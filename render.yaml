@@ -1,0 +1,184 @@
+# ═══════════════════════════════════════════════════════════════
+#  Humarains — Render Deployment Configuration
+#  Docs: https://render.com/docs/blueprint-spec
+# ═══════════════════════════════════════════════════════════════
+services:
+  - type: web
+    name: humarains
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install --omit=dev
+    startCommand: node src/server.js
+    nodeVersion: "20"
+    healthCheckPath: /api/system/status
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      # Supabase — Settings → Database → URI. The schema creates itself on first boot (db/schema.sql).
+      - key: DATABASE_URL
+        sync: false
+      # Connections per app instance. Keep (instances × this) under your database's limit.
+      - key: DATABASE_POOL_MAX
+        value: 10
+      # Render terminates TLS at its proxy: one hop to trust for real client IPs and Secure cookies
+      - key: TRUST_PROXY
+        value: 1
+      # Which process does background work (inbox polling, follow-ups, workflow timers, the inbound
+      # WhatsApp queue, daily backup). "all" = this service too (safe next to the worker: every job is
+      # locked in the database). Change to "web" once humarains-worker below is running, so this
+      # service only serves HTTP.
+      - key: PROCESS_ROLE
+        value: all
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      # CORS — production URL, no trailing slash
+      - key: ALLOWED_ORIGIN
+        sync: false
+      - key: APP_URL
+        sync: false
+      # AI — required for all AI features
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5-20251001
+      # Stripe — leave blank for demo mode
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      # One monthly price per plan; add STRIPE_<PLAN>_ANNUAL_PRICE_ID for annual billing
+      - key: STRIPE_STARTER_PRICE_ID
+        sync: false
+      - key: STRIPE_GROWTH_PRICE_ID
+        sync: false
+      - key: STRIPE_BUSINESS_PRICE_ID
+        sync: false
+      # Google OAuth — for Google Sign-In and Google Calendar integration
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      # Meta App — for WhatsApp Embedded Signup (App Dashboard → Settings → Basic,
+      # and Facebook Login for Business → Configurations for META_CONFIG_ID)
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: META_CONFIG_ID
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      # Email sending — Resend (recommended) or SMTP
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      # Error reporting (optional)
+      - key: SENTRY_DSN
+        sync: false
+      # Admin seeding
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+  # ───────────────────────────────────────────────────────────────
+  #  Background worker — everything that is not an HTTP request
+  #  (inbox polling, follow-ups, workflow timers, Proactive Agent,
+  #  inbound WhatsApp message queue, daily database backup).
+  #
+  #  Runs from the Dockerfile because backups need pg_dump / pg_restore
+  #  / aws-cli, which Render's native Node runtime does not include.
+  #
+  #  !! JWT_SECRET MUST be exactly the same value as on the web service.
+  #  !! It also encrypts the stored email passwords, so a different value
+  #  !! makes every connected mailbox unreadable. Copy it, do not generate it.
+  # ───────────────────────────────────────────────────────────────
+  - type: worker
+    name: humarains-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node src/worker.js
+    plan: starter
+    region: oregon
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PROCESS_ROLE
+        value: worker
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_POOL_MAX
+        value: 5
+      - key: JWT_SECRET
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5-20251001
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      # Daily database backup (see docs/DISASTER_RECOVERY.md). Set BACKUP_ENABLED to true once the
+      # three values below are filled in.
+      - key: BACKUP_ENABLED
+        value: false
+      - key: BACKUP_HOUR_UTC
+        value: 3
+      - key: BACKUP_KEEP
+        value: 14
+      # Encrypts every backup file. Store it somewhere safe that is NOT this database: without it the backups cannot be read.
+      - key: BACKUP_PASSPHRASE
+        sync: false
+      # Off-site copy, any S3-compatible bucket (AWS S3, Cloudflare R2, Backblaze B2, Supabase Storage).
+      # Example: s3://humarains-backups/db   plus BACKUP_S3_ENDPOINT for non-AWS providers.
+      - key: BACKUP_S3_URI
+        sync: false
+      - key: BACKUP_S3_ENDPOINT
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: auto
