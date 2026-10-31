@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance — humarains</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  .maintenance-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .maintenance-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 56px 48px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+  .maintenance-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 32px;
+  }
+  .maintenance-title {
+    font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text1);
+  }
+  .maintenance-sub {
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .maintenance-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(251,191,36,0.1);
+    border: 1px solid rgba(251,191,36,0.25);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #92400e;
+  }
+  .maintenance-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #f59e0b;
+    border-radius: 50%;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.8); }
+  }
+  .maintenance-footer {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text3);
+  }
+  .maintenance-footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+</style>
+<style id='maint-light-override'>
+body { font-family: 'Hanken Grotesk', system-ui, sans-serif !important; background: #EDF3FA !important; color: #111111 !important; }
+</style>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+<div class="noise-overlay"></div>
+<div class="grid-overlay"></div>
+<div class="hero-orb orb-1" style="position:fixed"></div>
+<div class="hero-orb orb-2" style="position:fixed"></div>
+
+<div class="maintenance-wrap">
+  <div class="maintenance-card">
+    <div class="maintenance-icon"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3 17.7 6.3 21l6.3-6.3a4 4 0 0 0 5.1-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></div>
+    <h1 class="maintenance-title">Under Maintenance</h1>
+    <p class="maintenance-sub">
+      humarains is temporarily offline for scheduled maintenance.
+      We're working to improve your experience and will be back shortly.
+    </p>
+    <div class="maintenance-badge">Maintenance in progress</div>
+    <div class="maintenance-footer">
+      Questions? Contact us at <a href="mailto:hello@humarains.com">hello@humarains.com</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Poll every 15 seconds — redirect to home once maintenance is lifted
+(function poll() {
+  setTimeout(async function() {
+    try {
+      const data = await fetch('/api/system/status').then(r => r.json());
+      if (!data.maintenance) {
+        window.location.replace('/index.html');
+      } else {
+        poll();
+      }
+    } catch (_) {
+      poll();
+    }
+  }, 15000);
+})();
+</script>
+<script src="cookie-banner.js"></script>
+</body>
+</html>

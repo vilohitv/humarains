@@ -1,0 +1,46 @@
+/* Typography: one typeface, Hanken Grotesk, set with care on every page.
+   Loaded last so these refinements apply everywhere without touching each page's own styles. */
+:root {
+  --type-stack: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: var(--type-stack); --font-mono: var(--type-stack); --fm: var(--type-stack); --cl-mono: var(--type-stack);
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: var(--type-stack);
+  font-feature-settings: "kern", "liga", "calt";
+  letter-spacing: -0.006em;
+}
+/* Headings: tight at display sizes, balanced line breaks, no orphaned last words */
+h1, h2, h3, h4 { font-family: var(--type-stack); text-wrap: balance; }
+h1 { letter-spacing: -0.042em; }
+h2 { letter-spacing: -0.034em; }
+h3 { letter-spacing: -0.022em; }
+h4 { letter-spacing: -0.012em; }
+p, li, dd, blockquote, figcaption { text-wrap: pretty; }
+strong, b { font-weight: 650; }
+/* Form controls inherit the page typeface instead of the browser's */
+button, input, select, textarea, optgroup { font-family: inherit; letter-spacing: inherit; }
+::placeholder { opacity: .62; }
+/* Numbers line up: stats, prices, tables, times, counts and badges */
+table, time, td, th, output,
+[class*="stat"], [class*="count"], [class*="badge"], [class*="price"], [class*="kpi"], [class*="num"], [class*="time"] {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* Small labels that used to be monospace: sentence-weight, gently tracked */
+[class*="eyebrow"], [class*="label"], [class*="kicker"], th, legend { letter-spacing: 0.01em; }
+[class*="eyebrow"], [class*="kicker"] { font-weight: 600; }
+/* Code and technical strings stay readable in the same family */
+code, kbd, samp, pre { font-family: var(--type-stack); font-size: .94em; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+/* Links and selection */
+a { text-underline-offset: .2em; text-decoration-thickness: .06em; }
+::selection { background: rgba(18, 136, 154, .22); color: inherit; }
+/* Long-form reading (legal pages and blog posts) */
+.legal-body, .legal-content, article, .post, .blog-post { line-height: 1.7; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

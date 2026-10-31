@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="preload" href="fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<title>Humarains — The AI Agent for Business Enquiries &amp; Bookings</title>
+<meta name="description" content="Humarains is an AI agent that handles your business enquiries and bookings. It answers new enquiries in seconds by email and WhatsApp, quotes with your own prices, and books jobs on Google Calendar. When a conversation needs a person, it stops and waits for you." id="metaDesc">
+<meta name="keywords" content="AI agent, AI booking agent, enquiry management software, WhatsApp enquiries, automated booking, appointment booking, Google Calendar booking, automated follow-up, AI assistant for service businesses">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Humarains">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="canonical" href="https://humarains.com/">
+
+
+<link rel="icon" type="image/png" href="logo.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Humarains">
+<meta property="og:title" content="Humarains — The AI Agent for Business Enquiries & Bookings">
+<meta property="og:description" content="Meet Humarains, the AI agent that handles your business enquiries and bookings: it replies by email and WhatsApp, quotes with your prices, and books jobs on Google Calendar, around the clock.">
+<meta property="og:url" content="https://humarains.com/">
+<meta property="og:image" content="https://humarains.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A customer asks for a tap repair and Humarains replies with a price range and two times, then books the job.">
+<meta name="twitter:image" content="https://humarains.com/og-image.png">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Humarains — The AI Agent for Business Enquiries & Bookings">
+<meta name="twitter:description" content="Meet Humarains, the AI agent that handles your business enquiries and bookings: it replies by email and WhatsApp, quotes with your prices, and books jobs on Google Calendar, around the clock.">
+<meta name="twitter:image" content="https://humarains.com/logo.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Humarains",
+  "alternateName": "Humarains AI Agent",
+  "url": "https://humarains.com/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Humarains is an AI agent that handles enquiries and bookings for service businesses. It answers enquiries by email and WhatsApp, quotes with the owner's prices, and books jobs in Google Calendar, around the clock.",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "USD",
+    "lowPrice": "199",
+    "highPrice": "599",
+    "offerCount": "3",
+    "availability": "https://schema.org/InStock"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Humarains",
+    "url": "https://humarains.com/",
+    "logo": "https://humarains.com/logo.png"
+  }
+}
+</script>
+<style>
+/* ── Tokens ─────────────────────────────────────────────────────
+   Ink and white, the same as the app. One accent (teal, from the logo) for focus and small signals.
+   Green appears once, for "booked". Everything else is ink at different strengths. */
+:root{
+  --ink:#0B252A;
+  --ink-2:rgba(11,37,42,.74);
+  --ink-3:rgba(11,37,42,.60);
+  --line:rgba(11,37,42,.12);
+  --line-strong:rgba(11,37,42,.24);
+  --paper:#FFFFFF;
+  --canvas:#F4F6F6;
+  --accent:#12889A;
+  --accent-ink:#0E6F7E;
+  --green:#1E8A4C;
+  --r-sm:10px; --r-md:14px; --r-lg:20px;
+  --font:'Hanken Grotesk',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --wrap:1160px;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;overflow-x:clip;font-family:var(--font);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+h1,h2,h3,h4,p,ul,ol{margin:0;}
+ul,ol{padding:0;list-style:none;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px;}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 22px;border-radius:var(--r-sm);font:600 15px/1 var(--font);text-decoration:none;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:#fff;transition:background .15s ease,border-color .15s ease,transform .15s ease;}
+.btn:hover{background:#12363d;border-color:#12363d;}
+.btn:active{transform:translateY(1px);}
+.btn-quiet{background:var(--paper);color:var(--ink);border-color:var(--line-strong);}
+.btn-quiet:hover{background:var(--canvas);border-color:var(--ink);}
+.btn-sm{height:38px;padding:0 16px;font-size:14px;}
+.btn-block{width:100%;}
+.btn-on-ink{background:#fff;color:var(--ink);border-color:#fff;}
+.btn-on-ink:hover{background:var(--canvas);border-color:var(--canvas);}
+
+/* ── Header ───────────────────────────────────────────────────── */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);border-bottom:1px solid transparent;transition:border-color .2s ease;transform:translateZ(0);will-change:transform;}
+.site-header.stuck{border-bottom-color:var(--line);}
+.nav{display:flex;align-items:center;gap:32px;height:68px;}
+.brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em;text-decoration:none;}
+.brand img{width:28px;height:28px;border-radius:8px;}
+.nav-links{display:flex;gap:28px;margin-left:12px;}
+.nav-links a{font-size:15px;font-weight:500;color:var(--ink-2);text-decoration:none;}
+.nav-links a:hover{color:var(--accent-ink);}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.nav-signin{font-size:15px;font-weight:600;text-decoration:none;padding:0 10px;}
+.nav-toggle{display:none;position:relative;width:44px;height:44px;border:1px solid var(--line-strong);background:var(--paper);border-radius:12px;cursor:pointer;align-items:center;justify-content:center;color:var(--ink);padding:0;transition:background .2s ease,border-color .2s ease;}
+.nav-toggle:hover{background:var(--canvas);}
+.site-header.open .nav-toggle{background:var(--ink);border-color:var(--ink);color:#fff;}
+.nav-toggle .bars{position:relative;display:block;width:18px;height:12px;}
+.nav-toggle .bars i{position:absolute;left:0;width:100%;height:2px;border-radius:2px;background:currentColor;transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .18s ease,top .28s cubic-bezier(.16,1,.3,1);}
+.nav-toggle .bars i:nth-child(1){top:0;}
+.nav-toggle .bars i:nth-child(2){top:5px;}
+.nav-toggle .bars i:nth-child(3){top:10px;}
+.site-header.open .nav-toggle .bars i:nth-child(1){top:5px;transform:rotate(45deg);}
+.site-header.open .nav-toggle .bars i:nth-child(2){opacity:0;}
+.site-header.open .nav-toggle .bars i:nth-child(3){top:5px;transform:rotate(-45deg);}
+
+/* Mobile menu: a full-width sheet that drops from the header, with a dimmed page behind it */
+.nav-panel{display:none;}
+@media (max-width:860px){
+  .nav-panel{display:block;position:absolute;top:100%;left:0;right:0;z-index:2;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 28px 44px -26px rgba(11,37,42,.5);padding:6px 28px 26px;max-height:calc(100vh - 68px);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .22s ease,transform .3s cubic-bezier(.16,1,.3,1),visibility 0s linear .3s;}
+  .site-header.open .nav-panel{opacity:1;visibility:visible;transform:none;transition-delay:0s;}
+  .site-header::after{content:"";position:absolute;top:100%;left:0;right:0;height:100vh;background:rgba(11,37,42,.38);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s;}
+  .site-header.open::after{opacity:1;visibility:visible;transition-delay:0s;}
+}
+.nav-panel-links a{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 2px;font-size:19px;font-weight:600;letter-spacing:-.015em;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);}
+.nav-panel-links a svg{flex:none;width:18px;height:18px;color:var(--ink-3);transition:transform .2s ease,color .2s ease;}
+.nav-panel-links a:active svg,.nav-panel-links a:hover svg{transform:translateX(3px);color:var(--ink);}
+.nav-panel-actions{display:grid;gap:12px;margin-top:24px;}
+.nav-panel-actions .btn{width:100%;height:52px;padding:0 24px;font-size:16px;letter-spacing:.005em;white-space:nowrap;}
+.nav-panel-actions .btn-quiet{color:var(--ink);}
+@media (max-width:860px){
+  .nav-links,.nav-signin,.nav-actions .btn{display:none;}
+  .nav-toggle{display:inline-flex;margin-left:auto;}
+}
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+.hero{padding:64px 0 96px;}
+.hero-copy{max-width:820px;margin:0 auto;text-align:center;}
+.hero h1{font-size:clamp(40px,5.2vw,62px);line-height:1.03;letter-spacing:-.035em;font-weight:650;max-width:14em;margin:0 auto;}
+.hero-sub{margin:24px auto 0;font-size:19px;line-height:1.55;color:var(--ink-2);max-width:31em;}
+.hero-actions{margin-top:36px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.hero-note{margin-top:18px;font-size:14px;color:var(--ink-3);}
+
+/* Scroll reveal: transform and opacity only, so it stays on the compositor */
+.js .reveal{opacity:0;transform:translate3d(0,28px,0);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0s);will-change:opacity,transform;}
+.js .reveal.in{opacity:1;transform:none;will-change:auto;}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none;}}
+@media (max-width:960px){
+  .hero{padding:40px 0 64px;}
+  .hero h1{max-width:none;}
+}
+
+/* ── Sections ─────────────────────────────────────────────────── */
+.section{padding:104px 0;}
+.section-canvas{background:var(--canvas);}
+.section-head{max-width:640px;}
+.section h2{font-size:clamp(30px,3.6vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:650;}
+.section-lede{margin-top:16px;font-size:18px;color:var(--ink-2);max-width:34em;}
+@media (max-width:720px){.section{padding:72px 0;}}
+
+/* Pricing */
+.plans{margin-top:56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch;}
+.plan{background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-lg);padding:32px 28px 28px;display:flex;flex-direction:column;}
+.plan-rec{border:2px solid var(--ink);padding:31px 27px 27px;transform:translateY(-8px);box-shadow:0 30px 60px -32px rgba(11,37,42,.5),0 0 0 6px rgba(18,136,154,.10);}
+.plan-top{display:flex;align-items:center;gap:10px;min-height:28px;}
+.plan-name{font-size:18px;font-weight:650;}
+.plan-tag{font-size:12px;font-weight:650;background:var(--accent-ink);color:#fff;border-radius:999px;padding:4px 11px;}
+.plan-price{margin-top:18px;display:flex;align-items:baseline;gap:6px;}
+.plan-price strong{font-size:48px;font-weight:650;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;}
+.plan-price span{font-size:15px;color:var(--ink-3);}
+.plan-limit{margin-top:8px;font-size:15px;color:var(--ink-2);}
+.plan ul{margin:24px 0 28px;padding-top:24px;border-top:1px solid var(--line);display:grid;gap:13px;flex:1;align-content:start;}
+.plan li{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:15px;line-height:1.45;}
+.plan li svg{width:18px;height:18px;margin-top:2px;color:var(--accent);}
+.plan li.off{color:var(--ink-3);}
+.plan li.off svg{color:var(--ink-3);}
+.pricing-foot{margin-top:28px;font-size:14px;color:var(--ink-3);}
+@media (max-width:960px){.plans{grid-template-columns:1fr;max-width:520px;}.plan-rec{transform:none;}}
+
+/* FAQ */
+.faq{margin-top:48px;max-width:760px;border-top:1px solid var(--line-strong);}
+.faq details{border-bottom:1px solid var(--line);}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0;font-size:19px;font-weight:600;letter-spacing:-.01em;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"";flex:none;width:18px;height:18px;background:linear-gradient(var(--ink),var(--ink)) center/18px 1.8px no-repeat,linear-gradient(var(--ink),var(--ink)) center/1.8px 18px no-repeat;transition:transform .2s ease;}
+.faq details[open] summary::after{background:linear-gradient(var(--ink),var(--ink)) center/18px 1.8px no-repeat;transform:rotate(180deg);}
+.faq details p{padding:0 48px 26px 0;color:var(--ink-2);max-width:40em;}
+
+/* Closing call to action */
+
+/* Footer */
+.site-footer{padding:72px 0 36px;border-top:1px solid var(--line);}
+.site-footer-top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:48px;padding-bottom:48px;}
+.site-footer-brand{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.02em;text-decoration:none;}
+.site-footer-brand img{width:26px;height:26px;border-radius:7px;}
+.site-footer-tag{margin-top:14px;max-width:280px;font-size:15px;line-height:1.6;color:var(--ink-2);}
+.site-footer-col h4{margin:0 0 16px;font-size:14px;font-weight:650;}
+.site-footer-col ul{display:flex;flex-direction:column;gap:12px;}
+.site-footer-col a{font-size:15px;color:var(--ink-2);text-decoration:none;cursor:pointer;}
+.site-footer-col a:hover{color:var(--accent-ink);text-decoration:underline;text-underline-offset:3px;}
+.site-footer-bottom{padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-3);}
+@media (max-width:820px){
+  .site-footer{padding:56px 0 28px;}
+  .site-footer-top{grid-template-columns:1fr 1fr;gap:36px 24px;}
+  .site-footer-brandcol{grid-column:1/-1;}
+}
+
+/* Team dialog */
+.team-modal-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(11,37,42,.5);}
+.team-modal-overlay.open{display:flex;}
+.team-modal{position:relative;width:100%;max-width:520px;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-lg);padding:40px 36px 34px;}
+.team-modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border:1px solid var(--line-strong);background:var(--paper);border-radius:var(--r-sm);cursor:pointer;display:grid;place-items:center;color:var(--ink);}
+.team-modal-close:hover{background:var(--canvas);}
+.team-modal-label{font-size:14px;font-weight:650;color:var(--ink-3);margin-bottom:20px;}
+.team-modal-member{display:flex;gap:22px;align-items:flex-start;}
+.team-modal-photo{flex:none;width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--canvas);border:1px solid var(--line);}
+.team-modal-avatar{width:100%;height:100%;object-fit:cover;}
+.team-modal-avatar-fallback{display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:34px;font-weight:650;color:var(--ink-2);}
+.team-modal-name{font-size:22px;font-weight:650;letter-spacing:-.02em;}
+.team-modal-role{font-size:14px;font-weight:500;color:var(--ink-3);margin-left:6px;}
+.team-modal-bio{margin-top:10px;font-size:16px;line-height:1.6;color:var(--ink-2);}
+@media (max-width:560px){.team-modal{padding:36px 24px 28px;}.team-modal-member{flex-direction:column;}}
+
+/* ── Reply speed: how conversion odds rise as the first reply gets faster ── */
+.speed{padding:8px 0 104px;}
+.speed-card{background:var(--canvas);border:1px solid var(--line);border-radius:28px;padding:60px 60px 40px;}
+.speed-head{max-width:660px;}
+.speed-head .section-lede + .section-lede{margin-top:10px;}
+.speed-fig{margin:56px 0 0;}
+.sp-chart{position:relative;height:392px;}
+.sp-plot{position:absolute;left:0;right:0;top:92px;bottom:0;border-bottom:1.5px solid var(--line-strong);}
+.sp-draw{position:absolute;inset:0;}
+.sp-draw svg{display:block;width:100%;height:100%;overflow:visible;}
+.sp-area{fill:rgba(18,136,154,.13);}
+.sp-line{fill:none;stroke:var(--accent);stroke-width:5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+.sp-pt{position:absolute;left:var(--x);bottom:var(--y);width:0;height:0;}
+.sp-dot{position:absolute;left:-11px;bottom:-11px;width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--canvas);}
+.sp-val{position:absolute;left:0;bottom:22px;transform:translateX(var(--lx,-50%));white-space:nowrap;font-size:clamp(19px,2.7vw,32px);font-weight:700;letter-spacing:-.025em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink);}
+.sp-mia{position:absolute;left:90%;top:-44px;bottom:0;width:0;border-left:3px dashed var(--green);}
+.sp-mia-dot{position:absolute;left:-12px;bottom:-12px;width:24px;height:24px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--canvas);}
+.sp-mia-name{position:absolute;left:0;top:-36px;transform:translateX(-50%);font-size:clamp(17px,2.2vw,26px);font-weight:700;letter-spacing:-.02em;color:var(--green);line-height:1;}
+.sp-x{display:grid;grid-template-columns:repeat(5,1fr);margin-top:18px;text-align:center;}
+.sp-x span{font-size:clamp(13px,1.9vw,22px);font-weight:500;color:var(--ink-2);line-height:1.2;font-variant-numeric:tabular-nums;}
+.sp-x .sp-x-mia{color:var(--green);font-weight:700;}
+.sp-cap{margin-top:20px;text-align:center;font-size:clamp(13px,1.5vw,17px);color:var(--ink-2);}
+.speed-note{margin-top:36px;max-width:62em;font-size:13px;line-height:1.6;color:var(--ink-3);}
+.js .speed-fig .sp-draw{clip-path:inset(0 100% 0 0);transition:clip-path 1.7s cubic-bezier(.16,1,.3,1) .25s;}
+.js .speed-fig.in .sp-draw{clip-path:inset(-12px -12px -12px -12px);}
+.js .speed-fig .sp-pt,.js .speed-fig .sp-mia{opacity:0;transition:opacity .6s ease var(--dl,0s);}
+.js .speed-fig.in .sp-pt,.js .speed-fig.in .sp-mia{opacity:1;}
+@media (prefers-reduced-motion:reduce){
+  .js .speed-fig .sp-draw{clip-path:none;transition:none;}
+  .js .speed-fig .sp-pt,.js .speed-fig .sp-mia{opacity:1;transition:none;}
+}
+@media (max-width:720px){
+  .speed{padding:0 0 72px;}
+  .speed-card{padding:32px 18px 26px;border-radius:22px;}
+  .speed-fig{margin-top:40px;}
+  .sp-chart{height:300px;}
+  .sp-plot{top:76px;}
+  .sp-dot{left:-8px;bottom:-8px;width:16px;height:16px;box-shadow:0 0 0 3px var(--canvas);}
+  .sp-val{bottom:16px;}
+  .sp-line{stroke-width:4;}
+  .sp-mia{top:-34px;}
+  .sp-mia-dot{left:-9px;bottom:-9px;width:18px;height:18px;box-shadow:0 0 0 3px var(--canvas);}
+  .sp-mia-name{top:-30px;}
+  .speed-note{margin-top:26px;font-size:12px;}
+}
+
+/* ── Product preview: the dashboard, shown as a working window ── */
+.hero{position:relative;}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(11,37,42,.15) 1px,transparent 1.3px);background-size:22px 22px;-webkit-mask-image:linear-gradient(#000 20%,transparent 92%);mask-image:linear-gradient(#000 20%,transparent 92%);}
+.hero>.wrap{position:relative;}
+.product{position:relative;padding:40px 0 112px;}
+.product-head{text-align:center;max-width:820px;margin:0 auto;}
+.product-head h2{font-size:clamp(34px,5vw,58px);line-height:1.04;letter-spacing:-.04em;font-weight:650;}
+.product-head p{margin:20px auto 0;max-width:33em;font-size:18px;color:var(--ink-2);}
+.product.how{padding:96px 0 112px;}
+
+/* ── Showcase panels: a white card on a deep blue panel (hero story + how it works) ── */
+.sc-panel{position:relative;margin:0;border-radius:28px;overflow:hidden;background:radial-gradient(52% 48% at 18% 30%,rgba(124,144,238,.95) 0%,rgba(124,144,238,0) 62%),radial-gradient(40% 36% at 80% 26%,rgba(208,216,253,.95) 0%,rgba(208,216,253,0) 60%),linear-gradient(165deg,#4A5EC4 0%,#2B3A9C 48%,#141C66 100%);}
+.sc-hero{margin-top:56px;padding:72px 28px 40px;}
+.sc-cap{position:relative;margin-top:26px;text-align:center;font-size:13px;color:rgba(255,255,255,.72);}
+.sc-card{position:relative;max-width:680px;margin:0 auto;background:var(--paper);border-radius:22px;padding:22px 22px 20px;box-shadow:0 34px 70px -34px rgba(6,10,56,.65);}
+.sc-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;min-width:0;}
+.sc-ico{flex:none;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:#E3F2F4;color:var(--accent-ink);}
+.sc-ico svg{width:24px;height:24px;}
+.sc-head-t{min-width:0;font-size:17px;line-height:1.3;}
+.sc-head-t b{font-weight:650;}.sc-head-t span{color:var(--ink-3);}
+.sc-chat{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;background:#EEF0EC;}
+.js .sc-item:not(.on){display:none;}
+.js .sc-chat.measure .sc-item{display:block!important;}
+.sc-item.pop{animation:scpop .45s cubic-bezier(.16,1,.3,1);}
+@keyframes scpop{from{opacity:0;transform:translateY(10px) scale(.98);}to{opacity:1;transform:none;}}
+.sc-msg{max-width:76%;padding:10px 14px 7px;border-radius:14px;font-size:16px;line-height:1.4;background:#fff;box-shadow:0 1px 1px rgba(11,37,42,.07);}
+.sc-msg.in{align-self:flex-start;border-top-left-radius:4px;}
+.sc-msg.out{align-self:flex-end;background:#DDF5D3;border-top-right-radius:4px;}
+.sc-msg time{display:block;margin-top:3px;text-align:right;font-size:12px;color:var(--ink-3);}
+.sc-msg.vo{border:2px solid #1D2A86;padding:8px 13px 6px;}
+.sc-lab{display:block;margin-bottom:1px;font-size:13.5px;font-weight:650;color:#1D2A86;}
+.sc-chip{align-self:center;padding:5px 15px;border-radius:999px;font-size:14px;font-weight:600;background:#FBEBD2;color:#7A4D0B;}
+.sc-chip.soft{background:#fff;color:var(--ink-2);font-weight:500;}
+.sc-chip.ok{display:inline-flex;align-items:center;gap:9px;padding:8px 17px 8px 9px;background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(11,37,42,.1);}
+.sc-chip.ok svg{width:24px;height:24px;color:#1D2A86;}
+.sc-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px;}
+.sc-stage{border:0;background:none;padding:0;font:inherit;font-size:15px;line-height:1.3;text-align:left;color:var(--ink-3);cursor:pointer;}
+.sc-stage i{position:relative;display:block;height:4px;margin-bottom:10px;border-radius:4px;background:rgba(11,37,42,.1);overflow:hidden;}
+.sc-stage i::after{content:"";position:absolute;inset:0;background:#1D2A86;transform-origin:0 50%;transform:scaleX(0);}
+.sc-stage.done i::after,.sc-stage.on i::after{transform:scaleX(1);}
+.sc-stage.on{color:#1D2A86;font-weight:650;}
+.sc-run .sc-stage.on i::after{animation:scfill var(--dur,6s) linear both;}
+@keyframes scfill{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+.sc-stage:hover{color:var(--ink);}.sc-stage.on:hover{color:#1D2A86;}
+
+/* How it works */
+.how-head{max-width:860px;margin:0 auto;text-align:center;}
+.how-head h2{font-size:clamp(34px,4.6vw,56px);line-height:1.06;letter-spacing:-.035em;font-weight:650;}
+.how-head h2 span{display:block;margin-top:2px;font-weight:500;color:var(--ink-3);}
+.how-grid{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.3fr);gap:56px;align-items:center;margin-top:64px;}
+.acc{border-bottom:1px solid var(--line);}
+.acc-item{border-top:1px solid var(--line);}
+.acc-btn{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;padding:26px 0;border:0;background:none;font:650 28px/1.1 var(--font);letter-spacing:-.02em;text-align:left;color:var(--ink-3);cursor:pointer;transition:color .2s ease;}
+.acc-btn:hover,.acc-item.open .acc-btn{color:var(--ink);}
+.acc-pm{position:relative;flex:none;width:18px;height:18px;}
+.acc-pm::before,.acc-pm::after{content:"";position:absolute;left:0;right:0;top:8px;height:2px;border-radius:2px;background:currentColor;transition:transform .25s ease;}
+.acc-pm::after{transform:rotate(90deg);}
+.acc-item.open .acc-pm::after{transform:rotate(0);}
+.acc-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s cubic-bezier(.16,1,.3,1);}
+.acc-item.open .acc-panel{grid-template-rows:1fr;}
+.acc-in{overflow:hidden;}
+.acc-in p{max-width:25em;font-size:19px;line-height:1.5;color:var(--ink-2);}
+.acc-chip{display:inline-block;margin:16px 0 28px;padding:9px 16px;border-radius:12px;background:rgba(255,255,255,.85);font-size:15px;font-weight:600;color:var(--ink);}
+html:not(.js) .acc-panel{grid-template-rows:1fr;}
+.how-panel{min-height:660px;padding:72px 56px;display:flex;align-items:center;}
+.how-panel .sc-card{width:100%;max-width:none;padding:24px;}
+.sc-pane{display:none;width:100%;}
+.sc-pane.on{display:block;animation:scfade .5s ease;}
+html:not(.js) .sc-pane:first-child{display:block;}
+@keyframes scfade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.hw-from{margin:4px 0 6px 6px;font-size:14px;color:var(--ink-3);}
+.hw-bubble{display:inline-block;max-width:88%;padding:14px 18px;border-radius:22px;background:#2F5BEA;color:#fff;font-size:18px;line-height:1.4;}
+.hw-right{text-align:right;margin-top:10px;}
+.hw-bubble.reply{background:#E9ECEC;color:var(--ink);text-align:left;}
+.hw-meta{margin:8px 6px 0 0;text-align:right;font-size:13px;color:var(--ink-3);}
+.hw-tags{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;}
+.hw-tag{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;font-size:15px;background:#E5F3EA;color:#16603A;}
+.hw-tag svg{width:15px;height:15px;flex:none;}
+.hw-tag.t-blue{background:#E7EAFB;color:#1D2A86;}.hw-tag.t-amber{background:#FBEBD2;color:#7A4D0B;}
+.hw-sub{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:15px;color:var(--ink-3);}
+.hw-chans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px;}
+.hw-chan{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border:1px solid var(--line);border-radius:12px;background:#fff;font:600 15px var(--font);color:var(--ink);cursor:pointer;}
+.hw-chan svg{width:19px;height:19px;flex:none;}
+.hw-chan[aria-pressed=true]{background:#E7EAFB;border-color:#A9B4F0;color:#1D2A86;}
+.hw-chan i{position:absolute;left:0;right:0;bottom:0;height:3px;background:#1D2A86;transform-origin:0 50%;transform:scaleX(0);}
+.hw-chan.run[aria-pressed=true] i{animation:scfill var(--dur,2.4s) linear both;}
+.hw-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:17px;}
+.hw-hd b{font-weight:650;}.hw-hd span{color:var(--ink-3);}
+.hw-tl{display:grid;gap:12px;}
+.hw-tl li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:14px;align-items:start;padding:14px 16px;border-radius:14px;background:#F4F6F6;}
+.hw-day{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#1D2A86;padding-top:2px;}
+.hw-tl p{font-size:16px;line-height:1.4;}
+.hw-tl em{display:block;margin-top:4px;font-style:normal;font-size:13px;color:var(--green);font-weight:600;}
+.hw-tl li.off{opacity:.62;}.hw-tl li.off em{color:var(--ink-3);}
+.hw-note{margin-top:14px;font-size:14px;color:var(--ink-3);}
+.hw-flag{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;padding:6px 13px;border-radius:999px;background:#FBEBD2;color:#7A4D0B;font-size:14px;font-weight:650;}
+.hw-flag::before{content:"";width:8px;height:8px;border-radius:50%;background:#C98A1B;}
+.hw-draft{margin-top:16px;padding:16px;border:1px solid var(--line-strong);border-radius:14px;}
+.hw-draft small{display:block;margin-bottom:8px;font-size:12.5px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-3);}
+.hw-draft p{font-size:16px;line-height:1.5;}
+.hw-act{display:flex;align-items:center;gap:14px;margin-top:14px;font-size:13.5px;color:var(--ink-3);}
+.hw-btn{display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:10px;background:var(--ink);color:#fff;font-size:14.5px;font-weight:600;}
+.hw-booked{display:flex;align-items:center;gap:16px;padding:18px;border-radius:16px;background:#F3FAF5;border:1px solid rgba(30,138,76,.28);}
+.hw-booked svg{flex:none;width:34px;height:34px;color:var(--green);}
+.hw-booked small{display:block;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--green);}
+.hw-booked strong{display:block;font-size:19px;line-height:1.3;}
+.hw-booked span{font-size:14.5px;color:var(--ink-2);}
+.hw-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;}
+.hw-stats div{padding:14px;border-radius:14px;background:#F4F6F6;}
+.hw-stats b{display:block;font-size:28px;font-weight:650;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums;}
+.hw-stats span{font-size:13.5px;color:var(--ink-3);}
+@media (prefers-reduced-motion:reduce){.sc-item.pop,.sc-pane.on{animation:none;}.sc-run .sc-stage.on i::after,.hw-chan.run[aria-pressed=true] i{animation:none;transform:scaleX(1);}.acc-panel{transition:none;}}
+@media (max-width:960px){
+  .how-grid{grid-template-columns:1fr;gap:36px;margin-top:44px;}
+  .how-panel{min-height:0;padding:40px 18px;}
+}
+@media (max-width:720px){
+  .sc-hero{padding:36px 14px 28px;border-radius:22px;}
+  .sc-card{padding:16px 14px 16px;border-radius:18px;}
+  .sc-chat{padding:12px;}
+  .sc-msg{max-width:88%;font-size:15px;}
+  .sc-stages{gap:8px;}.sc-stage{font-size:12.5px;}
+  .acc-btn{font-size:23px;padding:22px 0;}.acc-in p{font-size:17px;}
+  .how-panel .sc-card{padding:16px;}.hw-bubble{font-size:16px;}.hw-chans{grid-template-columns:1fr;}
+  .product.how{padding:72px 0 80px;}
+}
+</style>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+<script>document.documentElement.classList.add("js");</script>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap">
+    <div class="nav">
+      <a class="brand" href="/" aria-label="Humarains home"><img src="logo.png" alt="">Humarains</a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#product">Product</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-signin" href="login.html">Sign in</a>
+        <a class="btn btn-sm" href="signup.html">Get started</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel">
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+    </div>
+    <div class="nav-panel" id="navPanel">
+      <nav class="nav-panel-links" aria-label="Mobile">
+        <a href="#product"><span>Product</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="#pricing"><span>Pricing</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="#faq"><span>FAQ</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </nav>
+      <div class="nav-panel-actions">
+        <a class="btn btn-quiet" href="login.html">Sign in</a>
+        <a class="btn" href="signup.html">Get started</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1>The AI agent for your enquiries and bookings.</h1>
+      <p class="hero-sub">Humarains answers every new enquiry <span data-wa-text data-wa-text-hide="by email">by email and WhatsApp</span> in seconds, quotes with your own prices, and books the job into your calendar, even while you are on site. Anything risky waits for you.</p>
+      <div class="hero-actions">
+        <a class="btn" href="signup.html">Get started</a>
+        <a class="btn btn-quiet" href="#product">See how it works</a>
+      </div>
+      <p class="hero-note">The free plan includes 10 AI replies a month.</p>
+    </div>
+
+    <figure class="sc-panel sc-hero" id="heroShow" role="group" aria-label="Example: a customer asks about a water heater service, goes quiet, is followed up automatically, and books.">
+      <div class="sc-card">
+        <div class="sc-head"><span class="sc-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="sc-head-t"><b>Priya Nair</b> <span>Water heater service, by email</span></div></div>
+        <div class="sc-chat">
+          <div class="sc-item sc-msg in on" data-s="0">How much to service a gas water heater? Ours is about 9 years old.<time>9:42 PM</time></div>
+          <div class="sc-item sc-msg out on" data-s="0">Hi Priya, a full service is $890 including parts. I have Friday at 10:00 am or Monday at 8:00 am.<time>9:42 PM</time></div>
+          <div class="sc-item sc-chip soft on" data-s="0">Replied in 11 seconds</div>
+          <div class="sc-item sc-msg in" data-s="1">Let me check with my partner first.<time>9:47 PM</time></div>
+          <div class="sc-item sc-chip" data-s="1">Quiet for a day</div>
+          <div class="sc-item sc-msg out vo" data-s="2"><span class="sc-lab">Humarains, in your voice</span>Hi Priya! Did you get a chance to talk it over? Happy to hold Friday at 10:00 am for you.<time>10:02 AM</time></div>
+          <div class="sc-item sc-msg in" data-s="3">Yes please, Friday works!<time>10:15 AM</time></div>
+          <div class="sc-item sc-chip ok" data-s="3"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="m7 12.4 3.3 3.3L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Booked, Fri 10:00 am</div>
+        </div>
+        <div class="sc-stages" role="group" aria-label="Stages of the conversation">
+          <button type="button" class="sc-stage on" aria-current="step"><i></i>Asked</button>
+          <button type="button" class="sc-stage"><i></i>Went quiet</button>
+          <button type="button" class="sc-stage"><i></i>Followed up</button>
+          <button type="button" class="sc-stage"><i></i>Booked</button>
+        </div>
+      </div>
+      <figcaption class="sc-cap">Example conversation, shown with illustrative prices.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section section-canvas product how" id="product">
+  <div class="wrap">
+    <div class="reveal how-head">
+      <h2>How it works.<span>Answer every enquiry. Quote with your prices. Book the job. Stay in control.</span></h2>
+    </div>
+    <div class="reveal how-grid" id="how">
+      <div class="acc">
+        <div class="acc-item open">
+          <h3><button type="button" class="acc-btn" id="acc-b0" aria-expanded="true" aria-controls="acc-p0">Capture<span class="acc-pm" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="acc-p0" role="region" aria-labelledby="acc-b0"><div class="acc-in"><p><span data-wa-text data-wa-text-hide="Every enquiry lands in one list, whichever way it came in. Email, or added by hand in a few taps.">Every enquiry lands in one list, whichever way it came in. Email, WhatsApp, or added by hand in a few taps.</span></p><span class="acc-chip">Every channel, one list</span></div></div>
+        </div>
+        <div class="acc-item">
+          <h3><button type="button" class="acc-btn" id="acc-b1" aria-expanded="false" aria-controls="acc-p1">Quote and book<span class="acc-pm" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="acc-p1" role="region" aria-labelledby="acc-b1"><div class="acc-in"><p>It replies in seconds with a price range from your own price list, and offers real times from your calendar.</p><span class="acc-chip">Your prices, your times</span></div></div>
+        </div>
+        <div class="acc-item">
+          <h3><button type="button" class="acc-btn" id="acc-b2" aria-expanded="false" aria-controls="acc-p2">Follow up<span class="acc-pm" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="acc-p2" role="region" aria-labelledby="acc-b2"><div class="acc-in"><p>If a customer goes quiet, it follows up on day 1, 3 and 7 in your voice, and stops the moment they reply.</p><span class="acc-chip">Three polite nudges, then it stops</span></div></div>
+        </div>
+        <div class="acc-item">
+          <h3><button type="button" class="acc-btn" id="acc-b3" aria-expanded="false" aria-controls="acc-p3">Hand over<span class="acc-pm" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="acc-p3" role="region" aria-labelledby="acc-b3"><div class="acc-in"><p>Large jobs, unusual requests and anything it is unsure about wait for you. Nothing risky goes out on its own.</p><span class="acc-chip">You decide what goes out</span></div></div>
+        </div>
+        <div class="acc-item">
+          <h3><button type="button" class="acc-btn" id="acc-b4" aria-expanded="false" aria-controls="acc-p4">Result<span class="acc-pm" aria-hidden="true"></span></button></h3>
+          <div class="acc-panel" id="acc-p4" role="region" aria-labelledby="acc-b4"><div class="acc-in"><p>Jobs land in your Google Calendar, and you can see what was asked, answered and won.</p><span class="acc-chip">Booked, not just answered</span></div></div>
+        </div>
+      </div>
+      <div class="sc-panel how-panel" aria-live="polite">
+        <div class="sc-pane on" data-i="0">
+          <div class="sc-card">
+            <div class="sc-head"><span class="sc-ico" id="hwIco"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="sc-head-t"><b>New enquiry</b> <span id="hwWhere">Email, just now</span></div></div>
+            <div class="hw-from">Tom O.</div>
+            <div class="hw-bubble" id="hwMsg">Hi, my bathroom drain is blocked and the water is not going down. What would it cost to fix?</div>
+            <div class="hw-sub">Into one list from</div>
+            <div class="hw-chans" id="hwChans">
+              <button type="button" class="hw-chan" aria-pressed="true" data-k="0"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Email<i></i></button>
+              <button type="button" class="hw-chan" aria-pressed="false" data-k="1" data-whatsapp-feature><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 19.5 5.8 15A8 8 0 1 1 9 18.2l-4.5 1.3Z" stroke="#25A244" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.3 8.6c.3 2.8 2.3 5 5.4 5.9l1-1.3-1.7-.9-.8.6c-1-.4-1.9-1.3-2.3-2.3l.6-.8-.8-1.7-1.4.5Z" fill="#25A244"/></svg>WhatsApp<i></i></button>
+              <button type="button" class="hw-chan" aria-pressed="false" data-k="2"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m4 20 1-4L16.5 4.5a2 2 0 0 1 2.8 0l.2.2a2 2 0 0 1 0 2.8L8 19l-4 1Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Added by hand<i></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="sc-pane" data-i="1">
+          <div class="sc-card">
+            <div class="sc-head"><span class="sc-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="sc-head-t"><b>Reply sent</b> <span>Email, 14 seconds after it arrived</span></div></div>
+            <div class="hw-from">Tom O.</div>
+            <div class="hw-bubble">Hi, my bathroom drain is blocked and the water is not going down. What would it cost to fix?</div>
+            <div class="hw-right"><div class="hw-bubble reply">Hi Tom, clearing a blocked drain is usually $180 to $260. I can be there today at 4:00 pm or tomorrow at 8:30 am. Which suits you?</div></div>
+            <div class="hw-meta">Written by Humarains, in your voice</div>
+            <div class="hw-tags">
+              <span class="hw-tag"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8.2V3.3c0-.4.3-.8.8-.8h4.9c.2 0 .4.1.6.2l5 5c.3.3.3.8 0 1.1l-4.8 4.8c-.3.3-.8.3-1.100 0l-5-5a.8.8 0 0 1-.2-.6Z" stroke="currentColor" stroke-width="1.4"/><circle cx="5.600" cy="5.600" r="1" fill="currentColor"/></svg>Price from <b>your price list</b></span>
+              <span class="hw-tag t-blue"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="10.500" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M2 6.500h12M5.500 1.800v2.400M10.500 1.800v2.400" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Times from <b>your calendar</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="sc-pane" data-i="2">
+          <div class="sc-card">
+            <div class="sc-head"><span class="sc-ico"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="m4 7.5 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="sc-head-t"><b>Priya Nair</b> <span>Went quiet after the quote</span></div></div>
+            <ol class="hw-tl">
+              <li><span class="hw-day">Day 1</span><div><p>Just checking in, Priya. Does Friday at 10:00 am still suit you?</p><em>Sent automatically</em></div></li>
+              <li class="off"><span class="hw-day">Day 3</span><div><p>Still have Friday at 10:00 am free if you would like it.</p><em>Cancelled, she replied</em></div></li>
+              <li class="off"><span class="hw-day">Day 7</span><div><p>No rush at all. The quote stays open if you change your mind.</p><em>Cancelled, she replied</em></div></li>
+            </ol>
+            <p class="hw-note">Priya replied "Friday is perfect, thanks", so the rest were cancelled.</p>
+          </div>
+        </div>
+        <div class="sc-pane" data-i="3">
+          <div class="sc-card">
+            <span class="hw-flag">Held for you</span>
+            <div class="hw-from">Lena W.</div>
+            <div class="hw-bubble">Can you quote for re-piping a whole three-storey house?</div>
+            <div class="hw-draft">
+              <small>Your reply, drafted for you</small>
+              <p>Hi Lena, thanks for getting in touch. A job this size needs a look at the house first. Could I visit on Thursday morning to give you a proper quote?</p>
+            </div>
+            <div class="hw-act"><span class="hw-btn">Send my reply</span><span>Nothing has been sent yet.</span></div>
+          </div>
+        </div>
+        <div class="sc-pane" data-i="4">
+          <div class="sc-card">
+            <div class="hw-booked"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="m7 12.4 3.3 3.3L17 9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><small>Booked</small><strong>Water heater service, Friday 10:00 am</strong><span>Added to your Google Calendar</span></div></div>
+            <div class="hw-stats">
+              <div><b>23</b><span>Enquiries</span></div>
+              <div><b>23</b><span>Replied to</span></div>
+              <div><b>9</b><span>Booked</span></div>
+            </div>
+            <p class="hw-note">An example week, with illustrative figures.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section speed" id="speed">
+  <div class="wrap">
+    <div class="speed-card">
+      <div class="reveal speed-head">
+        <h2>The faster the reply, the more bookings</h2>
+      </div>
+      <figure class="reveal speed-fig" role="img" aria-label="Chart of the lift in conversion odds by time to first reply: plus 62 percent at 30 minutes, plus 98 percent at 3 minutes, plus 160 percent at 2 minutes, plus 391 percent at 1 minute. Humarains replies in about 14 seconds.">
+        <div class="sp-chart" aria-hidden="true">
+          <div class="sp-plot">
+            <div class="sp-draw">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+                <polygon class="sp-area" points="10,100 10,86 30,79 50,65 70,15 70,100"/>
+                <polyline class="sp-line" points="10,86 30,79 50,65 70,15"/>
+              </svg>
+            </div>
+            <div class="sp-pt" style="--x:10%;--y:14%;--dl:.6s"><span class="sp-dot"></span><span class="sp-val">+62%</span></div>
+            <div class="sp-pt" style="--x:30%;--y:21%;--dl:.9s"><span class="sp-dot"></span><span class="sp-val">+98%</span></div>
+            <div class="sp-pt" style="--x:50%;--y:35%;--dl:1.2s"><span class="sp-dot"></span><span class="sp-val" style="--lx:-82%">+160%</span></div>
+            <div class="sp-pt" style="--x:70%;--y:85%;--dl:1.6s"><span class="sp-dot"></span><span class="sp-val">+391%</span></div>
+            <div class="sp-mia" style="--dl:2s"><span class="sp-mia-name">Humarains</span><span class="sp-mia-dot"></span></div>
+          </div>
+        </div>
+        <div class="sp-x" aria-hidden="true"><span>30 min</span><span>3 min</span><span>2 min</span><span>1 min</span><span class="sp-x-mia">~14 sec</span></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="reveal section-head">
+      <h2>Simple monthly pricing</h2>
+      <p class="section-lede">Pick a plan, change it whenever you like, and cancel from your billing page.</p>
+    </div>
+    <div class="reveal plans">
+      <article class="plan">
+        <div class="plan-top"><h3 class="plan-name">Starter</h3></div>
+        <div class="plan-price"><strong>$199</strong><span>per month</span></div>
+        <p class="plan-limit">75 AI replies a month</p>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Risky chats are held for your review</li>
+          <li data-whatsapp-feature><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>WhatsApp, 50 messages a month</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>1 workflow with basic steps</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Campaigns to up to 25 people</li>
+          <li class="off"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>No automatic follow-ups</li>
+          <li class="off"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>No calendar booking</li>
+        </ul>
+        <a class="btn btn-quiet btn-block" href="signup.html">Get started</a>
+      </article>
+
+      <article class="plan plan-rec">
+        <div class="plan-top"><h3 class="plan-name">Growth</h3><span class="plan-tag">Recommended</span></div>
+        <div class="plan-price"><strong>$399</strong><span>per month</span></div>
+        <p class="plan-limit">400 AI replies a month</p>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Autopilot campaigns to past customers</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Automatic follow-ups until they reply</li>
+          <li data-whatsapp-feature><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>WhatsApp, 500 messages a month</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Google Calendar booking</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>5 workflows with branching and AI steps</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Campaigns to up to 100 people</li>
+        </ul>
+        <a class="btn btn-block" href="signup.html">Get started</a>
+      </article>
+
+      <article class="plan">
+        <div class="plan-top"><h3 class="plan-name">Pro</h3></div>
+        <div class="plan-price"><strong>$599</strong><span>per month</span></div>
+        <p class="plan-limit">Unlimited AI replies</p>
+        <ul>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Growth</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited replies, messages and workflows</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Lead scoring on every enquiry</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Deal insights: stalled deals, objections, next step</li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Campaigns to up to 500 people</li>
+        </ul>
+        <a class="btn btn-quiet btn-block" href="signup.html">Get started</a>
+      </article>
+    </div>
+    <p class="reveal pricing-foot">Prices are in US dollars per month. There is also a free plan with 10 AI replies a month.</p>
+  </div>
+</section>
+
+<section class="section section-canvas" id="faq">
+  <div class="wrap">
+    <div class="reveal section-head"><h2>Questions owners ask</h2></div>
+    <div class="reveal faq">
+      <details>
+        <summary>Will it send things I have not seen?</summary>
+        <p>Routine replies go out on their own, so customers are not left waiting. When something needs a person, such as a complaint, an unusual request or a job above your size limit, Humarains stops, holds the conversation in Review, and waits for you. You can also pause the AI on any chat and reply yourself from the Inbox.</p>
+      </details>
+      <details>
+        <summary>How does it know my prices?</summary>
+        <p>You enter your services, rates and quoting rules in Business Settings. It quotes only from those. If a request does not fit them, it hands the lead to you instead of guessing.</p>
+      </details>
+      <details>
+        <summary>Where do my enquiries come from?</summary>
+        <p>You connect your email inbox<span data-whatsapp-feature> and your WhatsApp Business number</span>, and you can send in enquiries from your website form. They all land in one place.</p>
+      </details>
+      <details>
+        <summary>What happens when the AI is not sure?</summary>
+        <p>It stops and flags the enquiry for you, with the reason, for example a complaint, a very large job, or missing details. Nothing is sent until a person has looked.</p>
+      </details>
+      <details>
+        <summary>Can I cancel?</summary>
+        <p>Yes, at any time from your billing page. You keep access until the end of the period you paid for, and your enquiries and settings are kept if you come back.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer-top">
+      <div class="site-footer-brandcol">
+        <a class="site-footer-brand" href="/" aria-label="Humarains home"><img src="logo.png" alt="" loading="lazy">Humarains</a>
+        <p class="site-footer-tag">Your AI agent for enquiries and bookings. Every enquiry answered, every job booked.</p>
+      </div>
+      <nav class="site-footer-col" aria-label="Product">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#product">Product</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </nav>
+      <nav class="site-footer-col" aria-label="Company">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#team" onclick="openTeamModal(); return false;">Team</a></li>
+          <li><a href="mailto:hello@humarains.com">Contact</a></li>
+        </ul>
+      </nav>
+      <nav class="site-footer-col" aria-label="Legal">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="terms.html">Terms</a></li>
+          <li><a href="imprint.html">Imprint</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="site-footer-bottom">&copy; 2026 Humarains. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- TEAM MODAL -->
+<div class="team-modal-overlay" id="teamModalOverlay" onclick="if(event.target===this) closeTeamModal()">
+  <div class="team-modal" role="dialog" aria-modal="true" aria-labelledby="teamModalTitle">
+    <button class="team-modal-close" onclick="closeTeamModal()" aria-label="Close">
+      <svg viewBox="0 0 20 20" fill="none" width="16"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div class="team-modal-label" id="teamModalTitle">Team</div>
+    <div class="team-modal-member">
+      <div class="team-modal-photo">
+        <img src="assets/team-vilo.jpg" alt="Vilo, founder of Humarains" class="team-modal-avatar" loading="lazy"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="team-modal-avatar-fallback" aria-hidden="true">V</div>
+      </div>
+      <div class="team-modal-info">
+        <div class="team-modal-name">Vilo <span class="team-modal-role">Founder</span></div>
+        <div class="team-modal-bio">15-year-old founder building Humarains — the AI agent for business enquiries and bookings.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Header: hairline appears once the page scrolls; mobile menu */
+(function () {
+  var header = document.getElementById('siteHeader');
+  var toggle = document.getElementById('navToggle');
+  function onScroll() { header.classList.toggle('stuck', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  function setOpen(open) {
+    header.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  toggle.addEventListener('click', function () { setOpen(!header.classList.contains('open')); });
+  document.querySelectorAll('#navPanel a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+  header.addEventListener('click', function (e) { if (e.target === header) setOpen(false); });   /* tap the dimmed page */
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 860) setOpen(false); });
+})();
+
+/* Reveal on scroll (the smooth scrolling itself lives in smooth-scroll.js) */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+/* Team dialog */
+function openTeamModal() { var o = document.getElementById('teamModalOverlay'); if (o) { o.classList.add('open'); document.body.style.overflow = 'hidden'; } }
+function closeTeamModal() { var o = document.getElementById('teamModalOverlay'); if (o) { o.classList.remove('open'); document.body.style.overflow = ''; } }
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeTeamModal(); });
+
+/* WhatsApp feature flag: hides WhatsApp copy everywhere if the server has WhatsApp switched off */
+(function () {
+  function applyWhatsAppHide() {
+    document.querySelectorAll('[data-whatsapp-feature]').forEach(function (el) { el.style.display = 'none'; });
+    document.querySelectorAll('[data-wa-text]').forEach(function (el) {
+      var alt = el.getAttribute('data-wa-text-hide');
+      if (alt) el.textContent = alt;
+    });
+    var meta = document.getElementById('metaDesc');
+    if (meta) meta.content = meta.content.replace(', replies via email and WhatsApp,', ', replies via email,').replace('email and WhatsApp', 'email');
+  }
+  fetch('/api/settings/public')
+    .then(function (r) { return r.json(); })
+    .then(function (d) { if (d && d.features && d.features.whatsapp === false) applyWhatsAppHide(); })
+    .catch(function () { /* fail open: show everything */ });
+})();
+</script>
+<script src="smooth-scroll.js?v=1"></script>
+<script src="showcase.js?v=1"></script>
+</body>
+</html>

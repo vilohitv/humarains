@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="auth.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Sign In — Humarains</title>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+
+<a href="index.html" class="auth-back">
+  <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Back
+</a>
+
+<a href="index.html" class="auth-logo">
+  <img src="logo.png" alt="Humarains"> Humarains
+</a>
+
+<div class="auth-card">
+
+  <!-- Login section -->
+  <div id="loginSection">
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in to your account</div>
+
+    <div class="error-msg" id="loginError"></div>
+
+    <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@company.com" autocomplete="email"></div>
+    <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password" autocomplete="current-password"></div>
+    <div class="forgot"><a href="#" onclick="showReset();return false;">Forgot password?</a></div>
+
+    <button class="btn-submit" id="loginBtn" onclick="doLogin()">Sign in</button>
+
+    <div class="divider">or</div>
+
+    <a href="/api/auth/google" class="btn-google">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </a>
+
+    <div class="auth-footer">No account yet? <a href="signup.html">Sign up free</a></div>
+  </div>
+
+  <!-- Reset password section -->
+  <div class="reset-section" id="resetSection">
+    <div class="auth-title">Reset password</div>
+    <div class="auth-sub">Enter your email and we will send a reset link</div>
+    <div class="error-msg" id="resetError"></div>
+    <div class="success-msg" id="resetSuccess"></div>
+    <div class="field"><label>Email</label><input type="email" id="resetEmail" placeholder="you@company.com" autocomplete="email"></div>
+    <button class="btn-submit" id="resetBtn" onclick="doReset()">Send reset link</button>
+    <div class="auth-footer"><a href="#" onclick="showLogin();return false;">Back to sign in</a></div>
+  </div>
+
+</div>
+
+<script>
+function showReset(){document.getElementById('loginSection').style.display='none';document.getElementById('resetSection').classList.add('show');}
+function showLogin(){document.getElementById('loginSection').style.display='block';document.getElementById('resetSection').classList.remove('show');}
+
+async function doLogin(){
+  const btn=document.getElementById('loginBtn');
+  const email=document.getElementById('loginEmail').value.trim();
+  const pw=document.getElementById('loginPassword').value;
+  const err=document.getElementById('loginError');
+  err.classList.remove('show');
+  if(!email||!pw){err.textContent='Please enter your email and password.';err.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Signing in…';
+  try{
+    const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw}),credentials:'include'});
+    const d=await r.json();
+    if(!d.success){err.textContent=d.message||'Invalid credentials.';err.classList.add('show');return;}
+    if(d.user){try{sessionStorage.setItem('bp_user',JSON.stringify(d.user));}catch(_){}}
+    const p=new URLSearchParams(location.search);
+    let dest=p.get('next')||p.get('redirect')||'dashboard.html';
+    if(dest.startsWith('http://')||dest.startsWith('https://'))dest='dashboard.html';
+    location.href=dest;
+  }catch(e){err.textContent='Connection error. Please try again.';err.classList.add('show');}
+  finally{btn.disabled=false;btn.textContent='Sign in';}
+}
+
+async function doReset(){
+  const btn=document.getElementById('resetBtn');
+  const email=document.getElementById('resetEmail').value.trim();
+  const err=document.getElementById('resetError');
+  const suc=document.getElementById('resetSuccess');
+  err.classList.remove('show');suc.classList.remove('show');
+  if(!email){err.textContent='Please enter your email.';err.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Sending…';
+  try{
+    await fetch('/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email}),credentials:'include'});
+    suc.textContent='If that email is registered, a reset link has been sent.';suc.classList.add('show');
+  }catch(_){err.textContent='Connection error.';err.classList.add('show');}
+  finally{btn.disabled=false;btn.textContent='Send reset link';}
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(document.getElementById('resetSection').classList.contains('show'))doReset();
+    else doLogin();
+  }
+});
+
+const p=new URLSearchParams(location.search);
+if(p.get('reason')==='expired'){const e=document.getElementById('loginError');e.textContent='Your session has expired. Please sign in again.';e.classList.add('show');}
+if(p.get('reset')){
+  const token=p.get('reset'),email=p.get('email');
+  if(token&&email){
+    document.getElementById('loginSection').innerHTML=`<div class="auth-title">Set new password</div><div class="auth-sub">Enter a new password for ${email}</div><div class="error-msg" id="rpError"></div><div class="success-msg" id="rpSuccess"></div><div class="field"><label>New Password</label><input type="password" id="rpPw" placeholder="8 or more characters" minlength="8"></div><button class="btn-submit" id="rpBtn" onclick="doResetPw('${token}','${email}')">Update password</button>`;
+  }
+}
+
+async function doResetPw(token,email){
+  const btn=document.getElementById('rpBtn');
+  const pw=document.getElementById('rpPw').value;
+  const err=document.getElementById('rpError');
+  const suc=document.getElementById('rpSuccess');
+  err.classList.remove('show');suc.classList.remove('show');
+  if(!pw||pw.length<8){err.textContent='Password must be at least 8 characters.';err.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Updating…';
+  try{
+    const r=await fetch('/api/auth/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,token,password:pw}),credentials:'include'});
+    const d=await r.json();
+    if(!d.success){err.textContent=d.message||'Reset failed.';err.classList.add('show');return;}
+    suc.textContent='Password updated. Redirecting to sign in…';suc.classList.add('show');
+    setTimeout(()=>location.href='login.html',2000);
+  }catch(_){err.textContent='Connection error.';err.classList.add('show');}
+  finally{btn.disabled=false;btn.textContent='Update password';}
+}
+</script>
+</body>
+</html>

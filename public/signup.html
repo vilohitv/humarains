@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="auth.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Create Account — Humarains</title>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+
+<a href="index.html" class="auth-back">
+  <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Back
+</a>
+
+<a href="index.html" class="auth-logo">
+  <img src="logo.png" alt="Humarains"> Humarains
+</a>
+
+<div class="auth-card">
+  <div class="error-msg" id="signupError"></div>
+
+  <!-- ── STEP 1: Credentials ── -->
+  <div class="step-panel active" id="panel-1">
+    <div class="auth-title">Create your account</div>
+    <div class="auth-sub" id="signupSub">Free to start, no credit card needed. Next you connect your email or WhatsApp so your Agent can start answering enquiries.</div>
+
+    <div class="field"><label>Full name</label><input type="text" id="signupName" placeholder="Alex Chen" autocomplete="name"></div>
+    <div class="field"><label>Work email</label><input type="email" id="signupEmail" placeholder="you@company.com" autocomplete="email"></div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="signupPw" placeholder="10+ characters, upper and lower case, a number" autocomplete="new-password" oninput="updatePwStrength(this.value)">
+      <div class="pw-strength" id="pwStrength">
+        <div class="pw-bars">
+          <div class="pw-bar" id="pwb1"></div>
+          <div class="pw-bar" id="pwb2"></div>
+          <div class="pw-bar" id="pwb3"></div>
+          <div class="pw-bar" id="pwb4"></div>
+        </div>
+        <div class="pw-label" id="pwLabel"></div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="step1Btn" onclick="doSignup()">Create account</button>
+
+    <div class="divider">or</div>
+
+    <a href="/api/auth/google" class="btn-google">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </a>
+
+    <div class="auth-footer">Already have an account? <a href="login.html">Sign in</a></div>
+    <div class="terms-note">By creating an account you agree to our <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</div>
+  </div>
+
+</div>
+
+<script>
+
+const qp = new URLSearchParams(location.search);
+if (qp.get('email')) document.getElementById('signupEmail').value = qp.get('email');
+
+function updatePwStrength(pw) {
+  const el = document.getElementById('pwStrength');
+  if (!pw) { el.classList.remove('show'); return; }
+  el.classList.add('show');
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const colors = ['#fca5a5','#fca5a5','#fbbf24','#86efac'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('pwb'+i).style.background = i <= score ? colors[score-1] : 'var(--border)';
+  }
+  document.getElementById('pwLabel').textContent = labels[score-1] || '';
+  document.getElementById('pwLabel').style.color = colors[score-1] || 'var(--text3)';
+}
+
+async function doSignup() {
+  const btn   = document.getElementById('step1Btn');
+  const name  = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pw    = document.getElementById('signupPw').value;
+  const err   = document.getElementById('signupError');
+  err.classList.remove('show');
+  const fail = (m) => { err.textContent = m; err.classList.add('show'); };
+  if (!name || name.length < 2)        return fail('Please enter your full name.');
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('Please enter a valid email.');
+  // Same rule the server enforces, so people hear about it before submitting.
+  if (!pw || pw.length < 10 || !/[A-Z]/.test(pw) || !/[a-z]/.test(pw) || !/[0-9]/.test(pw)) {
+    return fail('Password must be at least 10 characters and include uppercase, lowercase, and a number.');
+  }
+
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  try {
+    const r = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, password: pw }), credentials: 'include' });
+    const d = await r.json();
+    if (!d.success) { fail(d.message || 'Registration failed.'); btn.disabled = false; btn.textContent = 'Create account'; return; }
+    if (d.user) { try { sessionStorage.setItem('bp_user', JSON.stringify(d.user)); } catch(_) {} }
+    location.href = 'onboarding.html';
+  } catch(e) {
+    fail('Connection error. Please try again.'); btn.disabled = false; btn.textContent = 'Create account';
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName !== 'A') doSignup();
+});
+</script>
+
+</body>
+</html>

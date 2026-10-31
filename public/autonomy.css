@@ -1,0 +1,59 @@
+/* autonomy.css — "What your Agent can do on its own": Settings > Agent permissions and the onboarding step.
+   Built from the shared tokens (--text, --text2, --text3, --border, --border2, --ink) with fallbacks, so it fits both pages. */
+.au { --au-ink: var(--ink, var(--text, #0B252A)); --au-line: var(--border2, rgba(11,37,42,.18)); --au-faint: var(--border, rgba(11,37,42,.10)); --au-mute: var(--text3, #6b7a7d); --au-soft: var(--text2, #3d5256); --au-warn: #8a5a00; --au-bad: #b3261e; --au-ok: #1b7a4b;
+  color: var(--text, #0B252A); font-size: 14px; line-height: 1.5; }
+.au * { box-sizing: border-box; }
+.au-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid var(--au-line); border-radius: 12px; margin: 0 0 16px; background: #fff; }
+.au-banner.paused { border-color: var(--au-warn); background: #fff8e6; }
+.au-banner b { font-weight: 650; }
+.au-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 6px; }
+.au-preset { text-align: left; border: 1.5px solid var(--au-line); background: #fff; border-radius: 12px; padding: 12px 13px; cursor: pointer; font: inherit; color: inherit; display: grid; gap: 3px; }
+.au-preset:hover { border-color: var(--au-ink); }
+.au-preset.on { border-color: var(--au-ink); box-shadow: 0 0 0 3px rgba(11,37,42,.08); }
+.au-preset b { font-size: 14px; }
+.au-preset span { font-size: 12.5px; color: var(--au-mute); line-height: 1.4; }
+.au-hint { font-size: 12.5px; color: var(--au-mute); margin: 4px 0 16px; }
+.au-card { border: 1px solid var(--au-line); border-radius: 14px; background: #fff; padding: 14px 16px; margin: 0 0 12px; }
+.au-card.off { background: #fafbfb; }
+.au-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.au-title { font-weight: 650; font-size: 14.5px; }
+.au-help { font-size: 13px; color: var(--au-soft); margin-top: 2px; max-width: 520px; }
+.au-seg { display: inline-flex; border: 1px solid var(--au-line); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.au-seg button { border: 0; background: #fff; padding: 8px 13px; font: 600 13px/1 inherit; font-family: inherit; color: var(--au-soft); cursor: pointer; border-left: 1px solid var(--au-line); }
+.au-seg button:first-child { border-left: 0; }
+.au-seg button:hover { background: #f3f5f5; }
+.au-seg button.on { background: var(--au-ink); color: #fff; }
+.au-lock { font-size: 12.5px; color: var(--au-warn); margin-top: 8px; }
+.au-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--au-faint); display: grid; gap: 12px; }
+.au-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 13.5px; color: var(--au-soft); }
+.au-row input[type=number] { width: 78px; height: 34px; border: 1px solid var(--au-line); border-radius: 8px; padding: 0 8px; font: inherit; color: var(--text, #0B252A); background: #fff; }
+.au-row select { height: 34px; border: 1px solid var(--au-line); border-radius: 8px; padding: 0 8px; font: inherit; background: #fff; color: var(--text, #0B252A); }
+.au-row textarea { width: 100%; min-height: 76px; border: 1px solid var(--au-line); border-radius: 10px; padding: 9px 11px; font: inherit; resize: vertical; color: var(--text, #0B252A); background: #fff; }
+.au-label { font-weight: 600; font-size: 12.5px; color: var(--au-ink); display: block; margin-bottom: 4px; width: 100%; }
+.au-note { font-size: 12.5px; color: var(--au-mute); line-height: 1.45; }
+.au-note.warn { color: var(--au-warn); }
+.au-limits { border: 1px solid var(--au-line); border-radius: 14px; padding: 14px 16px; margin: 4px 0 14px; background: #fff; }
+.au-limits h4 { margin: 0 0 4px; font-size: 14.5px; }
+.au-btn { height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--au-line); background: #fff; font: 600 13.5px/1 inherit; font-family: inherit; cursor: pointer; color: var(--text, #0B252A); }
+.au-btn:hover:not(:disabled) { border-color: var(--au-ink); }
+.au-btn.primary { background: var(--au-ink); border-color: var(--au-ink); color: #fff; }
+.au-btn.sm { height: 30px; padding: 0 11px; font-size: 12.5px; }
+.au-btn:disabled { opacity: .55; cursor: not-allowed; }
+.au-save { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.au-msg { font-size: 12.5px; color: var(--au-mute); }
+.au-msg.err { color: var(--au-bad); }
+.au-notes { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--au-warn); display: grid; gap: 4px; }
+.au-act { margin-top: 26px; }
+.au-act h4 { margin: 0 0 2px; font-size: 14.5px; }
+.au-sum { font-size: 13px; color: var(--au-soft); margin: 0 0 10px; }
+.au-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--au-line); border-radius: 12px; overflow: hidden; background: #fff; }
+.au-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--au-faint); font-size: 13px; }
+.au-list li:first-child { border-top: 0; }
+.au-list .what { color: var(--text, #0B252A); }
+.au-list .why { color: var(--au-mute); font-size: 12.5px; display: block; margin-top: 1px; }
+.au-pill { font-size: 11.5px; font-weight: 650; border: 1px solid var(--au-line); border-radius: 999px; padding: 2px 9px; white-space: nowrap; color: var(--au-soft); }
+.au-pill.sent { color: var(--au-ok); border-color: rgba(27,122,75,.4); }
+.au-pill.failed { color: var(--au-bad); border-color: rgba(179,38,30,.4); }
+.au-pill.skipped, .au-pill.queued { color: var(--au-warn); border-color: rgba(138,90,0,.4); }
+.au-empty { padding: 16px; font-size: 13px; color: var(--au-mute); text-align: center; border: 1px dashed var(--au-line); border-radius: 12px; }
+@media (max-width: 640px) { .au-presets { grid-template-columns: 1fr; } .au-seg button { padding: 8px 10px; } }

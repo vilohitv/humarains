@@ -1,0 +1,765 @@
+/* ════════════════════════════════════════════════════════════════
+   Humarains — Premium surface layer
+   Every page the Agent opens (leads, email, WhatsApp, calendar,
+   automations, knowledge, settings, billing, performance, outcomes,
+   intelligence, approvals, account …) is restyled here in one place.
+
+   Loaded LAST. Scoped to body.agent-ui so the public site, login and
+   signup are untouched. No markup or behaviour changes — presentation only.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Tokens ─────────────────────────────────────────────────────── */
+body.agent-ui {
+  --pm-font: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI Variable Display", "Segoe UI",
+             "Inter", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --pm-ink: #0B252A;
+  --pm-ink-2: rgba(11, 37, 42, .66);
+  --pm-ink-3: rgba(11, 37, 42, .46);
+  --pm-canvas: #F5F5F7;
+  --pm-card: #FFFFFF;
+  --pm-fill: rgba(11, 37, 42, .045);
+  --pm-fill-2: rgba(11, 37, 42, .08);
+  --pm-hair: rgba(11, 37, 42, .075);
+  --pm-ring: rgba(11, 37, 42, .14);
+  --pm-green: #1E8A4C;
+  --pm-green-bg: rgba(48, 178, 96, .13);
+  --pm-blue: #0A63C9;
+  --pm-blue-bg: rgba(10, 99, 201, .09);
+  --pm-amber: #A15C00;
+  --pm-amber-bg: rgba(255, 159, 10, .15);
+  --pm-red: #C0392B;
+  --pm-red-bg: rgba(192, 57, 43, .09);
+  --pm-shadow-card: 0 1px 2px rgba(11, 37, 42, .04), 0 10px 30px -14px rgba(11, 37, 42, .12);
+  --pm-shadow-lift: 0 2px 4px rgba(11, 37, 42, .05), 0 22px 44px -18px rgba(11, 37, 42, .22);
+  --pm-ease: cubic-bezier(.22, .72, .2, 1);
+  --pm-r-card: 22px;
+  --pm-r-field: 13px;
+
+  /* Re-point the legacy tokens so every inline style in the app follows */
+  --mono: var(--pm-font);
+  --border: var(--pm-hair);
+  --border2: rgba(11, 37, 42, .11);
+  --border3: rgba(11, 37, 42, .2);
+  --r: 12px;
+  --r2: 20px;
+  --text2: var(--pm-ink-2);
+  --text3: var(--pm-ink-3);
+}
+
+body.agent-ui .lc-main,
+body.agent-ui .lc-main button,
+body.agent-ui .lc-main input,
+body.agent-ui .lc-main select,
+body.agent-ui .lc-main textarea,
+body.agent-ui .lc-slideover,
+body.agent-ui .lc-slideover button,
+body.agent-ui .lc-slideover input,
+body.agent-ui .lc-slideover textarea,
+body.agent-ui .wf-slideover,
+body.agent-ui .lc-modal,
+body.agent-ui .wf-modal {
+  font-family: var(--pm-font) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "tnum" 1, "cv11" 1, "ss01" 1;
+}
+
+/* ── The sheet ──────────────────────────────────────────────────── */
+.ag-scrim {
+  background: rgba(20, 28, 30, .30) !important;
+  backdrop-filter: blur(22px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.3) !important;
+}
+
+body.agent-ui .lc-root .lc-main {
+  top: 22px !important; bottom: 22px !important;
+  width: min(1440px, calc(100vw - 44px)) !important;
+  border-radius: 30px !important;
+  background: var(--pm-canvas) !important;
+  box-shadow:
+    0 0 0 .5px rgba(11, 37, 42, .10),
+    0 2px 6px rgba(11, 37, 42, .06),
+    0 32px 70px -18px rgba(11, 37, 42, .34),
+    0 90px 180px -50px rgba(11, 37, 42, .34) !important;
+}
+
+/* ── Top bar (frosted) ──────────────────────────────────────────── */
+body.agent-ui .lc-topbar {
+  height: 68px !important;
+  padding: 0 24px 0 16px !important;
+  gap: 8px !important;
+  background: rgba(255, 255, 255, .78) !important;
+  backdrop-filter: saturate(180%) blur(28px);
+  -webkit-backdrop-filter: saturate(180%) blur(28px);
+  border-bottom: 1px solid var(--pm-hair) !important;
+  position: relative; z-index: 6;
+}
+body.agent-ui .lc-topbar-title {
+  font-size: 17px !important; font-weight: 650 !important; letter-spacing: -.02em !important;
+  color: var(--pm-ink) !important; flex: 1; min-width: 0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.agent-ui .ag-close {
+  height: 38px; padding: 0 16px 0 11px; margin-right: 10px; gap: 6px;
+  background: var(--pm-fill) !important; border-radius: 999px;
+  font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+  transition: background .25s var(--pm-ease), transform .25s var(--pm-ease);
+}
+body.agent-ui .ag-close:hover { background: var(--pm-fill-2) !important; }
+body.agent-ui .ag-close:active { transform: scale(.96); }
+body.agent-ui .ag-close svg { width: 16px; height: 16px; }
+
+body.agent-ui .lc-mode-trigger {
+  height: 38px; padding: 0 14px !important; gap: 8px;
+  background: var(--pm-fill) !important; border: 0 !important; border-radius: 999px !important;
+  font-size: 13.5px !important; font-weight: 600 !important; color: var(--pm-ink) !important;
+  transition: background .25s var(--pm-ease);
+}
+body.agent-ui .lc-mode-trigger:hover { background: var(--pm-fill-2) !important; }
+body.agent-ui .lc-mode-dot, body.agent-ui .lc-mode-option-dot { width: 8px; height: 8px; border-radius: 50%; }
+body.agent-ui .lc-mode-dot.autonomous, body.agent-ui .lc-mode-option-dot.autonomous {
+  background: #30B260 !important; box-shadow: 0 0 0 3px rgba(48, 178, 96, .18);
+}
+body.agent-ui .lc-mode-menu {
+  border: 0 !important; border-radius: 20px !important; padding: 8px !important; min-width: 300px;
+  background: rgba(255, 255, 255, .86) !important;
+  backdrop-filter: saturate(180%) blur(30px); -webkit-backdrop-filter: saturate(180%) blur(30px);
+  box-shadow: 0 0 0 .5px rgba(11, 37, 42, .1), 0 24px 60px -12px rgba(11, 37, 42, .28) !important;
+}
+body.agent-ui .lc-mode-menu-header { font-size: 12px !important; letter-spacing: .02em !important; text-transform: none !important; color: var(--pm-ink-3) !important; padding: 8px 12px 6px !important; }
+body.agent-ui .lc-mode-option { border-radius: 14px !important; padding: 12px !important; transition: background .2s; }
+body.agent-ui .lc-mode-option:hover, body.agent-ui .lc-mode-option.active { background: var(--pm-fill) !important; }
+body.agent-ui .lc-mode-option-title { font-size: 14px !important; font-weight: 600 !important; }
+body.agent-ui .lc-mode-option-desc { font-size: 12.5px !important; color: var(--pm-ink-2) !important; line-height: 1.4; }
+
+/* ── Content area: breathing room + uses the width ──────────────── */
+body.agent-ui .lc-content {
+  padding: 40px clamp(24px, 4.4vw, 72px) 72px !important;
+  background: var(--pm-canvas) !important;
+  scroll-behavior: smooth;
+}
+body.agent-ui .lc-view { max-width: 1260px; margin-left: auto; margin-right: auto; }
+body.agent-ui .lc-content::-webkit-scrollbar { width: 14px; }
+body.agent-ui .lc-content::-webkit-scrollbar-track { background: transparent; }
+body.agent-ui .lc-content::-webkit-scrollbar-thumb {
+  background: rgba(11, 37, 42, .16) !important; border-radius: 999px; border: 4px solid transparent; background-clip: padding-box;
+}
+body.agent-ui .lc-content::-webkit-scrollbar-thumb:hover { background: rgba(11, 37, 42, .28) !important; background-clip: padding-box; border: 4px solid transparent; }
+
+/* Entrance: content glides in, softly staggered */
+@keyframes pm-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+body.ag-surface-open .lc-view.active > *,
+body.ag-surface-open .lc-view.active .perf-wrap > *,
+body.ag-surface-open .lc-view.active .intel-wrap > * { animation: pm-rise .7s var(--pm-ease) both; }
+body.ag-surface-open .lc-view.active > *:nth-child(2),
+body.ag-surface-open .lc-view.active .perf-wrap > *:nth-child(2),
+body.ag-surface-open .lc-view.active .intel-wrap > *:nth-child(2) { animation-delay: .05s; }
+body.ag-surface-open .lc-view.active > *:nth-child(3),
+body.ag-surface-open .lc-view.active .perf-wrap > *:nth-child(3),
+body.ag-surface-open .lc-view.active .intel-wrap > *:nth-child(3) { animation-delay: .1s; }
+body.ag-surface-open .lc-view.active > *:nth-child(4),
+body.ag-surface-open .lc-view.active .perf-wrap > *:nth-child(4),
+body.ag-surface-open .lc-view.active .intel-wrap > *:nth-child(4) { animation-delay: .15s; }
+body.ag-surface-open .lc-view.active > *:nth-child(n+5),
+body.ag-surface-open .lc-view.active .perf-wrap > *:nth-child(n+5),
+body.ag-surface-open .lc-view.active .intel-wrap > *:nth-child(n+5) { animation-delay: .2s; }
+
+/* ── Cards ──────────────────────────────────────────────────────── */
+body.agent-ui .lc-settings-section,
+body.agent-ui .lc-chart-card,
+body.agent-ui .lc-leads-table,
+body.agent-ui .lc-connect-card,
+body.agent-ui .lc-consent-card,
+body.agent-ui .lc-human-card,
+body.agent-ui .lc-panel,
+body.agent-ui .lc-quote-box,
+body.agent-ui .perf-stat,
+body.agent-ui .perf-funnel,
+body.agent-ui .intel-card,
+body.agent-ui .intel-kpi,
+body.agent-ui .lc-stat-card,
+body.agent-ui .lc-kpi-card,
+body.agent-ui .wf-card,
+body.agent-ui .wf-template-card,
+body.agent-ui .out-win-row,
+body.agent-ui .out-log-row {
+  background: var(--pm-card) !important;
+  border: 1px solid var(--pm-hair) !important;
+  border-radius: var(--pm-r-card) !important;
+  box-shadow: var(--pm-shadow-card) !important;
+}
+body.agent-ui .lc-settings-section { max-width: none !important; padding: 34px 38px !important; margin-bottom: 24px !important; }
+body.agent-ui .lc-chart-card { padding: 28px 30px !important; }
+body.agent-ui .lc-consent-card, body.agent-ui .lc-human-card { margin-bottom: 20px !important; overflow: hidden; }
+body.agent-ui .lc-connect-card { padding: 32px 34px !important; }
+
+body.agent-ui .lc-stat-card:hover, body.agent-ui .lc-kpi-card:hover, body.agent-ui .lc-connect-card:hover,
+body.agent-ui .wf-card:hover, body.agent-ui .wf-template-card:hover,
+body.agent-ui .lc-consent-card:hover, body.agent-ui .lc-human-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--pm-hair) !important;
+  box-shadow: var(--pm-shadow-lift) !important;
+}
+body.agent-ui .lc-stat-card, body.agent-ui .lc-kpi-card, body.agent-ui .lc-connect-card,
+body.agent-ui .wf-card, body.agent-ui .wf-template-card, body.agent-ui .lc-consent-card, body.agent-ui .lc-human-card {
+  transition: transform .45s var(--pm-ease), box-shadow .45s var(--pm-ease) !important;
+}
+
+/* Settings typography */
+body.agent-ui .lc-settings-title { font-size: 21px !important; font-weight: 700 !important; letter-spacing: -.024em !important; color: var(--pm-ink); margin-bottom: 6px !important; }
+body.agent-ui .lc-settings-sub { font-size: 14.5px !important; line-height: 1.5 !important; color: var(--pm-ink-2) !important; margin-bottom: 28px !important; max-width: 70ch; }
+body.agent-ui .lc-settings-title small, body.agent-ui .lc-settings-title span { font-size: 12.5px; font-weight: 600; letter-spacing: 0; }
+body.agent-ui .lc-settings-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)) !important; gap: 4px 28px !important; }
+body.agent-ui .lc-settings-grid > .lc-field { margin-bottom: 14px !important; }
+body.agent-ui .lc-section-title, body.agent-ui .lc-form-title {
+  font-size: 22px !important; font-weight: 700 !important; letter-spacing: -.024em !important; text-transform: none !important; color: var(--pm-ink) !important;
+}
+body.agent-ui .lc-section-sub { font-size: 14.5px !important; color: var(--pm-ink-2) !important; }
+
+/* ── Forms ──────────────────────────────────────────────────────── */
+body.agent-ui .lc-field { margin-bottom: 20px; }
+body.agent-ui .lc-label {
+  display: block; margin-bottom: 8px !important;
+  font-family: var(--pm-font) !important; font-size: 13px !important; font-weight: 600 !important;
+  letter-spacing: -.005em !important; text-transform: none !important; color: var(--pm-ink) !important;
+}
+body.agent-ui .lc-input,
+body.agent-ui .lc-select,
+body.agent-ui .lc-textarea,
+body.agent-ui .lc-view input[type="text"],
+body.agent-ui .lc-view input[type="email"],
+body.agent-ui .lc-view input[type="password"],
+body.agent-ui .lc-view input[type="number"],
+body.agent-ui .lc-view input[type="url"],
+body.agent-ui .lc-view input[type="tel"],
+body.agent-ui .lc-view input[type="search"],
+body.agent-ui .lc-view select,
+body.agent-ui .lc-view textarea,
+body.agent-ui .lc-slideover input:not([type="checkbox"]):not([type="radio"]),
+body.agent-ui .lc-slideover textarea,
+body.agent-ui .lc-slideover select,
+body.agent-ui .wf-slideover input:not([type="checkbox"]):not([type="radio"]),
+body.agent-ui .wf-slideover textarea,
+body.agent-ui .wf-slideover select,
+body.agent-ui .wf-modal input:not([type="checkbox"]):not([type="radio"]),
+body.agent-ui .wf-modal textarea,
+body.agent-ui .wf-modal select {
+  width: 100%;
+  min-height: 48px; padding: 12px 16px !important;
+  font-size: 15px !important; line-height: 1.4; letter-spacing: -.005em;
+  color: var(--pm-ink) !important;
+  background-color: var(--pm-canvas) !important;
+  border: 1.5px solid transparent !important; border-radius: var(--pm-r-field) !important;
+  box-shadow: none !important; outline: 0 !important;
+  transition: background-color .25s var(--pm-ease), border-color .25s var(--pm-ease), box-shadow .25s var(--pm-ease) !important;
+}
+body.agent-ui .lc-view textarea, body.agent-ui .lc-textarea { min-height: 120px; line-height: 1.55; resize: vertical; }
+body.agent-ui .lc-input::placeholder, body.agent-ui .lc-view input::placeholder, body.agent-ui .lc-view textarea::placeholder,
+body.agent-ui .lc-slideover textarea::placeholder, body.agent-ui .wf-slideover input::placeholder { color: var(--pm-ink-3) !important; opacity: 1; }
+body.agent-ui .lc-input:hover, body.agent-ui .lc-select:hover, body.agent-ui .lc-view input:hover:not([type="checkbox"]):not([type="radio"]),
+body.agent-ui .lc-view select:hover, body.agent-ui .lc-view textarea:hover { background-color: #EFEFF2 !important; }
+body.agent-ui .lc-input:focus, body.agent-ui .lc-select:focus, body.agent-ui .lc-textarea:focus,
+body.agent-ui .lc-view input:focus:not([type="checkbox"]):not([type="radio"]), body.agent-ui .lc-view select:focus, body.agent-ui .lc-view textarea:focus,
+body.agent-ui .lc-slideover textarea:focus, body.agent-ui .lc-slideover input:focus,
+body.agent-ui .wf-slideover input:focus, body.agent-ui .wf-slideover textarea:focus, body.agent-ui .wf-slideover select:focus,
+body.agent-ui .wf-modal input:focus, body.agent-ui .wf-modal textarea:focus {
+  background-color: #fff !important; border-color: rgba(11, 37, 42, .72) !important;
+  box-shadow: 0 0 0 5px rgba(11, 37, 42, .09) !important;
+}
+body.agent-ui .lc-select, body.agent-ui .lc-view select, body.agent-ui .wf-slideover select, body.agent-ui .wf-modal select {
+  -webkit-appearance: none; appearance: none; padding-right: 44px !important; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%230B252A' stroke-opacity='.55' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important; background-position: right 18px center !important;
+}
+body.agent-ui .lc-view input[type="checkbox"], body.agent-ui .bd-checkbox { accent-color: var(--pm-ink); width: 18px; height: 18px; }
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+body.agent-ui .lc-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 24px !important;
+  font-size: 15px !important; font-weight: 600 !important; letter-spacing: -.012em !important; line-height: 1;
+  border-radius: 999px !important; border: 0 !important; cursor: pointer; text-transform: none !important;
+  transition: background-color .25s var(--pm-ease), transform .25s var(--pm-ease), box-shadow .25s var(--pm-ease), opacity .2s !important;
+}
+body.agent-ui .lc-btn-sm { min-height: 36px; padding: 0 16px !important; font-size: 13.5px !important; }
+body.agent-ui .lc-btn:active:not([disabled]) { transform: scale(.97); }
+body.agent-ui .lc-btn[disabled] { opacity: .45 !important; cursor: default; }
+body.agent-ui .lc-btn-primary {
+  background: var(--pm-ink) !important; color: #fff !important;
+  box-shadow: 0 1px 2px rgba(11, 37, 42, .2), 0 8px 20px -8px rgba(11, 37, 42, .5) !important;
+}
+body.agent-ui .lc-btn-primary:hover:not([disabled]) { background: #17363C !important; box-shadow: 0 1px 2px rgba(11, 37, 42, .2), 0 12px 26px -8px rgba(11, 37, 42, .55) !important; }
+body.agent-ui .lc-btn-ghost, body.agent-ui .lc-btn-dismiss {
+  background: var(--pm-fill) !important; color: var(--pm-ink) !important; box-shadow: none !important;
+}
+body.agent-ui .lc-btn-ghost:hover:not([disabled]), body.agent-ui .lc-btn-dismiss:hover:not([disabled]) { background: var(--pm-fill-2) !important; }
+body.agent-ui .lc-btn-approve, body.agent-ui .lc-btn-success { background: var(--pm-green) !important; color: #fff !important; box-shadow: 0 8px 18px -8px rgba(30, 138, 76, .6) !important; }
+body.agent-ui .lc-btn-approve:hover:not([disabled]), body.agent-ui .lc-btn-success:hover:not([disabled]) { background: #197a43 !important; }
+body.agent-ui .lc-btn-danger { background: var(--pm-red-bg) !important; color: var(--pm-red) !important; box-shadow: none !important; }
+body.agent-ui .lc-btn-danger:hover:not([disabled]) { background: rgba(192, 57, 43, .16) !important; }
+body.agent-ui .lc-btn:focus-visible, body.agent-ui .lc-filter-btn:focus-visible, body.agent-ui .wf-tab:focus-visible {
+  outline: 3px solid rgba(11, 37, 42, .28) !important; outline-offset: 2px;
+}
+
+/* ── Segmented controls (filters, ranges, tabs) ─────────────────── */
+body.agent-ui .lc-filter-row, body.agent-ui .perf-range, body.agent-ui .wf-tabs {
+  display: inline-flex !important; align-items: center; gap: 2px !important; padding: 3px !important;
+  background: rgba(11, 37, 42, .065) !important; border: 0 !important; border-radius: 12px !important; width: auto;
+}
+body.agent-ui .lc-filter-btn, body.agent-ui .perf-range button, body.agent-ui .wf-tab, body.agent-ui .wa-filter-btn, body.agent-ui .esg-tab {
+  min-height: 32px; padding: 0 16px !important; border: 0 !important; border-radius: 9px !important; background: transparent !important;
+  font-size: 13px !important; font-weight: 600 !important; letter-spacing: -.005em !important; text-transform: none !important;
+  color: var(--pm-ink-2) !important; cursor: pointer;
+  transition: background-color .25s var(--pm-ease), color .25s var(--pm-ease), box-shadow .25s var(--pm-ease) !important;
+}
+body.agent-ui .lc-filter-btn:hover, body.agent-ui .perf-range button:hover, body.agent-ui .wf-tab:hover { color: var(--pm-ink) !important; }
+body.agent-ui .lc-filter-btn.active, body.agent-ui .perf-range button.active, body.agent-ui .wf-tab.active, body.agent-ui .wa-filter-btn.active, body.agent-ui .esg-tab.active {
+  background: #fff !important; color: var(--pm-ink) !important; box-shadow: 0 1px 2px rgba(11, 37, 42, .12), 0 3px 8px rgba(11, 37, 42, .08) !important;
+}
+body.agent-ui .lc-leads-header { align-items: center; margin: 8px 0 18px !important; }
+body.agent-ui .lc-leads-header > * { font-size: 22px; font-weight: 700; letter-spacing: -.024em; color: var(--pm-ink); }
+body.agent-ui .lc-leads-header .lc-filter-row, body.agent-ui .lc-leads-header .lc-filter-btn { font-size: 13px; }
+
+/* ── Stats ──────────────────────────────────────────────────────── */
+body.agent-ui .lc-stats-bar, body.agent-ui .perf-stats, body.agent-ui .intel-kpis {
+  display: grid !important; gap: 20px !important; max-width: none !important; margin-bottom: 24px !important;
+}
+body.agent-ui .lc-stat-card, body.agent-ui .perf-stat, body.agent-ui .intel-kpi, body.agent-ui .lc-kpi-card { padding: 26px 28px 24px !important; }
+body.agent-ui .lc-stat-value, body.agent-ui .perf-stat-value, body.agent-ui .intel-kpi-value {
+  font-family: var(--pm-font) !important; font-size: 42px !important; line-height: 1.05 !important; font-weight: 700 !important;
+  letter-spacing: -.04em !important; color: var(--pm-ink); font-variant-numeric: tabular-nums;
+}
+body.agent-ui .lc-stat-label, body.agent-ui .perf-stat-label, body.agent-ui .intel-kpi-label {
+  font-family: var(--pm-font) !important; font-size: 13.5px !important; font-weight: 600 !important; letter-spacing: -.005em !important;
+  text-transform: none !important; color: var(--pm-ink-2) !important;
+}
+body.agent-ui .lc-stat-card .lc-stat-value { margin-bottom: 6px; }
+body.agent-ui .perf-stat-label, body.agent-ui .intel-kpi-label { margin-bottom: 14px; }
+body.agent-ui .perf-stat-sub, body.agent-ui .intel-kpi-sub { font-size: 13px !important; color: var(--pm-ink-3) !important; margin-top: 8px; letter-spacing: 0 !important; }
+body.agent-ui .lc-charts-row { gap: 20px !important; margin-bottom: 28px !important; }
+body.agent-ui .lc-chart-title, body.agent-ui .perf-section-title, body.agent-ui .intel-card-title {
+  font-size: 17px !important; font-weight: 700 !important; letter-spacing: -.02em !important; text-transform: none !important; color: var(--pm-ink) !important;
+}
+body.agent-ui .lc-chart-sub, body.agent-ui .intel-card-sub { font-size: 13.5px !important; color: var(--pm-ink-3) !important; letter-spacing: 0 !important; line-height: 1.5; }
+body.agent-ui .lc-legend-label { font-size: 14px !important; }
+body.agent-ui .lc-legend-count { font-variant-numeric: tabular-nums; font-weight: 600; }
+body.agent-ui .lc-bar-fill { border-radius: 8px 8px 3px 3px !important; }
+body.agent-ui .lc-bar-label { font-size: 11.5px !important; color: var(--pm-ink-3) !important; }
+
+@media (min-width: 1025px) {
+  body.agent-ui .lc-stats-bar, body.agent-ui .perf-stats, body.agent-ui .intel-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  body.agent-ui .lc-charts-row { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) !important; }
+}
+@media (max-width: 1024px) {
+  body.agent-ui .lc-stats-bar, body.agent-ui .perf-stats, body.agent-ui .intel-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+/* Page headers inside views (Performance, Outcomes, Intelligence, Automations, Knowledge) */
+body.agent-ui .perf-wrap, body.agent-ui .intel-wrap { max-width: none !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+body.agent-ui .perf-head, body.agent-ui .intel-head, body.agent-ui .wf-toolbar { align-items: flex-end !important; margin-bottom: 32px !important; gap: 20px; }
+body.agent-ui .perf-head h2, body.agent-ui .intel-head h2, body.agent-ui .wf-toolbar-title {
+  font-size: 40px !important; line-height: 1.05 !important; font-weight: 750 !important; letter-spacing: -.04em !important; color: var(--pm-ink) !important;
+}
+body.agent-ui .intel-head-sub, body.agent-ui .wf-toolbar-sub { font-size: 16px !important; line-height: 1.5; color: var(--pm-ink-2) !important; margin-top: 10px !important; max-width: 62ch; }
+
+/* ── Leads table ────────────────────────────────────────────────── */
+body.agent-ui .lc-leads-table { max-width: none !important; overflow: hidden; }
+body.agent-ui .lc-table-head { background: transparent !important; padding: 16px 30px !important; border-bottom: 1px solid var(--pm-hair) !important; }
+body.agent-ui .lc-th {
+  font-family: var(--pm-font) !important; font-size: 12.5px !important; font-weight: 600 !important; letter-spacing: 0 !important;
+  text-transform: none !important; color: var(--pm-ink-3) !important;
+}
+body.agent-ui .lc-lead-row { padding: 20px 30px !important; border-bottom: 1px solid var(--pm-hair) !important; transition: background-color .25s var(--pm-ease) !important; }
+body.agent-ui .lc-lead-row:hover { background: #FAFAFC !important; }
+body.agent-ui .lc-lead-name { font-size: 15.5px !important; font-weight: 650 !important; letter-spacing: -.012em !important; color: var(--pm-ink) !important; }
+body.agent-ui .lc-lead-email, body.agent-ui .lc-lead-meta { font-size: 13.5px !important; color: var(--pm-ink-3) !important; margin-top: 3px; }
+body.agent-ui .lc-td { font-size: 14.5px !important; color: var(--pm-ink-2) !important; font-variant-numeric: tabular-nums; }
+@media (min-width: 1025px) {
+  body.agent-ui .lc-table-head, body.agent-ui .lc-lead-row { grid-template-columns: 2.3fr 1.1fr 1fr 1.1fr 1.3fr 92px !important; column-gap: 16px; }
+}
+body.agent-ui .lc-status {
+  display: inline-flex !important; align-items: center; gap: 7px; padding: 5px 12px !important; border-radius: 999px;
+  font-family: var(--pm-font) !important; font-size: 12.5px !important; font-weight: 650 !important; letter-spacing: -.003em !important; text-transform: none !important;
+  background: var(--pm-fill); color: var(--pm-ink-2) !important; width: fit-content;
+}
+body.agent-ui .lc-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+body.agent-ui .lc-status.new { background: var(--pm-blue-bg); color: var(--pm-blue) !important; }
+body.agent-ui .lc-status.processing { background: var(--pm-fill); color: var(--pm-ink-2) !important; }
+body.agent-ui .lc-status.replied { background: var(--pm-green-bg); color: var(--pm-green) !important; }
+body.agent-ui .lc-status.pending_followup, body.agent-ui .lc-status.pending { background: var(--pm-amber-bg); color: var(--pm-amber) !important; }
+body.agent-ui .lc-status.closed { background: var(--pm-fill); color: var(--pm-ink-3) !important; }
+body.agent-ui .lc-urgency { font-family: var(--pm-font) !important; font-size: 13.5px !important; font-weight: 650 !important; letter-spacing: 0 !important; text-transform: capitalize !important; }
+body.agent-ui .lc-urgency.high, body.agent-ui .lc-urgency.emergency { color: var(--pm-red) !important; }
+body.agent-ui .lc-urgency.medium { color: var(--pm-amber) !important; }
+body.agent-ui .lc-urgency.low { color: var(--pm-ink-3) !important; }
+body.agent-ui .lc-table-actions .lc-btn { min-height: 34px; }
+
+/* ── Empty / loading ────────────────────────────────────────────── */
+body.agent-ui .lc-empty { padding: 88px 24px !important; text-align: center; }
+body.agent-ui .lc-empty-icon { width: 64px !important; height: 64px !important; color: rgba(11, 37, 42, .22) !important; margin: 0 auto 22px !important; display: block; }
+body.agent-ui .lc-empty-title { font-size: 22px !important; font-weight: 700 !important; letter-spacing: -.024em !important; color: var(--pm-ink) !important; margin-bottom: 8px; }
+body.agent-ui .lc-empty-text { font-size: 15.5px !important; line-height: 1.55; color: var(--pm-ink-2) !important; max-width: 400px; margin: 0 auto; }
+
+/* ── Connect cards (WhatsApp / Calendar / Email) ────────────────── */
+body.agent-ui .lc-connect-title { font-size: 22px !important; font-weight: 700 !important; letter-spacing: -.024em !important; }
+body.agent-ui .lc-connect-sub { font-size: 15px !important; color: var(--pm-ink-2) !important; line-height: 1.55; }
+body.agent-ui .lc-connect-icon { border-radius: 16px !important; background: var(--pm-canvas) !important; }
+
+/* ── Approvals & human review ───────────────────────────────────── */
+body.agent-ui .lc-consent-header { margin-bottom: 28px !important; }
+body.agent-ui .lc-consent-card-head, body.agent-ui .lc-human-card-head { padding: 22px 28px !important; border-bottom: 1px solid var(--pm-hair) !important; background: transparent !important; }
+body.agent-ui .lc-consent-body { padding: 24px 28px 28px !important; display: grid; gap: 16px; }
+body.agent-ui .lc-consent-from { font-size: 17px !important; font-weight: 700 !important; letter-spacing: -.02em !important; color: var(--pm-ink) !important; }
+body.agent-ui .lc-consent-subject { font-size: 13.5px !important; color: var(--pm-ink-3) !important; margin-top: 3px; }
+body.agent-ui .lc-consent-original, body.agent-ui .lc-consent-draft {
+  background: var(--pm-canvas) !important; border: 0 !important; border-radius: 16px !important; padding: 18px 20px !important;
+}
+body.agent-ui .lc-consent-draft { background: rgba(48, 178, 96, .08) !important; }
+body.agent-ui .lc-consent-original-label, body.agent-ui .lc-consent-draft-label, body.agent-ui .lc-human-compose-label {
+  font-family: var(--pm-font) !important; font-size: 12.5px !important; font-weight: 650 !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--pm-ink-3) !important; margin-bottom: 8px;
+}
+body.agent-ui .lc-consent-draft-label { color: var(--pm-green) !important; }
+body.agent-ui .lc-consent-original-text, body.agent-ui .lc-consent-draft-text { font-size: 15px !important; line-height: 1.6 !important; color: var(--pm-ink) !important; }
+body.agent-ui .lc-consent-draft-subject { font-size: 13.5px !important; font-weight: 600; color: var(--pm-ink-2) !important; margin-bottom: 8px; }
+body.agent-ui .lc-human-escalation-reason { border-radius: 14px !important; background: var(--pm-amber-bg) !important; color: var(--pm-amber) !important; border: 0 !important; padding: 12px 16px !important; font-size: 13.5px !important; }
+body.agent-ui .lc-human-send-btn { border-radius: 999px !important; }
+
+/* ── Plans & billing ────────────────────────────────────────────── */
+body.agent-ui .lc-plan-cards-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; max-width: none !important; gap: 22px !important; padding-top: 18px !important; margin-bottom: 28px;
+}
+body.agent-ui .lc-plan-card {
+  padding: 36px 32px 32px !important; border-radius: 28px !important; background: #fff !important; border: 1px solid var(--pm-hair) !important;
+  box-shadow: var(--pm-shadow-card) !important; transition: transform .5s var(--pm-ease), box-shadow .5s var(--pm-ease) !important;
+}
+body.agent-ui .lc-plan-card:hover { transform: translateY(-4px) !important; box-shadow: var(--pm-shadow-lift) !important; border-color: var(--pm-hair) !important; }
+body.agent-ui .lc-plan-card--featured, body.agent-ui .lc-plan-card.current {
+  box-shadow: 0 0 0 2px var(--pm-ink), 0 30px 60px -22px rgba(11, 37, 42, .38) !important; background: #fff !important;
+}
+body.agent-ui .lc-plan-tier { font-family: var(--pm-font) !important; font-size: 15px !important; font-weight: 650 !important; letter-spacing: -.01em !important; text-transform: none !important; color: var(--pm-ink-2) !important; }
+body.agent-ui .lc-plan-price { margin: 14px 0 6px !important; align-items: baseline; }
+body.agent-ui .lc-plan-price-amount { font-family: var(--pm-font) !important; font-size: 52px !important; line-height: 1 !important; font-weight: 750 !important; letter-spacing: -.045em !important; color: var(--pm-ink) !important; }
+body.agent-ui .lc-plan-price-period { font-family: var(--pm-font) !important; font-size: 16px !important; font-weight: 500; color: var(--pm-ink-3) !important; margin-left: 4px; }
+body.agent-ui .lc-plan-limit { font-size: 14.5px !important; color: var(--pm-ink-2) !important; }
+body.agent-ui .lc-plan-features { margin-top: 24px !important; padding-top: 24px !important; border-top: 1px solid var(--pm-hair) !important; }
+body.agent-ui .lc-plan-features li { font-size: 14.5px !important; line-height: 1.5 !important; color: var(--pm-ink-2) !important; gap: 12px; margin-bottom: 14px; }
+body.agent-ui .lc-plan-features svg { color: var(--pm-green) !important; opacity: 1 !important; }
+body.agent-ui .lc-plan-card .lc-btn { width: 100%; min-height: 48px; margin-top: auto; }
+body.agent-ui .lc-plan-badge {
+  top: -13px !important; padding: 6px 14px !important; border-radius: 999px !important; background: var(--pm-ink) !important; color: #fff !important;
+  font-family: var(--pm-font) !important; font-size: 12px !important; font-weight: 650 !important; letter-spacing: .01em !important; text-transform: none !important;
+  box-shadow: 0 8px 18px -6px rgba(11, 37, 42, .5);
+}
+body.agent-ui .lc-plan-features li.is-off { color: var(--pm-ink-3) !important; opacity: .8; }
+body.agent-ui #view-payment > div { max-width: none !important; }
+
+/* ── Workflows (Automations) ────────────────────────────────────── */
+body.agent-ui .wf-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)) !important; gap: 22px !important; }
+body.agent-ui .wf-card { padding: 26px 28px !important; }
+body.agent-ui .wf-card-name { font-size: 18px !important; font-weight: 700 !important; letter-spacing: -.02em !important; color: var(--pm-ink) !important; }
+body.agent-ui .wf-card-trigger { font-size: 13.5px !important; color: var(--pm-ink-3) !important; margin-top: 4px; }
+body.agent-ui .wf-card-stats { font-size: 13.5px !important; color: var(--pm-ink-2) !important; margin: 20px 0 !important; }
+body.agent-ui .wf-card-stats b { font-size: 18px; font-weight: 700; letter-spacing: -.02em; color: var(--pm-ink); margin-right: 3px; }
+body.agent-ui .wf-pill {
+  padding: 5px 12px !important; border-radius: 999px !important; font-size: 12.5px !important; font-weight: 650 !important; text-transform: capitalize !important; letter-spacing: 0 !important;
+  background: var(--pm-fill) !important; color: var(--pm-ink-2) !important; border: 0 !important;
+}
+body.agent-ui .wf-pill.active { background: var(--pm-green-bg) !important; color: var(--pm-green) !important; }
+body.agent-ui .wf-pill.paused { background: var(--pm-amber-bg) !important; color: var(--pm-amber) !important; }
+body.agent-ui .wf-templates-row { gap: 16px !important; }
+body.agent-ui .wf-template-card { padding: 22px 24px !important; cursor: pointer; }
+body.agent-ui .wf-template-name { font-size: 16px !important; font-weight: 700 !important; letter-spacing: -.016em !important; }
+body.agent-ui .wf-template-desc { font-size: 13.5px !important; color: var(--pm-ink-2) !important; line-height: 1.5; margin-top: 4px; }
+body.agent-ui .wf-add-btn { border-radius: 999px !important; }
+body.agent-ui .wf-step-card, body.agent-ui .wf-trigger-card { border-radius: 20px !important; border: 1px solid var(--pm-hair) !important; box-shadow: var(--pm-shadow-card) !important; background: #fff !important; }
+body.agent-ui .wf-connector { opacity: .5; }
+
+/* ── Performance, Outcomes, Intelligence ────────────────────────── */
+body.agent-ui .perf-funnel { padding: 30px 32px !important; margin-bottom: 24px !important; }
+body.agent-ui .perf-funnel-bar-track { height: 12px !important; border-radius: 999px !important; background: var(--pm-fill) !important; }
+body.agent-ui .perf-funnel-bar { border-radius: 999px !important; background: linear-gradient(90deg, #17363C, var(--pm-ink)) !important; }
+body.agent-ui .perf-funnel-label, body.agent-ui .perf-funnel-count { font-size: 14.5px !important; font-weight: 600; }
+body.agent-ui .perf-funnel-count { font-variant-numeric: tabular-nums; }
+body.agent-ui .perf-source-table, body.agent-ui .intel-table { width: 100%; border-collapse: collapse; }
+body.agent-ui .perf-source-table th, body.agent-ui .intel-table th {
+  font-family: var(--pm-font) !important; font-size: 12.5px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--pm-ink-3) !important; text-align: left; padding: 12px 8px !important;
+}
+body.agent-ui .perf-source-table td, body.agent-ui .intel-table td { padding: 16px 8px !important; font-size: 14.5px !important; border-top: 1px solid var(--pm-hair) !important; font-variant-numeric: tabular-nums; }
+body.agent-ui .perf-pill { padding: 4px 12px !important; border-radius: 999px !important; background: var(--pm-fill) !important; border: 0 !important; font-size: 13px !important; font-weight: 600; text-transform: none !important; letter-spacing: 0 !important; }
+body.agent-ui .perf-note { font-size: 13.5px !important; line-height: 1.6; color: var(--pm-ink-3) !important; max-width: 80ch; padding: 6px 4px; }
+body.agent-ui .out-nudge { border-radius: 18px !important; background: var(--pm-amber-bg) !important; border: 0 !important; color: var(--pm-amber) !important; padding: 16px 20px !important; font-size: 14.5px !important; margin-bottom: 24px !important; }
+body.agent-ui .out-spark-bar { border-radius: 8px 8px 3px 3px !important; background: linear-gradient(180deg, #2B5A63, var(--pm-ink)) !important; }
+body.agent-ui .out-win-row, body.agent-ui .out-log-row { padding: 18px 22px !important; margin-bottom: 12px; }
+body.agent-ui .out-win-name { font-size: 15.5px !important; font-weight: 650 !important; }
+body.agent-ui .out-win-value { font-size: 17px !important; font-weight: 700 !important; letter-spacing: -.02em; color: var(--pm-green) !important; font-variant-numeric: tabular-nums; }
+
+body.agent-ui .intel-grid { gap: 24px !important; }
+body.agent-ui .intel-col { gap: 24px !important; }
+body.agent-ui .intel-card { padding: 30px 32px !important; }
+body.agent-ui .intel-lead-row { padding: 18px 10px !important; margin: 0 -10px; border-radius: 16px; border-bottom: 0 !important; transition: background-color .25s var(--pm-ease); }
+body.agent-ui .intel-lead-row:hover { background: var(--pm-canvas) !important; }
+body.agent-ui .intel-lead-name { font-size: 16px !important; font-weight: 650 !important; letter-spacing: -.014em !important; }
+body.agent-ui .intel-lead-sub { font-size: 13.5px !important; color: var(--pm-ink-3) !important; }
+body.agent-ui .intel-sig { padding: 4px 11px !important; border-radius: 999px !important; background: var(--pm-fill) !important; border: 0 !important; font-size: 12px !important; font-weight: 600 !important; color: var(--pm-ink-2) !important; }
+body.agent-ui .intel-sig.green { background: var(--pm-green-bg) !important; color: var(--pm-green) !important; }
+body.agent-ui .intel-sig.amber { background: var(--pm-amber-bg) !important; color: var(--pm-amber) !important; }
+body.agent-ui .intel-sig.red { background: var(--pm-red-bg) !important; color: var(--pm-red) !important; }
+body.agent-ui .intel-score-ring circle:first-child { stroke: rgba(11, 37, 42, .08); }
+body.agent-ui .intel-badge-label { font-family: var(--pm-font) !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: .04em !important; }
+body.agent-ui .intel-cat-bar-track { height: 10px !important; border-radius: 999px !important; background: var(--pm-fill) !important; }
+body.agent-ui .intel-cat-bar { border-radius: 999px !important; }
+body.agent-ui .intel-cold-row { padding: 16px 10px !important; margin: 0 -10px; border-radius: 16px; }
+
+/* ── Banners & alerts ───────────────────────────────────────────── */
+body.agent-ui #freeTrialBanner, body.agent-ui #freeLimitBanner, body.agent-ui .lc-banner {
+  border: 0 !important; border-radius: 18px !important; background: #fff !important; padding: 16px 22px !important;
+  font-size: 14.5px !important; box-shadow: var(--pm-shadow-card) !important; margin-bottom: 24px !important;
+}
+body.agent-ui .lc-alert-ok { background: var(--pm-green-bg) !important; color: var(--pm-green) !important; border: 0 !important; border-radius: 14px !important; }
+body.agent-ui .lc-alert-warn, body.agent-ui .lc-banner-warn { background: var(--pm-amber-bg) !important; color: var(--pm-amber) !important; border: 0 !important; border-radius: 14px !important; }
+body.agent-ui .lc-alert-err { background: var(--pm-red-bg) !important; color: var(--pm-red) !important; border: 0 !important; border-radius: 14px !important; }
+body.agent-ui .lc-toast { border-radius: 16px !important; box-shadow: 0 20px 50px -12px rgba(11, 37, 42, .4) !important; border: 0 !important; font-size: 14.5px !important; padding: 14px 20px !important; }
+
+/* ── Account page ───────────────────────────────────────────────── */
+body.agent-ui #view-account { max-width: 860px; }
+body.agent-ui #view-account .lc-settings-section, body.agent-ui #view-account > div { border-radius: var(--pm-r-card); }
+body.agent-ui .lc-user-avatar { background: var(--pm-ink) !important; color: #fff !important; border-radius: 50% !important; font-weight: 650; letter-spacing: 0; }
+
+/* ── Ingest (Add a lead) ────────────────────────────────────────── */
+body.agent-ui .lc-ingest-form { max-width: 860px !important; margin: 0 auto !important; padding: 36px 40px !important; }
+
+/* ── Lead panel, modals, workflow editor ────────────────────────── */
+body.agent-ui .lc-slideover-overlay, body.agent-ui .wf-slideover-overlay, body.agent-ui .lc-modal-overlay, body.agent-ui .wf-modal-overlay {
+  background: rgba(20, 28, 30, .32) !important; backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+body.agent-ui .lc-slideover, body.agent-ui .wf-slideover {
+  background: rgba(255, 255, 255, .94) !important; backdrop-filter: saturate(180%) blur(30px); -webkit-backdrop-filter: saturate(180%) blur(30px);
+  border: 0 !important; border-radius: 28px 0 0 28px !important; width: min(680px, 100vw) !important; max-width: 100vw;
+  box-shadow: none !important;
+}
+body.agent-ui .lc-slideover.open, body.agent-ui .wf-slideover.open { box-shadow: -30px 0 90px -20px rgba(11, 37, 42, .35) !important; }
+body.agent-ui .lc-slideover-header, body.agent-ui .wf-slideover-header { padding: 26px 32px !important; border-bottom: 1px solid var(--pm-hair) !important; background: transparent !important; }
+body.agent-ui .lc-slideover-body, body.agent-ui .wf-slideover-body { padding: 28px 32px !important; }
+body.agent-ui .lc-slideover-footer, body.agent-ui .wf-slideover-footer { padding: 20px 32px !important; border-top: 1px solid var(--pm-hair) !important; background: transparent !important; }
+body.agent-ui .lc-slideover-title, body.agent-ui .wf-slideover-title { font-size: 20px !important; font-weight: 700 !important; letter-spacing: -.024em !important; }
+body.agent-ui .lc-slideover-close { width: 34px; height: 34px; border-radius: 50% !important; background: var(--pm-fill) !important; border: 0 !important; }
+body.agent-ui .lc-slideover-close:hover { background: var(--pm-fill-2) !important; }
+body.agent-ui .lc-modal, body.agent-ui .wf-modal { border-radius: 28px !important; border: 0 !important; box-shadow: 0 40px 100px -20px rgba(11, 37, 42, .45) !important; padding: 8px; }
+body.agent-ui .lc-modal-title, body.agent-ui .wf-modal-title { font-size: 21px !important; font-weight: 700 !important; letter-spacing: -.024em !important; }
+body.agent-ui .lc-detail-label, body.agent-ui .lc-detail-key { font-family: var(--pm-font) !important; font-size: 12.5px !important; font-weight: 600 !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--pm-ink-3) !important; }
+body.agent-ui .lc-detail-val { font-size: 15px !important; }
+body.agent-ui .lc-thread-bubble { border-radius: 20px !important; font-size: 15px !important; line-height: 1.55; border: 0 !important; }
+body.agent-ui .lc-reply-box, body.agent-ui .lc-detail-section { border-radius: 18px !important; }
+
+/* ── Phones ─────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  body.agent-ui .lc-root .lc-main { top: 0 !important; bottom: 0 !important; width: 100vw !important; border-radius: 0 !important; }
+  body.agent-ui .lc-topbar { height: 60px !important; padding: 0 14px 0 10px !important; }
+  body.agent-ui .lc-content { padding: 22px 16px 56px !important; }
+  body.agent-ui .lc-settings-section, body.agent-ui .lc-connect-card, body.agent-ui .lc-ingest-form { padding: 24px 20px !important; }
+  body.agent-ui .lc-stat-value, body.agent-ui .perf-stat-value, body.agent-ui .intel-kpi-value { font-size: 34px !important; }
+  body.agent-ui .perf-head h2, body.agent-ui .intel-head h2, body.agent-ui .wf-toolbar-title { font-size: 32px !important; }
+  body.agent-ui .lc-stat-card, body.agent-ui .perf-stat, body.agent-ui .intel-kpi { padding: 20px !important; }
+  body.agent-ui .lc-plan-cards-grid { grid-template-columns: 1fr !important; }
+  body.agent-ui .lc-slideover, body.agent-ui .wf-slideover { border-radius: 0 !important; width: 100vw !important; }
+  body.agent-ui .lc-mode-trigger #agentModeLabel { display: none; }
+  body.agent-ui .lc-leads-header { flex-wrap: wrap; gap: 12px; }
+}
+
+/* ── Accessibility: reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body.ag-surface-open .lc-view.active > *,
+  body.ag-surface-open .lc-view.active .perf-wrap > *,
+  body.ag-surface-open .lc-view.active .intel-wrap > * { animation: none !important; }
+  body.agent-ui .lc-plan-card, body.agent-ui .wf-card, body.agent-ui .lc-stat-card { transition: none !important; }
+}
+
+
+/* ════ Polish pass ════════════════════════════════════════════════ */
+/* typeless inputs (human-review subject, etc.) */
+body.agent-ui .lc-view input:not([type]), body.agent-ui .lc-human-subject-input, body.agent-ui .lc-human-reply-textarea {
+  width: 100%; min-height: 48px; padding: 12px 16px !important; font-size: 15px !important; color: var(--pm-ink) !important;
+  background-color: var(--pm-canvas) !important; border: 1.5px solid transparent !important; border-radius: var(--pm-r-field) !important;
+  box-shadow: none !important; outline: 0 !important; transition: background-color .25s var(--pm-ease), border-color .25s var(--pm-ease), box-shadow .25s var(--pm-ease) !important;
+}
+body.agent-ui .lc-human-reply-textarea { min-height: 150px; line-height: 1.6; margin-top: 10px; }
+body.agent-ui .lc-human-subject-input { margin-top: 4px; }
+body.agent-ui .lc-view input:not([type]):focus, body.agent-ui .lc-human-subject-input:focus, body.agent-ui .lc-human-reply-textarea:focus {
+  background-color: #fff !important; border-color: rgba(11,37,42,.72) !important; box-shadow: 0 0 0 5px rgba(11,37,42,.09) !important;
+}
+
+/* Consent + human review headers and cards */
+body.agent-ui .lc-consent-header { align-items: flex-end !important; }
+body.agent-ui .lc-consent-header > div:first-child > div:first-child, body.agent-ui #view-humanreview > div:first-child > div:first-child > div:first-child {
+  font-size: 30px !important; font-weight: 750 !important; letter-spacing: -.035em !important; margin-bottom: 8px !important; color: var(--pm-ink) !important;
+}
+body.agent-ui .lc-consent-header > div:first-child > div:nth-child(2), body.agent-ui #view-humanreview > div:first-child > div:first-child > div:nth-child(2) {
+  font-size: 15.5px !important; color: var(--pm-ink-2) !important; line-height: 1.5;
+}
+body.agent-ui .lc-human-card-head [style*="font-size:13px"] { font-size: 17px !important; font-weight: 700 !important; letter-spacing: -.02em !important; }
+body.agent-ui .lc-human-compose { padding: 24px 28px 28px !important; }
+
+/* Tiny inline helper text: make it legible */
+body.agent-ui .lc-view :not(button):not(svg):not(path)[style*="font-size:11px"] { font-size: 12.5px !important; }
+body.agent-ui .lc-view :not(button):not(svg):not(path)[style*="font-size:12px"] { font-size: 13.5px !important; }
+
+/* Inline uppercase / mono labels -> refined sentence case */
+body.agent-ui .lc-view [style*="text-transform:uppercase"], body.agent-ui .lc-view [style*="text-transform: uppercase"] {
+  text-transform: none !important; letter-spacing: 0 !important; font-family: var(--pm-font) !important; font-size: 13px !important; font-weight: 600 !important; color: var(--pm-ink-2) !important;
+}
+
+/* Inline-styled banners and cards */
+body.agent-ui #settingsSetupBanner, body.agent-ui #paySuccessBanner {
+  border: 0 !important; border-radius: 18px !important; background: #fff !important; padding: 18px 24px !important;
+  font-size: 15px !important; box-shadow: var(--pm-shadow-card) !important; margin-bottom: 24px !important;
+}
+body.agent-ui #paywallMsg { border: 0 !important; border-radius: var(--pm-r-card) !important; background: #fff !important; box-shadow: var(--pm-shadow-card) !important; max-width: none !important; padding: 32px 36px !important; }
+body.agent-ui #paywallMsg > div:first-child { font-size: 24px !important; font-weight: 750 !important; letter-spacing: -.03em !important; }
+body.agent-ui #paywallMsg > div:nth-child(2) { font-size: 15.5px !important; }
+body.agent-ui #view-payment [style*="background:var(--bg3);border:1px solid var(--border)"] {
+  background: #fff !important; border: 1px solid var(--pm-hair) !important; border-radius: var(--pm-r-card) !important; padding: 26px 30px !important; box-shadow: var(--pm-shadow-card) !important;
+}
+body.agent-ui #view-payment [style*="background:var(--bg2);border:1px solid var(--border);border-radius:6px"] { background: var(--pm-canvas) !important; border: 0 !important; border-radius: 14px !important; }
+
+/* Plan card cleanup */
+body.agent-ui .lc-plan-limit { border-bottom: 0 !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }
+body.agent-ui .lc-plan-features { margin-top: 22px !important; padding-top: 22px !important; border-top: 1px solid var(--pm-hair) !important; }
+body.agent-ui .lc-plan-card .lc-btn[disabled], body.agent-ui .lc-plan-card .lc-btn:disabled {
+  background: var(--pm-fill-2) !important; color: var(--pm-ink-2) !important; opacity: 1 !important; box-shadow: none !important;
+}
+/* Apple-style switch */
+
+/* ── Finishing touches ──────────────────────────────────────────────
+   Small details that make the interface feel considered: focus,
+   selection, press feedback, a calmer toast, a softer input. */
+html { -webkit-tap-highlight-color: transparent; }
+::selection { background: rgba(11, 37, 42, .14); color: var(--pm-ink); }
+
+/* The Agent's input: lifts and glows softly when you start typing */
+.ag-box { transition: box-shadow .45s var(--pm-ease), transform .45s var(--pm-ease); }
+.ag-box:focus-within {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px var(--pm-ring), 0 0 0 6px rgba(11, 37, 42, .045), 0 28px 60px -26px rgba(11, 37, 42, .34);
+}
+.ag-send { box-shadow: 0 6px 16px -6px rgba(11, 37, 42, .5); }
+.ag-send:hover { transform: translateY(-1px) scale(1.04); }
+.ag-send:active { transform: scale(.94); transition-duration: .1s; }
+
+/* Replies read as one calm block, not a ragged edge */
+.ag-msg.agent { text-wrap: pretty; }
+.ag-msg.you { opacity: .85; }
+
+/* One consistent, quiet keyboard focus ring across the sheet */
+body.agent-ui .lc-main :is(button, a, input, select, textarea, [role="button"], .lc-nav-item, .lc-lead-row):focus-visible {
+  outline: 2px solid rgba(10, 99, 201, .55); outline-offset: 2px; border-radius: 10px;
+}
+body.agent-ui .lc-input:focus, body.agent-ui .lc-select:focus, body.agent-ui .lc-textarea:focus {
+  border-color: var(--pm-ink) !important; box-shadow: 0 0 0 4px rgba(11, 37, 42, .07) !important;
+}
+
+/* Primary buttons: a faint top highlight and depth, firm press */
+body.agent-ui .lc-btn-primary {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 6px 14px -8px rgba(11, 37, 42, .55) !important;
+}
+body.agent-ui .lc-btn-primary:hover { transform: translateY(-1px); }
+body.agent-ui .lc-btn-primary:active { transform: scale(.97); box-shadow: none !important; }
+
+/* Toasts: frosted, rounded, rise in with a little spring */
+body.agent-ui .lc-toast {
+  background: rgba(255, 255, 255, .86) !important; border: 1px solid var(--pm-hair) !important; border-radius: 16px !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: var(--pm-shadow-lift) !important; padding: 12px 18px !important; font-weight: 550;
+  animation: pm-toast .45s cubic-bezier(.34, 1.4, .64, 1) both;
+}
+body.agent-ui .lc-toast.error { border-color: var(--pm-red) !important; box-shadow: var(--pm-shadow-lift) !important; }
+@keyframes pm-toast { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+
+/* Scrolling inside the sheet never drags the page behind it */
+body.agent-ui .lc-content { overscroll-behavior: contain; scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-box, .ag-send, body.agent-ui .lc-btn-primary { transition: none !important; }
+  .ag-box:focus-within { transform: none; }
+  body.agent-ui .lc-toast { animation: none !important; }
+}
+
+/* ── Agent mode dropdown (Autonomous / Manual) ──────────────────────
+   A soft pill with a live status dot, and a frosted menu that opens
+   with a gentle scale, a clear selected state and a check mark. */
+.ag-mode-btn {
+  height: 38px; padding: 0 14px 0 13px; gap: 9px; color: var(--pm-ink); font-weight: 600;
+  background: rgba(255, 255, 255, .72); border: 1px solid var(--pm-hair);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3); backdrop-filter: blur(12px) saturate(1.3);
+  box-shadow: 0 1px 2px rgba(11, 37, 42, .04), 0 8px 20px -12px rgba(11, 37, 42, .2);
+  transition: background .25s var(--pm-ease), border-color .25s var(--pm-ease), box-shadow .3s var(--pm-ease), transform .25s var(--pm-ease);
+}
+.ag-mode-btn:hover { background: #fff; border-color: var(--pm-ring); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(11, 37, 42, .05), 0 14px 26px -14px rgba(11, 37, 42, .28); }
+.ag-mode-btn[aria-expanded="true"] { background: #fff; border-color: var(--pm-ring); box-shadow: 0 0 0 4px rgba(11, 37, 42, .05); transform: none; }
+.ag-mode-btn:active { transform: scale(.97); }
+.ag-mode-btn svg { opacity: .5; }
+.ag-mode-btn .ag-mode-dot[data-mode="autonomous"] { animation: pm-live 2.6s ease-in-out infinite; }
+@keyframes pm-live { 0%, 100% { box-shadow: 0 0 0 3px rgba(47, 174, 118, .16); } 50% { box-shadow: 0 0 0 6px rgba(47, 174, 118, .05); } }
+
+.ag-mode-menu {
+  width: min(344px, calc(100vw - 32px)); padding: 8px; border-radius: 22px;
+  background: rgba(255, 255, 255, .88); border: 1px solid var(--pm-hair);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow: 0 1px 2px rgba(11, 37, 42, .05), 0 30px 70px -22px rgba(11, 37, 42, .42);
+  transform-origin: 22px -6px;
+}
+.ag-mode-menu:not([hidden]) { animation: pm-menu .3s var(--pm-ease) both; }
+@keyframes pm-menu { from { opacity: 0; transform: translateY(-6px) scale(.96); } to { opacity: 1; transform: none; } }
+
+.ag-mode-opt { position: relative; padding: 13px 44px 13px 14px; border-radius: 15px; gap: 13px; transition: background .2s var(--pm-ease); }
+.ag-mode-opt:hover { background: var(--pm-fill); }
+.ag-mode-opt:focus-visible { outline: 0; background: var(--pm-fill-2); }
+.ag-mode-opt[aria-selected="true"] { background: var(--pm-fill); }
+.ag-mode-opt b { font-size: 14.5px; font-weight: 650; letter-spacing: -.015em; }
+.ag-mode-opt small { margin-top: 3px; font-size: 12.5px; line-height: 1.45; color: var(--pm-ink-2); }
+.ag-mode-opt .ag-mode-dot { margin-top: 6px; }
+.ag-mode-opt::after {
+  content: ""; position: absolute; right: 15px; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 50%;
+  background: var(--pm-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M5 9.4l2.6 2.6L13 6.6' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
+  opacity: 0; transform: scale(.6); transition: opacity .25s var(--pm-ease), transform .35s cubic-bezier(.34, 1.5, .64, 1);
+}
+.ag-mode-opt[aria-selected="true"]::after { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-mode-btn .ag-mode-dot[data-mode="autonomous"] { animation: none; }
+  .ag-mode-btn, .ag-mode-opt, .ag-mode-opt::after { transition: none; }
+}
+
+
+/* ── Visible button borders ─────────────────────────────────────────
+   The dashboard buttons above were borderless (border: 0 !important) and the
+   secondary ones relied on a ~4% tint, which disappears on the white cards and the
+   light canvas. Every button that is not a solid fill now has a real 1px edge. */
+body.agent-ui {
+  --pm-edge: rgba(11, 37, 42, .30);
+  --pm-edge-hover: rgba(11, 37, 42, .55);
+}
+/* Secondary / plain buttons: ghost, dismiss, and any .lc-btn with no colour variant */
+body.agent-ui .lc-btn:not(.lc-btn-primary):not(.lc-btn-approve):not(.lc-btn-success):not(.lc-btn-danger) {
+  border: 1px solid var(--pm-edge) !important;
+}
+body.agent-ui .lc-btn:not(.lc-btn-primary):not(.lc-btn-approve):not(.lc-btn-success):not(.lc-btn-danger):hover:not([disabled]) {
+  border-color: var(--pm-edge-hover) !important;
+}
+/* Plain buttons with no variant had no fill either (e.g. the human-reply Send button was white on a white card) */
+body.agent-ui .lc-btn:not(.lc-btn-primary):not(.lc-btn-approve):not(.lc-btn-success):not(.lc-btn-danger):not(.lc-btn-ghost):not(.lc-btn-dismiss) {
+  background: #fff !important; color: var(--pm-ink) !important;
+}
+/* Danger is a pale red tint: give it a red edge */
+body.agent-ui .lc-btn-danger { border: 1px solid rgba(192, 57, 43, .45) !important; }
+body.agent-ui .lc-btn-danger:hover:not([disabled]) { border-color: var(--pm-red) !important; }
+/* Header pills and sheet close */
+body.agent-ui .ag-close, body.agent-ui .lc-mode-trigger, body.agent-ui .lc-slideover-close {
+  border: 1px solid var(--pm-edge) !important;
+}
+body.agent-ui .ag-close:hover, body.agent-ui .lc-mode-trigger:hover, body.agent-ui .lc-slideover-close:hover {
+  border-color: var(--pm-edge-hover) !important;
+}
+/* Keep the filled/solid buttons crisp: a same-colour edge so sizes match the bordered ones */
+body.agent-ui .lc-btn-primary { border: 1px solid var(--pm-ink) !important; }
+body.agent-ui .lc-btn-approve, body.agent-ui .lc-btn-success { border: 1px solid var(--pm-green) !important; }

@@ -1,0 +1,182 @@
+/* ════════════════════════════════════════════════════════════════
+   Humarains — Classic view
+   The same pages the Agent opens, laid out the traditional way:
+   a labelled sidebar on the left, one page at a time on the right.
+   Applied when <body> has .classic-ui (set by ui-mode.js).
+   Loaded last. Nothing here changes the Agent view.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── The Agent / Classic slider ─────────────────────────────────── */
+.ui-switch {
+  --us-ink: #0B252A;
+  position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; align-items: center;
+  height: 34px; padding: 3px; border: 1px solid rgba(11, 37, 42, .14); border-radius: 999px;
+  background: rgba(255, 255, 255, .78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  font: inherit; cursor: pointer; flex-shrink: 0; isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+.ui-switch:hover { border-color: rgba(11, 37, 42, .34); }
+.ui-switch:focus-visible { outline: 2px solid var(--us-ink); outline-offset: 2px; }
+.ui-switch-opt {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-width: 70px; height: 100%; padding: 0 12px; font-size: 12.5px; font-weight: 600; letter-spacing: -.005em;
+  color: rgba(11, 37, 42, .62); transition: color .22s; white-space: nowrap;
+}
+.ui-switch-opt svg { width: 14px; height: 14px; flex-shrink: 0; }
+.ui-switch-thumb {
+  position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px;
+  background: var(--us-ink); transition: transform .3s cubic-bezier(.22, .72, .2, 1);
+}
+.ui-switch[aria-checked="false"] .ui-switch-opt:nth-child(2),
+.ui-switch[aria-checked="true"] .ui-switch-opt:nth-child(3) { color: #fff; }
+.ui-switch[aria-checked="true"] .ui-switch-thumb { transform: translateX(100%); }
+
+/* Agent view: sits in the top right, just left of the account button */
+.ui-switch-stage { position: fixed; top: 16px; right: 64px; z-index: 3; transition: opacity .4s; }
+body.ag-surface-open .ui-switch-stage { opacity: 0; pointer-events: none; }
+/* Classic view keeps the same top-right controls in the same place, above the layout */
+body.classic-ui .ui-switch-stage, body.classic-ui .ag-me { z-index: 60; }
+
+@media (max-width: 760px) {
+  .ui-switch-stage { top: 12px; right: 56px; }
+  .ui-switch-opt { min-width: 0; padding: 0 10px; }
+  .ui-switch-opt span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { .ui-switch-thumb, .ui-switch-opt { transition: none; } }
+
+/* ── Classic layout ─────────────────────────────────────────────── */
+body.agent-ui.classic-ui {
+  background: #F5F5F7 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+/* Hide everything that belongs to the Agent stage */
+body.classic-ui .ag-stage, body.classic-ui .ag-mark,
+body.classic-ui .ag-scrim, body.classic-ui .ag-close { display: none !important; }
+
+body.agent-ui.classic-ui .lc-root {
+  position: fixed !important; inset: 0 !important; z-index: 5 !important;
+  display: flex !important; flex-direction: row !important;
+  width: 100vw !important; height: 100vh !important; height: 100dvh !important;
+  background: #F5F5F7 !important; overflow: hidden !important; pointer-events: auto !important;
+}
+body.agent-ui.classic-ui .lc-root .lc-main {
+  position: relative !important; inset: auto !important; top: auto !important; bottom: auto !important; left: auto !important;
+  flex: 1 1 auto !important; min-width: 0 !important; width: auto !important; height: 100% !important;
+  transform: none !important; border-radius: 0 !important; box-shadow: none !important;
+  opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; transition: none !important;
+  background: #F5F5F7 !important; overflow: visible !important;
+}
+body.agent-ui.classic-ui .lc-topbar { height: 66px !important; padding: 0 292px 0 24px !important; }
+body.agent-ui.classic-ui .lc-content { padding: 32px clamp(20px, 3.4vw, 56px) 56px !important; }
+body.agent-ui.classic-ui .lc-view { animation: none !important; }
+body.agent-ui.classic-ui .lc-view.active > * { animation: none !important; }
+
+/* ── Sidebar: labelled, grouped, always open ────────────────────── */
+body.agent-ui.classic-ui .lc-sidebar {
+  display: flex !important; flex-direction: column !important; position: relative !important;
+  width: 248px !important; min-width: 248px !important; height: 100% !important;
+  background: #fff !important; border-right: 1px solid rgba(11, 37, 42, .10) !important; overflow: hidden !important;
+}
+body.agent-ui.classic-ui .lc-sidebar-logo {
+  order: 1; justify-content: flex-start !important; gap: 10px; padding: 18px 20px 14px !important; border-bottom: 0 !important;
+}
+body.agent-ui.classic-ui .lc-sidebar-logo::after {
+  content: 'Humarains'; font-size: 16px; font-weight: 650; letter-spacing: -.02em; color: #0B252A;
+}
+body.agent-ui.classic-ui .lc-logo-img { width: 26px; height: 26px; border-radius: 6px; object-fit: contain; }
+
+/* The flyout becomes the scrolling nav list */
+body.agent-ui.classic-ui .lc-flyout {
+  order: 2; position: static !important; flex: 1 1 auto; min-height: 0; width: auto !important; max-width: none !important;
+  opacity: 1 !important; pointer-events: auto !important; transform: none !important;
+  background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+  overflow-y: auto !important; overscroll-behavior: contain; padding: 4px 12px 12px;
+}
+body.agent-ui.classic-ui .lc-flyout-header { display: none !important; }
+body.agent-ui.classic-ui .lc-flyout .lc-nav,
+body.agent-ui.classic-ui .lc-flyout .lc-nav[hidden] { display: flex !important; flex-direction: column; gap: 2px; padding: 0 0 14px !important; flex: none; }
+body.agent-ui.classic-ui .lc-flyout .lc-nav::before {
+  content: attr(aria-label); padding: 10px 10px 6px; font-size: 12px; font-weight: 600; color: rgba(11, 37, 42, .46);
+}
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item {
+  height: 38px; padding: 0 10px !important; gap: 10px !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 500;
+}
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item svg { width: 17px; height: 17px; opacity: .6; }
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item:hover { background: rgba(11, 37, 42, .05) !important; color: #0B252A !important; }
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item.active {
+  background: #0B252A !important; color: #fff !important; font-weight: 600; box-shadow: none !important;
+}
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item.active svg { opacity: 1; color: #fff !important; }
+body.agent-ui.classic-ui .lc-flyout .lc-nav-item:focus-visible { outline: 2px solid #0B252A; outline-offset: 1px; }
+
+/* Rail: only the Upgrade row stays, sitting above the account block */
+body.agent-ui.classic-ui .lc-icon-rail { order: 3; flex: none !important; overflow: visible !important; padding: 8px 12px 10px !important; align-items: stretch !important; }
+body.agent-ui.classic-ui .lc-icon-btn[data-group], body.agent-ui.classic-ui .lc-icon-rail-sep { display: none !important; }
+body.agent-ui.classic-ui #navUpgrade {
+  width: 100% !important; height: 38px !important; flex-direction: row !important; justify-content: flex-start !important;
+  gap: 10px !important; padding: 0 10px !important; border-radius: 10px !important; border: 1px solid rgba(11, 37, 42, .14) !important;
+}
+body.agent-ui.classic-ui #navUpgrade svg { width: 17px; height: 17px; }
+body.agent-ui.classic-ui #navUpgrade .lc-icon-label { font-size: 14px; font-weight: 600; }
+body.agent-ui.classic-ui #navUpgrade.active { background: #0B252A !important; color: #fff !important; border-color: #0B252A !important; }
+
+/* Account block */
+body.agent-ui.classic-ui .lc-sidebar-user {
+  order: 4; flex-direction: row !important; justify-content: flex-start !important; gap: 10px !important;
+  padding: 12px 14px !important; border-top: 1px solid rgba(11, 37, 42, .10) !important;
+}
+body.agent-ui.classic-ui .lc-user-avatar { width: 34px; height: 34px; flex-shrink: 0; }
+.cl-user-meta { display: none; min-width: 0; flex: 1; flex-direction: column; line-height: 1.25; }
+body.classic-ui .cl-user-meta { display: flex; }
+.cl-user-meta b { font-size: 13.5px; font-weight: 600; color: #0B252A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-user-meta span { font-size: 12px; color: rgba(11, 37, 42, .56); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.agent-ui.classic-ui .lc-logout-btn { margin-left: auto !important; width: 32px; height: 32px; }
+
+/* ── Tablet and phone ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  body.agent-ui.classic-ui .lc-sidebar { width: 216px !important; min-width: 216px !important; }
+}
+@media (max-width: 600px) {
+  /* Sidebar becomes a drawer opened from the menu button; leads.js handles open/close */
+  body.agent-ui.classic-ui .lc-sidebar {
+    position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 200 !important;
+    width: min(288px, 86vw) !important; min-width: 0 !important; height: 100dvh !important;
+    box-shadow: 8px 0 40px rgba(11, 37, 42, .18);
+  }
+  body.agent-ui.classic-ui .lc-sidebar-overlay { display: none !important; }
+  body.agent-ui.classic-ui .lc-sidebar-overlay.open { display: block !important; }
+  body.agent-ui.classic-ui .lc-hamburger { display: flex !important; }
+  body.agent-ui.classic-ui .lc-topbar { height: 58px !important; padding: 0 140px 0 12px !important; }
+  body.agent-ui.classic-ui .lc-content { padding: 16px 14px 84px !important; }
+  body.agent-ui.classic-ui .lc-bottom-nav, body.agent-ui.classic-ui #lcBottomNav { display: flex !important; }
+}
+
+/* ── Agent ⇄ Classic: the screen slides along a straight line, no fade ──
+   Going to Classic the screen moves left (the slider thumb moves right); going back it moves right.
+   Opacity is never animated. The slider and account button are pulled out so they stay put. */
+.ui-switch-stage { view-transition-name: ui-switch; }
+.ag-me { view-transition-name: ag-me; }
+::view-transition-old(ui-switch), ::view-transition-old(ag-me) { display: none; }
+::view-transition-new(ui-switch), ::view-transition-new(ag-me) { animation: none; mix-blend-mode: normal; }
+::view-transition-group(ui-switch), ::view-transition-group(ag-me) { animation-duration: 0s; }
+
+html.ui-vt-to-classic::view-transition-old(root),
+html.ui-vt-to-classic::view-transition-new(root),
+html.ui-vt-to-agent::view-transition-old(root),
+html.ui-vt-to-agent::view-transition-new(root) {
+  mix-blend-mode: normal; opacity: 1; animation-duration: .55s; animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(.65, 0, .25, 1);
+}
+html.ui-vt-to-classic::view-transition-old(root) { animation-name: ui-slide-out-left; }
+html.ui-vt-to-classic::view-transition-new(root) { animation-name: ui-slide-in-right; }
+html.ui-vt-to-agent::view-transition-old(root) { animation-name: ui-slide-out-right; }
+html.ui-vt-to-agent::view-transition-new(root) { animation-name: ui-slide-in-left; }
+@keyframes ui-slide-out-left  { from { transform: translateX(0); }     to { transform: translateX(-100%); } }
+@keyframes ui-slide-in-right  { from { transform: translateX(100%); }  to { transform: translateX(0); } }
+@keyframes ui-slide-out-right { from { transform: translateX(0); }     to { transform: translateX(100%); } }
+@keyframes ui-slide-in-left   { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) {
+  html.ui-vt-to-classic::view-transition-group(*), html.ui-vt-to-agent::view-transition-group(*),
+  html.ui-vt-to-classic::view-transition-old(root), html.ui-vt-to-classic::view-transition-new(root),
+  html.ui-vt-to-agent::view-transition-old(root), html.ui-vt-to-agent::view-transition-new(root) { animation: none; }
+}
+

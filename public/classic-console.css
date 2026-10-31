@@ -1,0 +1,148 @@
+/* ════════════════════════════════════════════════════════════════
+   Classic view, "console" look
+   White floating pill sidebar, a pale canvas, white rounded cards,
+   and a page header with a title and description. Humarains colours: ink #0B252A, teal #12889A, canvas #F4F6F6.
+   Its own file, linked after refine.css, so it wins over every earlier Classic rule. Scoped to Classic; the Agent view is untouched.
+   ════════════════════════════════════════════════════════════════ */
+body.agent-ui.classic-ui {
+  --cl-ink: #0B252A; --cl-ink-2: #14343A; --cl-teal: #12889A; --cl-teal-dk: #0E6E7D; --cl-teal-lt: #5CC6D6;
+  --cl-canvas: #F4F6F6; --cl-line: rgba(11, 37, 42, .10);
+  --cl-mono: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--cl-canvas) !important;
+}
+body.agent-ui.classic-ui .lc-root, body.agent-ui.classic-ui .lc-root .lc-main { background: var(--cl-canvas) !important; }
+
+/* Sidebar: a white, floating, elongated pill */
+body.agent-ui.classic-ui .lc-sidebar { background: #fff !important; color: var(--cl-ink); border: 0 !important; }
+body.agent-ui.classic-ui .lc-sidebar-logo { padding: 2px 0 10px !important; justify-content: center !important; align-items: center; border: 0 !important; }
+body.agent-ui.classic-ui .lc-sidebar-logo::after { content: none !important; }
+body.agent-ui.classic-ui .lc-logo-img { width: 36px; height: 36px; border-radius: 11px; }
+.cl-brand, body.classic-ui .cl-brand { display: none !important; }
+
+body.agent-ui.classic-ui .lc-icon-rail { flex: 0 1 auto !important; gap: 6px; padding: 6px 0 !important; scrollbar-width: none; }
+body.agent-ui.classic-ui .lc-icon-rail::-webkit-scrollbar { display: none; }
+body.agent-ui.classic-ui .lc-icon-btn {
+  width: 62px; height: 58px; border-radius: 22px; gap: 5px; color: rgba(11, 37, 42, .5);
+  transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+body.agent-ui.classic-ui .lc-icon-btn:hover { background: #F0F4F4 !important; color: var(--cl-ink) !important; transform: translateY(-1px); }
+body.agent-ui.classic-ui .lc-icon-btn.active { background: var(--cl-ink) !important; color: #fff !important; box-shadow: 0 10px 20px -10px rgba(11, 37, 42, .6); transform: none; }
+body.agent-ui.classic-ui .lc-icon-btn:focus-visible { outline: 2px solid var(--cl-teal) !important; outline-offset: 2px; }
+body.agent-ui.classic-ui .lc-icon-label { font-size: 10.5px; }
+body.agent-ui.classic-ui .lc-icon-dot { top: 7px; right: 11px; background: var(--cl-teal); box-shadow: 0 0 0 2px #fff; }
+body.agent-ui.classic-ui .lc-icon-btn.active .lc-icon-dot { box-shadow: 0 0 0 2px var(--cl-ink); }
+body.agent-ui.classic-ui .lc-icon-rail-sep { width: 30px; background: rgba(11, 37, 42, .09); margin: 4px 0; }
+body.agent-ui.classic-ui #navUpgrade { color: var(--cl-teal-dk) !important; border: 0 !important; background: transparent !important; }
+body.agent-ui.classic-ui #navUpgrade:hover { background: #E8F4F6 !important; }
+body.agent-ui.classic-ui #navUpgrade.active { background: var(--cl-teal) !important; color: #fff !important; }
+
+body.agent-ui.classic-ui .lc-sidebar-user { border: 0 !important; padding: 10px 0 2px !important; gap: 8px !important; }
+body.agent-ui.classic-ui .lc-user-avatar { background: var(--cl-teal) !important; color: #fff !important; width: 38px; height: 38px; }
+body.agent-ui.classic-ui .cl-user-meta { display: none !important; }
+body.agent-ui.classic-ui .lc-logout-btn { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; color: rgba(11, 37, 42, .55) !important; background: transparent !important; border: 1px solid rgba(11, 37, 42, .12) !important; border-radius: 50% !important; }
+body.agent-ui.classic-ui .lc-logout-btn:hover { color: var(--cl-ink) !important; border-color: rgba(11, 37, 42, .35) !important; }
+
+/* Centre everything inside the pill and neutralise the older generic nav-item rules */
+body.agent-ui.classic-ui .lc-sidebar { align-items: stretch !important; }
+body.agent-ui.classic-ui .lc-sidebar-logo { width: 100% !important; }
+body.agent-ui.classic-ui .lc-icon-rail { width: 100% !important; align-items: center !important; }
+body.agent-ui.classic-ui .lc-icon-btn.lc-nav-item, body.agent-ui.classic-ui .lc-icon-btn {
+  width: 62px !important; height: 58px !important; padding: 0 !important; margin: 0 !important;
+  flex-direction: column !important; align-items: center !important; justify-content: center !important;
+}
+body.agent-ui.classic-ui .lc-icon-btn svg { color: currentColor !important; width: 20px; height: 20px; opacity: 1; }
+body.agent-ui.classic-ui .lc-icon-btn.active::before, body.agent-ui.classic-ui .lc-icon-btn::before { content: none !important; }
+body.agent-ui.classic-ui .lc-sidebar-user { width: 100% !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; }
+body.agent-ui.classic-ui .lc-icon-rail-sep { align-self: center; }
+
+body.agent-ui.classic-ui #navUpgrade.lc-icon-btn.lc-nav-item {
+  width: 62px !important; height: 58px !important; padding: 0 !important; margin: 0 !important; gap: 5px !important;
+  flex-direction: column !important; justify-content: center !important; align-items: center !important; border-radius: 22px !important;
+}
+body.agent-ui.classic-ui #navUpgrade .lc-icon-label { margin: 0 !important; font-size: 10.5px !important; }
+body.agent-ui.classic-ui .lc-sidebar-user .lc-logout-btn { margin: 0 auto !important; align-self: center !important; position: static !important; }
+
+/* Desktop: the pill floats over the page, vertically centred, with room around it */
+@media (min-width: 901px) {
+  body.agent-ui.classic-ui .lc-sidebar {
+    position: fixed !important; left: 18px; top: 50%; transform: translateY(-50%);
+    width: 88px !important; min-width: 88px !important; height: auto !important; max-height: calc(100vh - 36px) !important;
+    padding: 18px 0 16px; border-radius: 48px !important; overflow: hidden !important; align-items: center; z-index: 60;
+    box-shadow: 0 0 0 1px rgba(11, 37, 42, .06), 0 4px 10px rgba(11, 37, 42, .05), 0 26px 56px -18px rgba(11, 37, 42, .3) !important;
+    transition: box-shadow .3s ease, transform .3s ease;
+  }
+  body.agent-ui.classic-ui .lc-sidebar:hover {
+    transform: translateY(calc(-50% - 2px));
+    box-shadow: 0 0 0 1px rgba(11, 37, 42, .07), 0 6px 14px rgba(11, 37, 42, .06), 0 34px 70px -18px rgba(11, 37, 42, .36) !important;
+  }
+  body.agent-ui.classic-ui .lc-root .lc-main { margin-left: 124px; }
+}
+@media (prefers-reduced-motion: reduce) { body.agent-ui.classic-ui .lc-sidebar, body.agent-ui.classic-ui .lc-icon-btn { transition: none; } }
+
+/* Page header: mono eyebrow, big title, one-line description */
+body.agent-ui.classic-ui .lc-topbar {
+  height: auto !important; min-height: 104px; align-items: flex-start !important;
+  padding: 30px 292px 0 clamp(20px, 3.4vw, 56px) !important;
+  background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: 0 !important;
+}
+body.agent-ui.classic-ui .lc-topbar-title {
+  flex: 1; min-width: 0; font-size: 32px !important; line-height: 1.12 !important; font-weight: 700 !important; letter-spacing: -.03em !important;
+  white-space: normal !important; overflow: visible !important; text-overflow: clip !important; color: var(--cl-ink) !important;
+}
+body.agent-ui.classic-ui .lc-topbar-title::after {
+  content: attr(data-sub); display: block; margin-top: 8px;
+  font-size: 15px; font-weight: 400; letter-spacing: 0; line-height: 1.4; color: rgba(11, 37, 42, .62);
+}
+body.agent-ui.classic-ui .lc-topbar-actions { margin-top: 36px; }
+body.agent-ui.classic-ui .lc-content { padding-top: 12px !important; }
+
+/* Cards */
+body.agent-ui.classic-ui :is(.lc-stat-card, .lc-chart-card, .lc-leads-table, .lc-table-wrap, .lc-kpi-card, .perf-stat, .intel-kpi, .lc-connect-card, .lc-settings-section) {
+  background: #fff !important; border: 1px solid var(--cl-line) !important; border-radius: 16px !important; box-shadow: 0 1px 2px rgba(11, 37, 42, .04) !important;
+}
+body.agent-ui.classic-ui .lc-stats-bar { gap: 16px !important; }
+body.agent-ui.classic-ui .lc-stat-card { display: flex !important; flex-direction: column; padding: 20px 22px 18px !important; }
+body.agent-ui.classic-ui .lc-stat-card .lc-stat-label {
+  order: -1; margin-bottom: 10px; font-family: var(--cl-mono) !important; font-size: 11px !important; font-weight: 500 !important;
+  letter-spacing: .12em !important; text-transform: uppercase !important; color: rgba(11, 37, 42, .60) !important;
+}
+body.agent-ui.classic-ui .lc-stat-card .lc-stat-value { font-size: 34px !important; letter-spacing: -.035em !important; margin-bottom: 0; }
+body.agent-ui.classic-ui .lc-chart-card { padding: 22px 24px !important; }
+body.agent-ui.classic-ui .lc-chart-title, body.agent-ui.classic-ui .lc-section-title { font-size: 17px !important; font-weight: 650 !important; letter-spacing: -.02em !important; color: var(--cl-ink) !important; }
+body.agent-ui.classic-ui .lc-chart-sub { font-family: var(--cl-mono); font-size: 12px; color: rgba(11, 37, 42, .56); }
+
+/* Lead list */
+body.agent-ui.classic-ui .lc-table-head { padding: 14px 24px !important; background: transparent !important; }
+body.agent-ui.classic-ui .lc-th {
+  font-family: var(--cl-mono) !important; font-size: 11px !important; font-weight: 500 !important; letter-spacing: .12em !important;
+  text-transform: uppercase !important; color: rgba(11, 37, 42, .58) !important;
+}
+body.agent-ui.classic-ui .lc-lead-row { padding: 16px 24px !important; }
+body.agent-ui.classic-ui .lc-lead-row:hover { background: #F2F8F9 !important; }
+body.agent-ui.classic-ui .lc-filter-btn { border-radius: 999px !important; border: 1px solid rgba(11, 37, 42, .22) !important; background: #fff !important; color: var(--cl-ink) !important; font-weight: 600; }
+body.agent-ui.classic-ui .lc-filter-btn:hover { border-color: var(--cl-ink) !important; }
+body.agent-ui.classic-ui .lc-filter-btn.active { background: var(--cl-ink) !important; border-color: var(--cl-ink) !important; color: #fff !important; }
+
+/* Primary buttons and focus pick up the teal */
+body.agent-ui.classic-ui .lc-main :is(button, a, input, select, textarea, [role="button"], .lc-lead-row):focus-visible { outline-color: var(--cl-teal) !important; }
+
+@media (max-width: 900px) {
+  body.agent-ui.classic-ui .lc-topbar { padding-right: 24px !important; }
+}
+@media (max-width: 600px) {
+  body.agent-ui.classic-ui .lc-topbar { min-height: 0; height: 58px !important; align-items: center !important; padding: 0 140px 0 12px !important; }
+  body.agent-ui.classic-ui .lc-topbar-title { font-size: 18px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  body.agent-ui.classic-ui .lc-topbar-title::before, body.agent-ui.classic-ui .lc-topbar-title::after { content: none; }
+  body.agent-ui.classic-ui .lc-topbar-actions { margin-top: 0; }
+  body.agent-ui.classic-ui .lc-content { padding-top: 16px !important; }
+  body.agent-ui.classic-ui .lc-stat-card .lc-stat-value { font-size: 28px !important; }
+}
+
+/* Classic console: the top bar already shows each page's title and one-line description, so views that
+   draw their own heading (Insights, Workflows) must not repeat it. Agent view keeps its own headings. */
+body.agent-ui.classic-ui .perf-head h2,
+body.agent-ui.classic-ui .intel-head h2,
+body.agent-ui.classic-ui .wf-toolbar-title { display: none !important; }
+body.agent-ui.classic-ui .perf-head,
+body.agent-ui.classic-ui .intel-head { justify-content: flex-end !important; }
+body.agent-ui.classic-ui .wf-toolbar { align-items: center !important; }

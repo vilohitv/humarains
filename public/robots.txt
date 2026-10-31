@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /onboarding.html
+Disallow: /admin.html
+Disallow: /payment.html
+Disallow: /maintenance.html
+Disallow: /api/
+
+Sitemap: https://humarains.com/sitemap.xml

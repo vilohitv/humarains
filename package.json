@@ -1,0 +1,51 @@
+{
+  "name": "humarains",
+  "version": "1.1.0",
+  "description": "AI agent for business enquiries and bookings",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "start:worker": "node src/worker.js",
+    "backup": "node scripts/backup.js",
+    "backup:verify": "node scripts/verify-backup.js",
+    "restore": "node scripts/restore.js",
+    "db:setup": "node db/setup.js",
+    "db:status": "node db/setup.js status",
+    "db:prune": "node scripts/prune.js",
+    "seed:admin": "node scripts/seed-admin.js",
+    "check": "node scripts/check.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "@sentry/node": "^10.51.0",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.2",
+    "connect-pg-simple": "^10.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^7.1.5",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.0.1",
+    "googleapis": "^144.0.0",
+    "helmet": "^7.2.0",
+    "imapflow": "^1.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "mailparser": "^3.9.11",
+    "nodemailer": "^10.1.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pg": "^8.11.3",
+    "stripe": "^14.25.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "pg-mem": "^3.0.14",
+    "supertest": "^7.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

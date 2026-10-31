@@ -1,0 +1,24 @@
+/* Reschedule booking pop-up (opened from a lead's Calendar Event card). */
+.rs-overlay { position: fixed; inset: 0; z-index: 990; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(11, 37, 42, .42); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+.rs-modal { width: min(460px, 100%); max-height: calc(100dvh - 40px); overflow-y: auto; background: #fff; color: #0B252A; border-radius: 18px; padding: 26px 28px 24px; box-shadow: 0 2px 6px rgba(11, 37, 42, .08), 0 30px 70px -20px rgba(11, 37, 42, .45); font-family: inherit; }
+.rs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rs-head h3 { margin: 0; font-size: 18px; font-weight: 650; letter-spacing: -.02em; color: #0B252A; }
+.rs-x { width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; color: rgba(11, 37, 42, .55); font-size: 22px; line-height: 1; cursor: pointer; }
+.rs-x:hover { background: rgba(11, 37, 42, .06); color: #0B252A; }
+.rs-sub { margin: 4px 0 0; font-size: 14px; color: rgba(11, 37, 42, .62); }
+.rs-current { margin: 18px 0 20px; padding: 12px 14px; border-radius: 12px; background: #F5F5F7; font-size: 14px; line-height: 1.45; color: #0B252A; }
+.rs-tz { color: rgba(11, 37, 42, .5); font-size: 13px; }
+.rs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rs-grid .lc-label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(11, 37, 42, .66); }
+.rs-grid .lc-input { width: 100%; min-height: 44px; }
+.rs-check { display: flex; align-items: flex-start; gap: 10px; margin: 18px 0 0; font-size: 13.5px; line-height: 1.45; color: rgba(11, 37, 42, .72); cursor: pointer; }
+.rs-check input { margin-top: 2px; width: 18px; height: 18px; flex: none; accent-color: #0B252A; }
+.rs-err { margin-top: 16px; padding: 10px 12px; border-radius: 10px; background: rgba(192, 57, 43, .09); color: #A8321F; font-size: 13.5px; line-height: 1.45; }
+.rs-result { margin-top: 18px; }
+.rs-result p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.45; }
+.rs-ok { color: #1E8A4C; font-weight: 600; }
+.rs-note { color: #A15C00; font-weight: 600; }
+.rs-result .lc-label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(11, 37, 42, .66); }
+.rs-result textarea { width: 100%; min-height: 84px; resize: none; margin-bottom: 10px; }
+.rs-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+@media (max-width: 480px) { .rs-modal { padding: 22px 18px 20px; } .rs-grid { grid-template-columns: 1fr; } }

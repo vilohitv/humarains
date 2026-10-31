@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Humarains</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="leads.css?v=1782003953">
+<link rel="stylesheet" href="reschedule.css?v=1">
+<link rel="stylesheet" href="workflows.css?v=1782003953">
+<link rel="stylesheet" href="performance.css?v=1782003953">
+<link rel="stylesheet" href="intelligence.css?v=1782003953">
+<link rel="stylesheet" href="autonomy.css?v=1">
+<style>
+/* ── AESTHETIC LAYER ─────────────────────────────────────────────
+   Layered on top of existing tokens. Does not break any layouts.
+──────────────────────────────────────────────────────────────── */
+
+/* 1. Warmer off-white base — less clinical than pure #FFF */
+:root {
+  --bg:  #F8F7F5;
+  --bg2: #F0EEEb;
+  --surf: #FFFFFF;
+}
+
+/* 2. Animated gradient mesh behind the main content area */
+.lc-main, .main-content {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 20%, rgba(99,102,241,0.045) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(16,185,129,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(245,158,11,0.025) 0%, transparent 65%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* 3. Sidebar: glass feel with a faint gradient stripe */
+.lc-sidebar, .sidebar {
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.95) 0%,
+    rgba(248,247,245,0.98) 100%
+  ) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(17,17,17,0.07) !important;
+}
+
+/* 4. Active nav item — pill with a subtle shimmer border */
+.nav-item.active, .lc-nav-item.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(16,185,129,0.07)) !important;
+  border: 1px solid rgba(99,102,241,0.18) !important;
+  color: #3730A3 !important;
+}
+.nav-item.active svg, .lc-nav-item.active svg { color: #4F46E5 !important; }
+
+/* 5. Metric cards — lift + tinted top border on hover */
+.metric-card {
+  border-top: 2px solid transparent;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s !important;
+}
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  border-top-color: rgba(99,102,241,0.4) !important;
+}
+
+/* 6. Metric values — number count-up shimmer (CSS only) */
+@keyframes value-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.metric-value {
+  background: linear-gradient(90deg,
+    #111 30%,
+    rgba(99,102,241,0.7) 50%,
+    #111 70%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: value-shimmer 4s linear infinite;
+}
+
+/* 7. Table rows — subtle hover tint */
+.lc-lead-row:hover, tr:hover td {
+  background: rgba(99,102,241,0.03) !important;
+}
+
+/* 8. Primary buttons — gradient with glow */
+.btn-primary, .lc-btn-primary, button[class*="btn-primary"] {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED) !important;
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(79,70,229,0.3) !important;
+  transition: box-shadow 0.2s, transform 0.2s !important;
+}
+.btn-primary:hover, .lc-btn-primary:hover, button[class*="btn-primary"]:hover {
+  box-shadow: 0 4px 20px rgba(79,70,229,0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 9. Status/badge pills — slightly glossy */
+.lc-status, [class*="status-badge"], .lc-score-badge {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+/* 10. Section headers / page titles — gradient text */
+.lc-page-title, .lc-section-title, .lc-settings-title {
+  background: linear-gradient(135deg, #111 60%, rgba(99,102,241,0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 11. Scrollbar — coloured thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(99,102,241,0.25), rgba(16,185,129,0.2)) !important;
+  border-radius: 4px !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(99,102,241,0.45), rgba(16,185,129,0.35)) !important;
+}
+
+/* 12. Topbar — frosted glass */
+.lc-topbar, .topbar {
+  background: rgba(248,247,245,0.85) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(17,17,17,0.06) !important;
+}
+
+/* 13. Lead detail panel — soft inner shadow on open */
+.lc-detail-panel, .detail-panel {
+  box-shadow: -8px 0 32px rgba(0,0,0,0.06) !important;
+}
+
+/* 14. Focus rings — branded colour */
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.18) !important;
+  border-color: rgba(99,102,241,0.4) !important;
+}
+/* 15. Premium card hover — clean lift with brand-tinted shadow */
+.lc-stat-card, .lc-panel, .lc-card, .lc-section,
+.metric-card, .chart-card, .wf-card, .wf-template-card,
+.product-card, .ps-card, .or-card, .ppc-card, .abtest-card {
+  transition:
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    transform 0.18s ease;
+  will-change: transform, box-shadow;
+}
+
+.lc-stat-card:hover, .lc-panel:hover, .lc-card:hover, .lc-section:hover,
+.metric-card:hover, .chart-card:hover, .wf-card:hover, .wf-template-card:hover,
+.product-card:hover, .ps-card:hover, .or-card:hover, .ppc-card:hover, .abtest-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px rgba(11, 37, 42, 0.16),
+    0 4px 14px rgba(11, 37, 42, 0.09),
+    0 1px 3px rgba(11, 37, 42, 0.05) !important;
+  border-color: rgba(11, 37, 42, 0.2) !important;
+}
+</style>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+
+<div class="lc-root">
+
+<!-- ══════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════ -->
+<aside class="lc-sidebar" id="lcSidebar">
+  <div class="lc-sidebar-logo">
+    <div class="lc-logo-mark">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M4 4h5v5H4V4zM11 4h5v5h-5V4zM4 11h5v5H4v-5zM14 13a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div>
+      <div class="lc-logo-name">Humarains</div>
+      <div class="lc-logo-sub">Enquiries &amp; bookings</div>
+    </div>
+  </div>
+
+  <nav class="lc-nav">
+    <div class="lc-nav-section">Overview</div>
+    <button class="lc-nav-item active" data-view="leads">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M3 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      All Leads
+      <span class="lc-nav-badge" id="navBadgeAll">0</span>
+    </button>
+    <button class="lc-nav-item" data-view="new">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 7v6M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      New Leads
+      <span class="lc-nav-badge amber" id="navBadgeNew">0</span>
+    </button>
+    <button class="lc-nav-item" data-view="pending">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Follow-Ups
+      <span class="lc-nav-badge amber" id="navBadgePending">0</span>
+    </button>
+    <button class="lc-nav-item" data-view="closed">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Closed
+    </button>
+    <button class="lc-nav-item" data-view="performance">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M3 14l4-4 3 3 4-5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 17h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Performance
+    </button>
+
+    <button class="lc-nav-item" data-view="intelligence">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 6v4l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 3.5C8 3 9 2.5 10 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      AI Sales Manager
+      <span class="lc-nav-badge" id="navBadgeIntelligence" style="display:none;background:var(--green);color:#000">●</span>
+    </button>
+
+    <div class="lc-nav-section">Automation</div>
+    <button class="lc-nav-item" data-view="workflows">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="5" cy="5" r="2.3" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="15" cy="5" r="2.3" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="10" cy="15" r="2.3" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M7 6.3L13 6.3M6.3 7.3L9 13M13.7 7.3L11 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Workflows
+    </button>
+
+    <div class="lc-nav-section">Ingestion</div>
+    <button class="lc-nav-item" data-view="ingest">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M3 8l7-5 7 5v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 17v-7h4v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Manual Ingest
+    </button>
+    <button class="lc-nav-item" data-view="email">
+      <svg viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Email (IMAP/SMTP)
+    </button>
+    <button class="lc-nav-item" data-view="whatsapp">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C5.58 2 2 5.58 2 10c0 1.5.4 2.9 1.1 4.1L2 18l4.1-1.1C7.3 17.6 8.6 18 10 18c4.42 0 8-3.58 8-8s-3.58-8-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M7.5 8.5c.5 1 1.5 2.5 3 3 .2-.3.6-.8.8-1 .8.4 1.4.7 1.7.9-.2.8-.9 1.6-1.7 1.6-1.8 0-4.8-3-4.8-4.8 0-.8.8-1.5 1.6-1.7.2.3.5.9.9 1.7-.2.2-.7.6-1 .8.1.2.3.4.5.5z" fill="currentColor" stroke="none"/>
+      </svg>
+      WhatsApp
+      <span class="lc-nav-badge" id="navBadgeWhatsapp" style="display:none;background:var(--bg5);color:var(--text)">0</span>
+    </button>
+    <div class="lc-nav-section">Review</div>
+    <button class="lc-nav-item" data-view="consent">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Consent Queue
+      <span class="lc-nav-badge amber" id="navBadgeConsent" style="display:none">0</span>
+    </button>
+    <button class="lc-nav-item" data-view="humanreview">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M4 17c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Human Review
+      <span class="lc-nav-badge" id="navBadgeHuman" style="display:none;background:#ffffff;color:#000000">0</span>
+    </button>
+
+    <div class="lc-nav-section">Configuration</div>
+    <button class="lc-nav-item" data-view="settings">
+      <svg viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.5 4.5l1.4 1.4M14.1 14.1l1.4 1.4M4.5 15.5l1.4-1.4M14.1 5.9l1.4-1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Business Settings
+    </button>
+    <button class="lc-nav-item" data-view="knowledge">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path d="M4 3.5h7.5L16 8v8.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M11.5 3.5V8H16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M6.5 11h6M6.5 13.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Company Knowledge
+    </button>
+    <button class="lc-nav-item" data-view="integrations">
+      <svg viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="12" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="2" y="12" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M15 8v2a2 2 0 0 1-2 2H7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5 12v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Integrations
+    </button>
+  </nav>
+
+  <div class="lc-sidebar-user">
+    <div class="lc-user-avatar" id="lcUserAvatar">U</div>
+    <div>
+      <div class="lc-user-name" id="lcUserName">Loading…</div>
+      <div class="lc-user-plan" id="lcUserPlan">—</div>
+    </div>
+    <button class="lc-logout-btn" id="lcLogoutBtn" title="Sign out">
+      <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+        <path d="M6 14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h3M11 11l3-3-3-3M14 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════════════ -->
+<main class="lc-main">
+  <header class="lc-topbar" style="overflow:visible;">
+    <!-- Hamburger: only visible on mobile -->
+    <button class="lc-hamburger" id="lcHamburger" aria-label="Open menu" style="display:none;background:none;border:none;cursor:pointer;padding:6px;color:var(--text2);flex-shrink:0">
+      <svg viewBox="0 0 20 20" fill="none" width="20" height="20">
+        <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="lc-topbar-title" id="lcPageTitle">All Leads</div>
+    <!-- Action buttons: shown only on lead-list views -->
+    <div class="lc-topbar-actions" id="lcTopbarActions" style="display:flex;align-items:center;gap:8px;margin-left:auto">
+      <span id="autoPollIndicator" title="Auto-polling every 60s" style="display:none;align-items:center;gap:5px;font-size:11px;color:var(--text3)">
+        <span style="width:6px;height:6px;border-radius:50%;background:#ffffff;display:inline-block;animation:lc-pulse 2s infinite"></span>
+        Auto
+      </span>
+      <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnPollEmail" title="Poll inbox now">
+        <svg viewBox="0 0 16 16" fill="none" width="12" height="12">
+          <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Poll Now
+      </button>
+      <button class="lc-btn lc-btn-primary lc-btn-sm" id="btnNewLead">
+        <svg viewBox="0 0 16 16" fill="none" width="12" height="12">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Add Lead
+      </button>
+    </div>
+
+    <!-- Agent Mode Dropdown: always visible, floated to far right -->
+    <div class="lc-mode-dropdown" id="agentModeDropdown" style="margin-left:12px;flex-shrink:0;position:relative;">
+      <button class="lc-mode-trigger" id="agentModeTrigger" aria-haspopup="true" aria-expanded="false">
+        <span class="lc-mode-dot autonomous" id="agentModeDot"></span>
+        <span id="agentModeLabel">Autonomous</span>
+        <svg viewBox="0 0 10 6" fill="none" width="10" style="margin-left:4px;opacity:0.5">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="lc-mode-menu" id="agentModeMenu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;z-index:200;min-width:240px;">
+        <div class="lc-mode-menu-header">Agent Mode <span style="font-weight:400;opacity:.7">(email only — WhatsApp is always fully autonomous)</span></div>
+        <button class="lc-mode-option active" data-mode="autonomous" id="modeOptAutonomous">
+          <div class="lc-mode-option-dot autonomous"></div>
+          <div>
+            <div class="lc-mode-option-title">Fully Autonomous</div>
+            <div class="lc-mode-option-desc">AI reads, replies, and closes deals automatically. No approval needed.</div>
+          </div>
+        </button>
+        <button class="lc-mode-option" data-mode="consent" id="modeOptConsent">
+          <div class="lc-mode-option-dot consent"></div>
+          <div>
+            <div class="lc-mode-option-title">With Consent</div>
+            <div class="lc-mode-option-desc">AI drafts every reply. You review and approve before anything is sent.</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="lc-content">
+
+    <!-- ── Free trial banner (1 send remaining, not yet used) ── -->
+    <div id="freeTrialBanner" style="display:none;align-items:center;gap:12px;padding:10px 18px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;margin-bottom:16px;font-size:13px;color:var(--text2)">
+      <svg viewBox="0 0 16 16" fill="none" width="14" style="flex-shrink:0;color:var(--text)"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5L10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span>You're on the Free plan — 1 email send included. After your first send, upgrade to Pro for unlimited.</span>
+      <button class="lc-btn lc-btn-primary lc-btn-sm" style="margin-left:auto;flex-shrink:0" onclick="showView('payment')">Upgrade to Pro</button>
+    </div>
+
+    <!-- ── Free limit reached banner ──────────────────────────── -->
+    <div id="freeLimitBanner" style="display:none;align-items:center;gap:12px;padding:10px 18px;background:var(--bg2);border:1px solid var(--border3);border-radius:8px;margin-bottom:16px;font-size:13px;color:var(--text2)">
+      <svg viewBox="0 0 16 16" fill="none" width="14" style="flex-shrink:0;color:var(--text)"><path d="M8 2l6 12H2L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span>Your free send has been used. Upgrade to Pro to unlock unlimited AI sends, auto-polling, and multi-turn conversations.</span>
+      <button class="lc-btn lc-btn-primary lc-btn-sm" style="margin-left:auto;flex-shrink:0" onclick="showView('payment')">Upgrade Now</button>
+    </div>
+
+    <!-- ── LEADS VIEW ─────────────────────────────────────── -->
+    <div class="lc-view active" id="view-leads">
+      <!-- Stats -->
+      <div class="lc-stats-bar" id="lcStatsBar">
+        <div class="lc-stat-card">
+          <div class="lc-stat-value" id="statTotal">0</div>
+          <div class="lc-stat-label">Total Leads</div>
+        </div>
+        <div class="lc-stat-card">
+          <div class="lc-stat-value" id="statNew">0</div>
+          <div class="lc-stat-label">Awaiting Reply</div>
+        </div>
+        <div class="lc-stat-card">
+          <div class="lc-stat-value" id="statPending">0</div>
+          <div class="lc-stat-label">Follow-Up Queue</div>
+        </div>
+        <div class="lc-stat-card">
+          <div class="lc-stat-value" id="statClosed">0</div>
+          <div class="lc-stat-label">Closed</div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="lc-leads-header">
+        <div class="lc-leads-header-left">
+          <div class="lc-section-title" id="lcTableTitle">All Leads</div>
+        </div>
+        <div class="lc-filter-row">
+          <button class="lc-filter-btn active" data-filter="all">All</button>
+          <button class="lc-filter-btn" data-filter="new">New</button>
+          <button class="lc-filter-btn" data-filter="replied">Replied</button>
+          <button class="lc-filter-btn" data-filter="pending_followup">Follow-Up</button>
+          <button class="lc-filter-btn" data-filter="closed">Closed</button>
+        </div>
+      </div>
+
+      <div class="lc-leads-table">
+        <div class="lc-table-head">
+          <div class="lc-th">Lead</div>
+          <div class="lc-th">Intent</div>
+          <div class="lc-th">Urgency</div>
+          <div class="lc-th">Quote</div>
+          <div class="lc-th">Status</div>
+          <div class="lc-th"></div>
+        </div>
+        <div class="lc-table-body" id="lcLeadsBody">
+          <div class="lc-empty">
+            <svg class="lc-empty-icon" viewBox="0 0 48 48" fill="none">
+              <rect x="8" y="8" width="32" height="32" rx="6" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 20h16M16 28h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div class="lc-empty-title">No leads yet</div>
+            <div class="lc-empty-text">Ingest your first lead via Email (IMAP) or a webhook.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NEW LEADS VIEW ─────────────────────────────────── -->
+    <div class="lc-view" id="view-new">
+      <div id="view-new-content"></div>
+    </div>
+
+    <!-- ── PENDING VIEW ───────────────────────────────────── -->
+    <div class="lc-view" id="view-pending">
+      <div id="view-pending-content"></div>
+    </div>
+
+    <!-- ── CLOSED VIEW ────────────────────────────────────── -->
+    <div class="lc-view" id="view-closed">
+      <div id="view-closed-content"></div>
+    </div>
+
+    <!-- ── PERFORMANCE VIEW ───────────────────────────────── -->
+    <div class="lc-view" id="view-performance">
+      <div id="view-performance-content"></div>
+    </div>
+
+    <!-- ── AI SALES MANAGER VIEW ──────────────────────────── -->
+    <div class="lc-view" id="view-intelligence">
+      <div id="view-intelligence-content"></div>
+    </div>
+
+    <!-- ── MANUAL INGEST VIEW ─────────────────────────────── -->
+    <div class="lc-view" id="view-ingest">
+      <div class="lc-ingest-form">
+        <div class="lc-detail-section-title" style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:20px;">Manual Lead Ingestion</div>
+        <div class="lc-field">
+          <label class="lc-label">Customer Name</label>
+          <input class="lc-input" id="ingestName" placeholder="Jane Smith" />
+        </div>
+        <div class="lc-field">
+          <label class="lc-label">Email Address *</label>
+          <input class="lc-input" id="ingestEmail" type="email" placeholder="jane@example.com" />
+        </div>
+        <div class="lc-field">
+          <label class="lc-label">Subject / Topic</label>
+          <input class="lc-input" id="ingestSubject" placeholder="Roof inspection quote request" />
+        </div>
+        <div class="lc-field">
+          <label class="lc-label">Message Body *</label>
+          <textarea class="lc-textarea" id="ingestBody" rows="5" placeholder="Hi, I need a quote for…"></textarea>
+        </div>
+        <div class="lc-field">
+          <label class="lc-label">Source</label>
+          <select class="lc-select" id="ingestSource">
+            <option value="form">Website Form</option>
+            <option value="phone">Phone Call Notes</option>
+            <option value="walkin">Walk-In</option>
+            <option value="referral">Referral</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button class="lc-btn lc-btn-ghost" id="btnIngestOnly">Save Without Processing</button>
+          <button class="lc-btn lc-btn-primary" id="btnIngestAndProcess">
+            <svg viewBox="0 0 16 16" fill="none" width="12">
+              <path d="M8 2a6 6 0 1 1 0 12A6 6 0 0 1 8 2z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M5 8h6M8 5l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Save & Process with AI
+          </button>
+          <span class="lc-spinner" id="ingestSpinner" style="display:none;margin-left:6px"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WHATSAPP VIEW ─────────────────────────────────── -->
+    <div class="lc-view" id="view-whatsapp">
+
+      <!-- ── Connected state ───────────────────────────────── -->
+      <div id="waConnectedCard" class="lc-connect-card" style="display:none">
+        <div class="lc-connect-icon">
+          <svg viewBox="0 0 24 24" fill="none" width="24">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.47 3.43 1.3 4.87L2 22l5.26-1.27A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M8.9 10c.6 1.2 1.8 3 3.6 3.6.24-.36.72-.96.96-1.2.96.48 1.68.84 2.04 1.08-.24.96-1.08 1.92-2.04 1.92-2.16 0-5.76-3.6-5.76-5.76 0-.96.96-1.8 1.92-2.04.24.36.6 1.08 1.08 2.04-.24.24-.84.72-1.2.96.12.24.36.48.6.6z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="lc-connect-info">
+          <div class="lc-connect-title">WhatsApp Connected</div>
+          <div class="lc-connect-meta" id="waConnectedMeta">—</div>
+        </div>
+        <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnDisconnectWA" style="margin-left:auto">Disconnect</button>
+      </div>
+
+      <!-- ── Connect card (Embedded Signup) ──────────────────── -->
+      <div id="waConnectCard" class="lc-settings-section">
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 20 20" fill="none" width="18">
+            <path d="M10 2C5.58 2 2 5.58 2 10c0 1.5.4 2.9 1.1 4.1L2 18l4.1-1.1C7.3 17.6 8.6 18 10 18c4.42 0 8-3.58 8-8s-3.58-8-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M7.5 8.5c.5 1 1.5 2.5 3 3 .2-.3.6-.8.8-1 .8.4 1.4.7 1.7.9-.2.8-.9 1.6-1.7 1.6-1.8 0-4.8-3-4.8-4.8 0-.8.8-1.5 1.6-1.7.2.3.5.9.9 1.7-.2.2-.7.6-1 .8.1.2.3.4.5.5z" fill="currentColor" stroke="none"/>
+          </svg>
+          Connect Your WhatsApp Business Number
+        </div>
+        <div class="lc-settings-sub">Connect your number in one click through Meta's secure sign-in — no codes or tokens to copy.</div>
+
+        <div style="margin-top:16px;display:grid;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">1</span>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;">Click Connect with WhatsApp below and log in with the Facebook account that manages your business.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">2</span>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;">Pick or create a WhatsApp Business Account and select the phone number you want to use.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">3</span>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;">Humarains finishes the setup automatically and starts receiving WhatsApp messages right away.</div>
+          </div>
+        </div>
+
+        <div id="waConnectError" style="display:none;margin-top:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);"></div>
+
+        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+          <button class="lc-btn lc-btn-primary" id="btnWAConnect">
+            <svg viewBox="0 0 20 20" fill="none" width="14">
+              <path d="M10 2C5.58 2 2 5.58 2 10c0 1.5.4 2.9 1.1 4.1L2 18l4.1-1.1C7.3 17.6 8.6 18 10 18c4.42 0 8-3.58 8-8s-3.58-8-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M7.5 8.5c.5 1 1.5 2.5 3 3 .2-.3.6-.8.8-1 .8.4 1.4.7 1.7.9-.2.8-.9 1.6-1.7 1.6-1.8 0-4.8-3-4.8-4.8 0-.8.8-1.5 1.6-1.7.2.3.5.9.9 1.7-.2.2-.7.6-1 .8.1.2.3.4.5.5z" fill="currentColor" stroke="none"/>
+            </svg>
+            Connect with WhatsApp
+          </button>
+          <div id="waConnectSpinner" style="display:none;font-size:12px;color:var(--text3);">Connecting…</div>
+        </div>
+      </div>
+
+      <!-- ── Test + status (shown when connected) ───────────── -->
+      <div id="waTestSection" class="lc-settings-section" style="display:none;margin-top:0">
+        <div class="lc-settings-title">Send a Test Message</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+          <div style="flex:1;min-width:180px;">
+            <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:5px;">Your phone number (send "hi" to your WhatsApp Business number from it first)</label>
+            <input class="lc-input" id="waTestPhone" placeholder="+1 555 000 0000" style="width:100%;box-sizing:border-box"/>
+          </div>
+          <button class="lc-btn lc-btn-primary" id="btnWATest" style="flex-shrink:0;">
+            <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M2 8l9-5v10L2 8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M11 8H2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            Send Test
+          </button>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--text3);">
+          Webhook URL: <code id="waWebhookUrl" style="background:rgba(0,0,0,.2);padding:2px 6px;border-radius:4px;font-size:11px;word-break:break-all;"></code>
+        </div>
+      </div>
+
+      <!-- ── How WhatsApp replies work (Meta's 24-hour rule) ─────── -->
+      <div id="waRulesSection" class="lc-settings-section" style="display:none;margin-top:0">
+        <div class="lc-settings-title">Replies and follow-ups</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6;">
+          Humarains only replies on WhatsApp. It answers people who message your number, and only within 24 hours of their last message,
+          which is the window WhatsApp allows for free-form replies. It never starts a conversation, never sends marketing or broadcast
+          messages, and never messages anyone who has not written to you on WhatsApp first or who has said STOP or "no thanks".
+          Follow-ups after the 24 hours go by email when the customer gave an address.
+        </div>
+      </div>
+
+      <!-- ── WhatsApp Conversation Threads ─────────────────── -->
+      <div id="waLeadsSection" style="display:none;margin-top:0">
+        <div class="lc-settings-section" style="padding-bottom:0;border-bottom:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div>
+              <div class="lc-settings-title" style="margin-bottom:2px">Active Conversations</div>
+              <div style="font-size:12px;color:var(--text3)">WhatsApp threads — click any to open the full conversation</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="display:flex;gap:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+                <button class="wa-filter-btn active" data-waf="all" style="padding:5px 12px;font-size:12px;border:none;background:none;color:var(--text2);cursor:pointer;transition:all .15s">All</button>
+                <button class="wa-filter-btn" data-waf="new" style="padding:5px 12px;font-size:12px;border:none;background:none;color:var(--text2);cursor:pointer;border-left:1px solid var(--border);transition:all .15s">New</button>
+                <button class="wa-filter-btn" data-waf="pending_followup" style="padding:5px 12px;font-size:12px;border:none;background:none;color:var(--text2);cursor:pointer;border-left:1px solid var(--border);transition:all .15s">Follow-Up</button>
+                <button class="wa-filter-btn" data-waf="closed" style="padding:5px 12px;font-size:12px;border:none;background:none;color:var(--text2);cursor:pointer;border-left:1px solid var(--border);transition:all .15s">Closed</button>
+              </div>
+            </div>
+          </div>
+          <div id="waLeadsList"></div>
+        </div>
+      </div>
+
+      <!-- ── How it works ───────────────────────────────────── -->
+      <div class="lc-settings-section" style="margin-top:0">
+        <div class="lc-settings-title">How It Works</div>
+        <div style="display:grid;gap:8px;margin-top:4px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--text2);">
+            <span style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--text);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:1px solid var(--border2);">1</span>
+            A customer messages your WhatsApp Business number
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--text2);">
+            <span style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--text);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:1px solid var(--border2);">2</span>
+            Meta delivers it to Humarains in real time via your webhook
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--text2);">
+            <span style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--text);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:1px solid var(--border2);">3</span>
+            The AI qualifies, quotes, and replies — or flags for human review
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--text2);">
+            <span style="width:22px;height:22px;border-radius:50%;background:var(--bg3);color:var(--text);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:1px solid var(--border2);">4</span>
+            Replies thread correctly — the AI always has full conversation context
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-whatsapp -->
+
+
+    
+
+    <!-- ── EMAIL VIEW (IMAP + SMTP) ──────────────────────────── -->
+    <div class="lc-view" id="view-email">
+      <div id="emailStatusCard" class="lc-connect-card" style="display:none">
+        <div class="lc-connect-icon">
+          <svg viewBox="0 0 24 24" fill="none" width="24">
+            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 8l10 6 10-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="flex:1">
+          <div class="lc-connect-title" id="emailConnectedTitle">Email Connected</div>
+          <div class="lc-connect-sub" id="emailConnectedAddress">—</div>
+        </div>
+        <button class="lc-btn lc-btn-primary" id="btnPollNow">
+          Poll Inbox Now
+        </button>
+        <button class="lc-btn lc-btn-ghost" id="btnTestEmail">Send test</button>
+        <button class="lc-btn lc-btn-ghost" id="btnDisconnectEmail">Disconnect</button>
+      </div>
+
+      <div id="emailConnectCard" class="lc-settings-section">
+        <div class="lc-settings-title">Connect Your Email</div>
+        <div class="lc-settings-sub">One account, two protocols: IMAP reads inbound enquiries, SMTP sends AI replies. Most providers (Gmail, Outlook, Zoho, your own domain host, etc.) support both with the same email + password or app password.</div>
+
+        <!-- Step-by-step guide -->
+        <details style="margin-top:16px;" id="emailSetupGuide">
+          <summary style="font-size:13px;color:var(--text2);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;gap:6px;" onclick="var a=document.getElementById('emailGuideArrow');a.style.transform=this.parentElement.open?'rotate(0deg)':'rotate(-90deg)'">
+            <svg viewBox="0 0 16 16" fill="none" width="12" id="emailGuideArrow" style="transition:transform .2s;transform:rotate(-90deg)"><path d="M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            How to connect your inbox — step by step
+          </summary>
+
+          <div style="margin-top:14px;display:grid;gap:10px;">
+
+            <!-- Quick-fill provider buttons -->
+            <div style="font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:.07em;padding-bottom:4px;border-bottom:1px solid var(--border2);">Quick-fill for common providers</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+              <button type="button" class="lc-btn lc-btn-ghost lc-btn-sm" onclick="document.getElementById('emailImapHost').value='imap.gmail.com';document.getElementById('emailImapPort').value='993';document.getElementById('emailSmtpHost').value='smtp.gmail.com';document.getElementById('emailSmtpPort').value='587';" style="font-size:12px;">Gmail</button>
+              <button type="button" class="lc-btn lc-btn-ghost lc-btn-sm" onclick="document.getElementById('emailImapHost').value='outlook.office365.com';document.getElementById('emailImapPort').value='993';document.getElementById('emailSmtpHost').value='smtp.office365.com';document.getElementById('emailSmtpPort').value='587';" style="font-size:12px;">Outlook / Microsoft 365</button>
+              <button type="button" class="lc-btn lc-btn-ghost lc-btn-sm" onclick="document.getElementById('emailImapHost').value='imap.zoho.com';document.getElementById('emailImapPort').value='993';document.getElementById('emailSmtpHost').value='smtp.zoho.com';document.getElementById('emailSmtpPort').value='587';" style="font-size:12px;">Zoho Mail</button>
+              <button type="button" class="lc-btn lc-btn-ghost lc-btn-sm" onclick="document.getElementById('emailImapHost').value='mail.privateemail.com';document.getElementById('emailImapPort').value='993';document.getElementById('emailSmtpHost').value='mail.privateemail.com';document.getElementById('emailSmtpPort').value='587';" style="font-size:12px;">Namecheap / cPanel</button>
+            </div>
+
+            <!-- Part 1 - Gmail -->
+            <div style="font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:.07em;padding-bottom:4px;border-bottom:1px solid var(--border2);margin-top:4px;">Part 1 — Gmail (App Password)</div>
+
+            <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;">
+              <svg viewBox="0 0 16 16" fill="none" width="14" style="flex-shrink:0;margin-top:1px;color:var(--text)"><path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="5.5" r=".6" fill="currentColor"/></svg>
+              <span style="font-size:12px;color:var(--text2);line-height:1.6;">Gmail requires a 16-character App Password — your normal Google password will not work. Follow these steps to generate one.</span>
+            </div>
+
+            <div style="display:grid;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">1</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Go to <a href="https://myaccount.google.com/security" target="_blank" style="color:var(--text);">myaccount.google.com/security</a> and make sure 2-Step Verification is turned On. App Passwords are only available when 2FA is enabled.</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">2</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Visit <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--text);">myaccount.google.com/apppasswords</a>. In the App name field type <em>Humarains</em> and click Create.</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">3</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Google displays a 16-character password (e.g. <code style="background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-size:11px;">abcd efgh ijkl mnop</code>). Copy it, paste it into the Password / App Password field below (spaces are fine), and click Gmail above to fill in the server settings automatically.</div>
+              </div>
+            </div>
+
+            <!-- Part 2 - Outlook -->
+            <div style="font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:.07em;padding-bottom:4px;border-bottom:1px solid var(--border2);margin-top:4px;">Part 2 — Outlook / Microsoft 365</div>
+
+            <div style="display:grid;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">4</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Sign into <a href="https://account.microsoft.com" target="_blank" style="color:var(--text);">account.microsoft.com</a>. Go to Security → Advanced security options → App passwords and create a new one named <em>Humarains</em>.</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">5</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">If your account is managed by an organisation (Microsoft 365), ask your IT admin to enable SMTP AUTH for your mailbox in the <a href="https://admin.microsoft.com" target="_blank" style="color:var(--text);">Microsoft 365 Admin Center</a> under Users → Active users → [your account] → Mail → Manage email apps.</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">6</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Click Outlook / Microsoft 365 above to auto-fill the server fields, enter your email address and the app password, then click Connect Email.</div>
+              </div>
+            </div>
+
+            <!-- Part 3 - Any other provider -->
+            <div style="font-size:12px;color:var(--text);text-transform:uppercase;letter-spacing:.07em;padding-bottom:4px;border-bottom:1px solid var(--border2);margin-top:4px;">Part 3 — Any other provider (Zoho, cPanel, custom domain, etc.)</div>
+
+            <div style="display:grid;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">7</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Find your provider's IMAP and SMTP settings — usually in their help centre under "Email client settings" or "IMAP configuration". You need four values: IMAP host, IMAP port (usually 993), SMTP host, and SMTP port (usually 587).</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">8</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Use your normal email password unless your provider requires an app-specific password (Zoho does — generate one at <a href="https://accounts.zoho.com/home#security/app-password" target="_blank" style="color:var(--text);">accounts.zoho.com → Security → App Passwords</a>).</div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#fff;color:#000;font-size:10px;display:flex;align-items:center;justify-content:center;">9</span>
+                <div style="font-size:13px;color:var(--text2);line-height:1.6;">Fill in all fields below and click Connect Email. Humarains verifies the IMAP connection before saving — if it fails, double-check the hostname and that IMAP is enabled on your account.</div>
+              </div>
+            </div>
+
+            <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;display:flex;gap:8px;align-items:flex-start;margin-top:2px;">
+              <svg viewBox="0 0 16 16" fill="none" width="14" style="flex-shrink:0;margin-top:1px;color:var(--text)"><path d="M2 8l5 5L14 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:12px;color:var(--text2);line-height:1.6;">Once connected, Humarains polls your inbox automatically every few minutes and processes new enquiries with AI — no manual action needed.</span>
+            </div>
+
+          </div>
+        </details>
+
+        <div class="lc-settings-grid" style="margin-top:16px;">
+          <div class="lc-field">
+            <label class="lc-label">Email Address</label>
+            <input class="lc-input" id="emailUser" placeholder="you@example.com" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Password / App Password</label>
+            <input class="lc-input" id="emailPass" type="password" placeholder="••••••••" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">IMAP Host</label>
+            <input class="lc-input" id="emailImapHost" placeholder="imap.example.com" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">IMAP Port</label>
+            <input class="lc-input" id="emailImapPort" placeholder="993" value="993" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">SMTP Host</label>
+            <input class="lc-input" id="emailSmtpHost" placeholder="smtp.example.com" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">SMTP Port</label>
+            <input class="lc-input" id="emailSmtpPort" placeholder="587" value="587" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">From Name</label>
+            <input class="lc-input" id="emailFromName" placeholder="Your Business Name" />
+          </div>
+        </div>
+        <button class="lc-btn lc-btn-primary" id="btnSaveEmail" style="margin-top:8px">
+          Connect Email
+        </button>
+        <button class="lc-btn lc-btn-ghost" id="btnTestEmailSetup" style="margin-top:8px;margin-left:8px;">
+          Send Test Email
+        </button>
+      </div>
+    </div>
+
+    <!-- ── WEBHOOK VIEW ───────────────────────────────────── -->
+    <div class="lc-view" id="view-webhook">
+      <div class="lc-settings-section">
+        <div class="lc-settings-title">Website Form Webhook</div>
+        <div class="lc-settings-sub">POST your website contact form data to this endpoint to auto-ingest leads.</div>
+
+        <div class="lc-field">
+          <label class="lc-label">Your Webhook URL</label>
+          <div class="lc-endpoint-url" id="webhookUrl">Loading…</div>
+        </div>
+
+        <div class="lc-field">
+          <label class="lc-label">Example Request</label>
+          <div class="lc-code" id="webhookCode">Loading…</div>
+        </div>
+
+        <div class="lc-field" style="margin-top:24px">
+          <label class="lc-label">Send a Test Payload</label>
+          <button class="lc-btn lc-btn-primary lc-btn-sm" id="btnTestWebhook">Send Test Lead</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS VIEW ──────────────────────────────────── -->
+    <div class="lc-view" id="view-settings">
+      <div class="lc-settings-section">
+        <div class="lc-settings-title">Business Profile</div>
+        <div class="lc-settings-sub">Used to personalise AI replies and quotes.</div>
+        <div class="lc-settings-grid">
+          <div class="lc-field">
+            <label class="lc-label">Business Name</label>
+            <input class="lc-input" id="settBusinessName" placeholder="Smith's Plumbing Co." />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Business Type</label>
+            <input class="lc-input" id="settBusinessType" placeholder="Plumbing & HVAC" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Owner / Rep Name</label>
+            <input class="lc-input" id="settOwnerName" placeholder="Tom Smith" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Phone Number</label>
+            <input class="lc-input" id="settPhone" placeholder="+1 555 000 1234" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Booking URL (optional)</label>
+            <input class="lc-input" id="settBookingUrl" placeholder="https://cal.com/yourname" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Currency</label>
+            <select class="lc-select" id="settCurrency">
+              <option value="USD">USD ($)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="AUD">AUD (A$)</option>
+              <option value="CAD">CAD (C$)</option>
+              <option value="SGD">SGD (S$)</option>
+            </select>
+          </div>
+        </div>
+        <button class="lc-btn lc-btn-primary" id="btnSaveSettings">Save Profile</button>
+      </div>
+
+      <div class="lc-settings-section">
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">Service Pricing Rules <span id="svcRequiredPill" style="display:none;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--bg4);color:var(--text);border:1px dashed var(--border3);letter-spacing:0.02em">Required</span></div>
+        <div class="lc-settings-sub">Define your services and pricing. AI uses ONLY these rules to calculate quotes — it never invents prices.</div>
+
+        <div class="lc-services-list" id="settServicesList"></div>
+
+        <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnAddService" style="margin-bottom:8px">
+          <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add Service
+        </button>
+
+        <div id="addServiceForm" style="display:none;margin-top:16px;">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;">
+            <div class="lc-settings-grid">
+              <div class="lc-field">
+                <label class="lc-label">Service Name</label>
+                <input class="lc-input" id="svcName" placeholder="Roof Inspection" />
+              </div>
+              <div class="lc-field">
+                <label class="lc-label">Base Price</label>
+                <input class="lc-input" id="svcBasePrice" type="number" placeholder="150" />
+              </div>
+              <div class="lc-field">
+                <label class="lc-label">Price Per Unit (optional)</label>
+                <input class="lc-input" id="svcPricePerUnit" type="number" placeholder="50" />
+              </div>
+              <div class="lc-field">
+                <label class="lc-label">Unit Label (e.g. "room")</label>
+                <input class="lc-input" id="svcUnitLabel" placeholder="room" />
+              </div>
+              <div class="lc-field">
+                <label class="lc-label">Emergency Surcharge</label>
+                <input class="lc-input" id="svcEmergency" type="number" placeholder="100" />
+              </div>
+              <div class="lc-field">
+                <label class="lc-label">Priority Surcharge</label>
+                <input class="lc-input" id="svcPriority" type="number" placeholder="50" />
+              </div>
+            </div>
+            <div class="lc-field">
+              <label class="lc-label">Quote Notes (shown to customer)</label>
+              <input class="lc-input" id="svcNotes" placeholder="Final price subject to on-site assessment" />
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              <button class="lc-btn lc-btn-primary lc-btn-sm" id="btnSaveService">Add Service</button>
+              <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnCancelService">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <input type="hidden" id="settTimezone" value="UTC" />
+        <button class="lc-btn lc-btn-primary" id="btnSavePricing" style="margin-top:16px;">Save Pricing Rules</button>
+      </div>
+
+      <!-- ── Agent permissions: what the Agent may do on its own, and the limits around it ── -->
+      <div class="lc-settings-section" id="autonomySection">
+        <div class="lc-settings-title">What your Agent can do on its own</div>
+        <div class="lc-settings-sub">Choose what the Agent may do without you: follow up with quiet leads, offer a discount, text back a missed WhatsApp call, ask for reviews. For each one you decide whether it is off, asks you first, or runs automatically. It never goes beyond the limits you set here.</div>
+        <div id="auMount"></div>
+      </div>
+
+      <!-- ── Human handover (the AI passes a ready-to-book customer to the right person) ── -->
+      <div class="lc-settings-section" id="handoverSection">
+      <div class="lc-settings-title">Human handover</div>
+      <div class="lc-settings-sub">When a customer is ready to book, the AI stops replying and passes the conversation to the right person on your team, with the customer's phone number and email. The AI tells the customer who will be in touch.</div>
+      <label style="display:flex;align-items:center;gap:10px;margin:14px 0 4px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="hoEnabled"> <span>Hand over to a person when a customer is ready to book</span>
+      </label>
+      <div id="hoBody">
+        <div class="lc-label" style="margin-top:18px;">Hand over when</div>
+        <div id="hoStages" style="display:grid;gap:8px;margin:6px 0 4px;"></div>
+
+        <div class="lc-label" style="margin-top:20px;">Your team</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:10px;">
+          List the jobs each person handles (for example "roof repair, gutters"). The AI matches the customer's job to a person.
+          Someone marked "everything else" gets leads that match nobody. If there is no match and no such person, the handover comes to you.
+        </div>
+        <div id="hoContacts"></div>
+        <button type="button" class="lc-btn lc-btn-ghost lc-btn-sm" id="hoAdd">+ Add a person</button>
+
+        <label style="display:flex;align-items:center;gap:10px;margin:18px 0 0;font-size:13px;cursor:pointer;">
+          <input type="checkbox" id="hoCopy"> <span>Copy me (the owner) on every handover</span>
+        </label>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:18px;">
+        <button type="button" class="lc-btn lc-btn-primary" id="hoSave">Save handover settings</button>
+        <span id="hoMsg" style="font-size:12px;color:var(--text3);"></span>
+      </div>
+      </div>
+
+      <!-- ── Service Timing ───────────────────────────────────── -->
+      <div class="lc-settings-section" id="serviceTimingSection">
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 20 20" fill="none" width="18" style="color:var(--text2)">
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 6v4.5l2.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Service Timing
+        </div>
+        <div class="lc-settings-sub">Configure your appointment scheduling rules. The AI uses these when booking meetings and suggesting available slots.</div>
+
+        <div class="lc-settings-grid" style="margin-top:12px;">
+          <div class="lc-field">
+            <label class="lc-label">Default Appointment Duration (mins)</label>
+            <input class="lc-input" id="settApptDuration" type="number" min="15" max="480" step="15" placeholder="60" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Buffer Between Appointments (mins)</label>
+            <input class="lc-input" id="settBufferTime" type="number" min="0" max="120" step="5" placeholder="15" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Business Hours — Start</label>
+            <input class="lc-input" id="settHoursStart" type="time" value="09:00" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Business Hours — End</label>
+            <input class="lc-input" id="settHoursEnd" type="time" value="17:00" />
+          </div>
+          <div class="lc-field">
+            <label class="lc-label">Advance Notice Required (hours)</label>
+            <input class="lc-input" id="settNoticePeriod" type="number" min="0" max="168" step="1" placeholder="24" />
+          </div>
+        </div>
+
+        <div class="lc-field" style="margin-top:12px;">
+          <label class="lc-label">Working Days</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;" id="settBusinessDays">
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="0" /> Sun</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="1" checked /> Mon</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="2" checked /> Tue</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="3" checked /> Wed</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="4" checked /> Thu</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="5" checked /> Fri</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);cursor:pointer"><input type="checkbox" class="bd-checkbox" data-day="6" /> Sat</label>
+          </div>
+        </div>
+
+        <button class="lc-btn lc-btn-primary" id="btnSaveTiming" style="margin-top:16px;">Save Timing Settings</button>
+      </div>
+
+    </div><!-- /view-settings -->
+
+    <!-- ── INTEGRATIONS VIEW ────────────────────────────────── -->
+    <div class="lc-view" id="view-integrations">
+
+      <!-- WhatsApp -->
+      <div class="lc-settings-section" data-whatsapp-feature>
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 20 20" fill="none" width="18">
+            <path d="M10 2C5.58 2 2 5.58 2 10c0 1.5.4 2.9 1.1 4.1L2 18l4.1-1.1C7.3 17.6 8.6 18 10 18c4.42 0 8-3.58 8-8s-3.58-8-8-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M7.5 8.5c.5 1 1.5 2.5 3 3 .2-.3.6-.8.8-1 .8.4 1.4.7 1.7.9-.2.8-.9 1.6-1.7 1.6-1.8 0-4.8-3-4.8-4.8 0-.8.8-1.5 1.6-1.7.2.3.5.9.9 1.7-.2.2-.7.6-1 .8.1.2.3.4.5.5z" fill="currentColor" stroke="none"/>
+          </svg>
+          WhatsApp
+        </div>
+        <div class="lc-settings-sub">Receive inbound WhatsApp enquiries and send AI replies via the official WhatsApp Business Cloud API.</div>
+        <div style="margin-top:12px;">
+          <button class="lc-btn lc-btn-ghost lc-btn-sm" onclick="showView('whatsapp')">
+            <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M8 1C4.13 1 1 4.13 1 8c0 1.2.32 2.32.88 3.28L1 15l3.82-.87C5.72 14.68 6.84 15 8 15c3.87 0 7-3.13 7-7s-3.13-7-7-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Manage WhatsApp Settings →
+          </button>
+        </div>
+      </div>
+
+      <!-- Email Connection -->
+      <div class="lc-settings-section">
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 20 20" fill="none" width="18" style="color:var(--text2)">
+            <rect x="2" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Email Connection
+        </div>
+        <div class="lc-settings-sub">Connect your email via IMAP + SMTP so Humarains can read inbound enquiries and send AI replies.</div>
+        <div style="margin-top:12px;">
+          <button class="lc-btn lc-btn-ghost lc-btn-sm" onclick="showView('email')">
+            <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M2 4h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4Z" stroke="currentColor" stroke-width="1.4"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            Manage Email Settings →
+          </button>
+        </div>
+      </div>
+
+      <!-- Google Calendar -->
+      <div class="lc-settings-section" id="calendarSection">
+        <div class="lc-settings-title" style="display:flex;align-items:center;gap:10px;">
+          <svg viewBox="0 0 20 20" fill="none" width="18" style="color:var(--text2)">
+            <rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 8h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M7 2v3M13 2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="7" cy="12" r="1" fill="currentColor"/>
+            <circle cx="10" cy="12" r="1" fill="currentColor"/>
+            <circle cx="13" cy="12" r="1" fill="currentColor"/>
+          </svg>
+          Google Calendar
+        </div>
+        <div class="lc-settings-sub">When a lead is closed, Humarains will ask your permission before adding the appointment to Google Calendar — including a customer invite and reminders.</div>
+
+        <!-- Connected state -->
+        <div id="calConnectedCard" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;">
+            <svg viewBox="0 0 20 20" fill="none" width="18" style="color:var(--text);flex-shrink:0">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:var(--text)">Calendar Connected</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:1px" id="calConnectedEmail">—</div>
+            </div>
+            <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnDisconnectCalendar">Disconnect</button>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--text3);line-height:1.5;">
+            How it works: When any lead reaches <em>Deal Closed</em>, Humarains asks for your permission before creating a Google Calendar event — with a customer invite and reminders.
+          </div>
+          <div style="margin-top:12px;">
+            <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnTestCalendarEvent">
+              <svg viewBox="0 0 16 16" fill="none" width="12"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5.5 1.5v2M10.5 1.5v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M8 9v2.5M6.5 10.5H10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              Create Test Event
+            </button>
+            <p style="margin-top:8px;font-size:12px;color:var(--text3);line-height:1.5;">
+              Creates a harmless 30-minute placeholder event 10 minutes from now on your primary calendar, so you can confirm the connection actually works.
+            </p>
+          </div>
+
+          <!-- Upcoming events list -->
+          <div style="margin-top:18px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-size:13px;font-weight:600;color:var(--text)">Upcoming Calendar Events</div>
+              <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnRefreshCalEvents" title="Refresh">
+                <svg viewBox="0 0 16 16" fill="none" width="13"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M13.5 3v3.5H10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Refresh
+              </button>
+            </div>
+            <div id="calEventsList" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
+              <div class="lc-skeleton-row"></div>
+              <div class="lc-skeleton-row"></div>
+              <div class="lc-skeleton-row"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disconnected state -->
+        <div id="calDisconnectedCard" style="margin-top:12px;">
+          <button class="lc-btn lc-btn-primary" id="btnConnectCalendar">
+            <svg viewBox="0 0 20 20" fill="none" width="14">
+              <rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M3 8h14" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 2v3M13 2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M10 11v3M8.5 12.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Connect Google Calendar
+          </button>
+          <p style="margin-top:10px;font-size:12px;color:var(--text3);line-height:1.5;">
+            Connect your Google Calendar so Humarains can add appointments when deals close. You'll always be asked before anything is added.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /view-integrations -->
+
+    <!-- ── CONSENT QUEUE VIEW ───────────────────────────────── -->
+    <div class="lc-view" id="view-consent">
+      <div class="lc-consent-header">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">Consent Queue</div>
+          <div style="font-size:12px;color:var(--text3)">AI has drafted these replies. Review and approve or dismiss each one before anything is sent.</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnApproveAll" style="display:none">Approve All</button>
+          <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnRefreshConsent">
+            <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 2.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+      <div id="consentQueueBody">
+        <div class="lc-empty" style="margin-top:40px">
+          <svg class="lc-empty-icon" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M16 24l6 6 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="lc-empty-title">Queue is empty</div>
+          <div class="lc-empty-text">No replies are waiting for your approval.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HUMAN REVIEW VIEW ─────────────────────────────────── -->
+    <div class="lc-view" id="view-humanreview">
+      <div class="lc-consent-header">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">Human Review Required</div>
+          <div style="font-size:12px;color:var(--text3)">These emails are beyond AI's scope — they need your personal attention. Read the email, write your reply, and send it directly.</div>
+        </div>
+        <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnRefreshHuman">
+          <svg viewBox="0 0 16 16" fill="none" width="12"><path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 2.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div id="humanReviewBody">
+        <div class="lc-empty" style="margin-top:40px">
+          <svg class="lc-empty-icon" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="16" r="6" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10 40c0-7.73 6.27-14 14-14s14 6.27 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="lc-empty-title">No escalations</div>
+          <div class="lc-empty-text">All leads are within AI's handling capability.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WORKFLOWS VIEW (built entirely by workflows.js) ───── -->
+    <div class="lc-view" id="view-workflows">
+      <div id="view-workflows-content"></div>
+    </div>
+
+    <!-- ── COMPANY KNOWLEDGE VIEW (built entirely by leads.js KnowledgeUI) ── -->
+    <div class="lc-view" id="view-knowledge">
+      <div id="view-knowledge-content"></div>
+    </div>
+
+  </div><!-- /lc-content -->
+</main>
+</div><!-- /lc-root -->
+
+<!-- ══════════════════════════════════════════════════════
+     WORKFLOW EDITOR SLIDE-OVER (separate from the lead detail one)
+══════════════════════════════════════════════════════ -->
+<div class="wf-slideover-overlay" id="wfOverlay"></div>
+<div class="wf-slideover" id="wfSlideover">
+  <div class="wf-slideover-header">
+    <div class="wf-slideover-title" id="wfSlideoverTitle">Configure Step</div>
+    <button class="lc-slideover-close" id="wfSlideoverClose">
+      <svg viewBox="0 0 16 16" fill="none" width="12">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="wf-slideover-body" id="wfSlideoverBody"></div>
+  <div class="wf-slideover-footer" id="wfSlideoverFooter"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     LEAD DETAIL SLIDE-OVER
+══════════════════════════════════════════════════════ -->
+<div class="lc-slideover-overlay" id="lcOverlay"></div>
+<div class="lc-slideover" id="lcSlideover">
+  <div class="lc-slideover-header">
+    <div class="lc-slideover-title" id="lcSlideoverTitle">Lead Details</div>
+    <button class="lc-slideover-close" id="lcSlideoverClose">
+      <svg viewBox="0 0 16 16" fill="none" width="12">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+  <div class="lc-slideover-body" id="lcSlideoverBody">
+    <!-- Populated by JS -->
+  </div>
+  <div class="lc-slideover-footer" id="lcSlideoverFooter">
+    <button class="lc-btn lc-btn-primary" id="lcBtnProcessLead" style="display:none">
+      <span class="lc-spinner" style="display:none" id="processSpinner"></span>
+      Process with AI
+    </button>
+    <button class="lc-btn lc-btn-success" id="lcBtnSendReply" style="display:none">Send Reply</button>
+    <button class="lc-btn lc-btn-ghost lc-btn-sm" id="lcBtnFollowUp" style="display:none">
+      + Follow-Up
+    </button>
+    <button class="lc-btn lc-btn-ghost lc-btn-sm" id="lcBtnAddToCalendar" style="display:none" title="Add to Google Calendar">
+      <svg viewBox="0 0 16 16" fill="none" width="12">
+        <rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M2 6.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M5.5 1.5v2M10.5 1.5v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M8 9v2.5M6.5 10.5H10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Add to Calendar
+    </button>
+    <button class="lc-btn lc-btn-ghost lc-btn-sm" id="lcBtnCloseLead" style="display:none">
+      Close Lead
+    </button>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="lcToast"></div>
+
+<!-- ── Calendar Permission Modal ──────────────────────────── -->
+<div id="calPermModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px 28px 24px;max-width:440px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:flex-start;gap:14px;">
+      <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:var(--bg4);display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 20 20" fill="none" width="20" style="color:var(--text)">
+          <rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M3 8h14" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 2v3M13 2v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="7" cy="12" r="1" fill="currentColor"/><circle cx="10" cy="12" r="1" fill="currentColor"/><circle cx="13" cy="12" r="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:15px;color:var(--text);margin-bottom:6px;">Add to Google Calendar?</div>
+        <div style="font-size:13px;color:var(--text3);line-height:1.55;" id="calPermModalBody">
+          This deal has been closed. Would you like Humarains to extract the appointment details from the conversation and add it to your Google Calendar?
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:22px;justify-content:flex-end;">
+      <button class="lc-btn lc-btn-ghost lc-btn-sm" id="calPermDecline">Not now</button>
+      <button class="lc-btn lc-btn-primary lc-btn-sm" id="calPermConfirm">
+        <svg viewBox="0 0 16 16" fill="none" width="12"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6.5h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5.5 1.5v2M10.5 1.5v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M8 9v2.5M6.5 10.5H10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Add to Calendar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="leads.js?v=1782003958"></script>
+<script src="handover-ui.js?v=2" defer></script>
+<script src="autonomy-ui.js?v=1" defer></script>
+<script src="workflows.js?v=1782003953"></script>
+<script src="performance.js?v=1782003953"></script>
+<script src="intelligence.js?v=1782003953"></script>
+
+<!-- Mobile sidebar overlay -->
+<div class="lc-sidebar-overlay" id="lcSidebarOverlay"></div>
+</body>
+</html>

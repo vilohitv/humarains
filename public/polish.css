@@ -1,0 +1,85 @@
+/* ════════════════════════════════════════════════════════════════════
+   polish.css — the last layer of the app UI.
+
+   One accent (teal, from the logo) for focus and selection. Ink for everything else. Structure comes from
+   hairline borders instead of floating shadows, fields and secondary buttons have visible edges, and radii
+   come from a small scale: 10px for controls, 16px for cards. Loaded after premium.css on purpose.
+   ════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --pm-accent: #12889A;
+  --pm-accent-ring: rgba(18, 136, 154, .22);
+  --pm-r-card: 16px;
+  --pm-r-field: 10px;
+  --pm-hair: rgba(11, 37, 42, .11);
+  --pm-ring: rgba(11, 37, 42, .22);
+  --pm-shadow-card: 0 1px 2px rgba(11, 37, 42, .04);
+  --pm-shadow-lift: 0 14px 30px -20px rgba(11, 37, 42, .30);
+}
+
+body.agent-ui { font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* ── Focus: keyboard users get one clear ring, mouse users get none ─────────────── */
+body.agent-ui :is(button, a, input, select, textarea, [role="button"], [tabindex]):focus:not(:focus-visible) { outline: none !important; box-shadow: none; }
+body.agent-ui :is(button, a, [role="button"], .lc-nav-item, .lc-lead-row, .lc-filter-btn, .wf-tab):focus-visible,
+body.agent-ui .lc-main :is(button, a, input, select, textarea, [role="button"], .lc-nav-item, .lc-lead-row):focus-visible {
+  outline: 2px solid var(--pm-accent) !important; outline-offset: 2px !important; box-shadow: none !important;
+}
+
+/* ── Fields: visible edge, white fill, calm hover, clear focus ──────────────────── */
+body.agent-ui .lc-input, body.agent-ui .lc-select, body.agent-ui .lc-textarea,
+body.agent-ui .lc-view input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+body.agent-ui .lc-view select, body.agent-ui .lc-view textarea,
+body.agent-ui .lc-slideover input:not([type="checkbox"]):not([type="radio"]), body.agent-ui .lc-slideover textarea, body.agent-ui .lc-slideover select,
+body.agent-ui .wf-slideover input:not([type="checkbox"]):not([type="radio"]), body.agent-ui .wf-slideover textarea, body.agent-ui .wf-slideover select,
+body.agent-ui .wf-modal input:not([type="checkbox"]):not([type="radio"]), body.agent-ui .wf-modal textarea, body.agent-ui .wf-modal select {
+  background-color: #fff !important;
+  border: 1px solid var(--pm-ring) !important;
+  border-radius: var(--pm-r-field) !important;
+}
+body.agent-ui .lc-input:hover, body.agent-ui .lc-select:hover, body.agent-ui .lc-textarea:hover,
+body.agent-ui .lc-view input:hover:not([type="checkbox"]):not([type="radio"]), body.agent-ui .lc-view select:hover, body.agent-ui .lc-view textarea:hover {
+  border-color: rgba(11, 37, 42, .45) !important; background-color: #fff !important;
+}
+body.agent-ui .lc-input:focus, body.agent-ui .lc-select:focus, body.agent-ui .lc-textarea:focus,
+body.agent-ui .lc-view input:focus:not([type="checkbox"]):not([type="radio"]), body.agent-ui .lc-view select:focus, body.agent-ui .lc-view textarea:focus,
+body.agent-ui .lc-slideover input:focus, body.agent-ui .lc-slideover textarea:focus, body.agent-ui .lc-slideover select:focus,
+body.agent-ui .wf-slideover input:focus, body.agent-ui .wf-slideover textarea:focus, body.agent-ui .wf-slideover select:focus,
+body.agent-ui .wf-modal input:focus, body.agent-ui .wf-modal textarea:focus, body.agent-ui .wf-modal select:focus {
+  border-color: var(--pm-accent) !important; background-color: #fff !important;
+  box-shadow: 0 0 0 3px var(--pm-accent-ring) !important; outline: none !important;
+}
+
+/* ── Buttons: flat, bordered, one primary style ─────────────────────────────────── */
+body.agent-ui .lc-btn { border-radius: var(--pm-r-field) !important; letter-spacing: -.005em; }
+body.agent-ui .lc-btn-primary {
+  background: var(--pm-ink) !important; color: #fff !important; border: 1px solid var(--pm-ink) !important; box-shadow: none !important;
+}
+body.agent-ui .lc-btn-primary:hover:not([disabled]) { background: #17363C !important; border-color: #17363C !important; box-shadow: none !important; }
+body.agent-ui .lc-btn-primary:active:not([disabled]) { transform: translateY(1px); }
+body.agent-ui .lc-btn-ghost, body.agent-ui .lc-btn-dismiss { background: #fff !important; border: 1px solid var(--pm-ring) !important; color: var(--pm-ink) !important; }
+body.agent-ui .lc-btn-ghost:hover:not([disabled]), body.agent-ui .lc-btn-dismiss:hover:not([disabled]) { background: #F4F6F6 !important; border-color: var(--pm-ink) !important; }
+body.agent-ui .lc-btn[disabled], body.agent-ui .lc-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Cards: a border carries the structure, not a drop shadow ───────────────────── */
+body.agent-ui .lc-stat-card, body.agent-ui .lc-chart-card, body.agent-ui .lc-table-wrap, body.agent-ui .lc-plan-card,
+body.agent-ui .lc-settings-section, body.agent-ui .wf-template-card, body.agent-ui .wf-step-card, body.agent-ui .wf-trigger-card {
+  border: 1px solid var(--pm-hair) !important; box-shadow: var(--pm-shadow-card) !important; border-radius: var(--pm-r-card) !important;
+}
+body.agent-ui .wf-template-card:hover, body.agent-ui .wf-step-card:hover { border-color: var(--pm-ink) !important; box-shadow: none !important; transform: none !important; }
+body.agent-ui .lc-plan-card--featured { border: 2px solid var(--pm-ink) !important; }
+
+/* ── Pricing: included items in ink, excluded items quiet (they were green) ─────── */
+body.agent-ui .lc-plan-features li.is-off { color: var(--pm-ink-3) !important; opacity: 1; }
+body.agent-ui .lc-plan-features li.is-off svg { color: var(--pm-ink-3) !important; }
+body.agent-ui .lc-plan-badge { background: var(--pm-ink) !important; color: #fff !important; box-shadow: none !important; border-radius: 999px !important; }
+
+/* ── Small things that read as unfinished ───────────────────────────────────────── */
+#waConnectSpinner svg { display: inline-block; vertical-align: -2px; margin-right: 6px; }
+body.agent-ui #settingsSetupBanner, #settingsSetupBanner { background: #fff !important; border: 1px solid var(--pm-ring) !important; box-shadow: none !important; color: var(--pm-ink) !important; }
+#settingsSetupBanner svg { color: var(--pm-ink); }
+body.agent-ui ::selection { background: rgba(18, 136, 154, .22); }
+
+@media (prefers-reduced-motion: reduce) {
+  body.agent-ui *, body.agent-ui *::before, body.agent-ui *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}

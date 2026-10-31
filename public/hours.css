@@ -1,0 +1,21 @@
+/* Time zone and opening hours (Settings) */
+.tz-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tz-row .lc-select { flex: 1 1 280px; min-width: 0; }
+.tz-now, .tz-note, .hours-status { margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: var(--text2, rgba(11,37,42,.66)); }
+.tz-note { padding: 10px 12px; border-radius: 10px; background: rgba(18,136,154,.10); color: #0B252A; }
+.hours-grid { display: flex; flex-direction: column; margin-top: 6px; border: 1px solid rgba(11,37,42,.10); border-radius: 14px; overflow: hidden; background: #fff; }
+.hours-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 10px 16px; padding: 10px 14px; border-bottom: 1px solid rgba(11,37,42,.08); min-height: 56px; position: relative; }
+.hours-row:last-child { border-bottom: 0; }
+.hours-day { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: #0B252A; cursor: pointer; }
+.hours-day input { width: 18px; height: 18px; accent-color: #0B252A; cursor: pointer; }
+.hours-times { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(11,37,42,.6); }
+.hours-times .lc-input { width: 128px; flex: 0 0 auto; padding-top: 8px; padding-bottom: 8px; }
+.hours-closed { display: none; font-size: 13px; color: rgba(11,37,42,.5); }
+.hours-row.is-closed .hours-times { display: none; }
+.hours-row.is-closed .hours-closed { display: block; grid-column: 2; grid-row: 1; }
+.hours-actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+@media (max-width: 520px) {
+  .hours-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .hours-row.is-closed .hours-closed { grid-column: 1; grid-row: auto; }
+  .hours-times .lc-input { width: 100%; flex: 1 1 0; }
+}

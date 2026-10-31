@@ -1,0 +1,80 @@
+/* Onboarding wizard. Builds on auth.css (same ink-and-white language). */
+body{justify-content:flex-start;padding-top:96px}
+.ob-top{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--paper);border-bottom:1px solid var(--border);z-index:5}
+.ob-top .auth-logo{margin:0;font-size:18px}
+.ob-top .auth-logo img{width:26px;height:26px}
+.ob-signout{height:36px;padding:0 14px;border:1px solid var(--border2);background:var(--paper);border-radius:10px;font:600 14px/1 var(--font);color:var(--text);cursor:pointer}
+.ob-signout:hover{background:var(--canvas);border-color:var(--ink)}
+
+.ob-wrap{width:100%;max-width:600px}
+.ob-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.ob-step{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--text3)}
+.ob-step .dot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--paper)}
+.ob-step.active{color:var(--text)}
+.ob-step.active .dot{border-color:var(--ink);background:var(--ink);color:#fff}
+.ob-step.done{color:var(--text2)}
+.ob-step.done .dot{border-color:var(--green);background:var(--green);color:#fff}
+.ob-step .bar{display:none}
+@media (max-width:520px){.ob-step span.lbl{display:none}.ob-step{justify-content:center}}
+
+.ob-card{max-width:none;padding:34px 34px 30px}
+.ob-card .auth-title{font-size:26px}
+.ob-panel{display:none}
+.ob-panel.active{display:block}
+
+.ob-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media (max-width:520px){.ob-choices{grid-template-columns:1fr}}
+.ob-choice{position:relative;text-align:left;border:1.5px solid var(--border2);background:var(--paper);border-radius:14px;padding:16px;cursor:pointer;font-family:var(--font);color:var(--text);display:flex;flex-direction:column;gap:6px;transition:border-color .15s,box-shadow .15s}
+.ob-choice:hover:not(:disabled){border-color:var(--ink)}
+.ob-choice.selected{border-color:var(--ink);box-shadow:0 0 0 3px rgba(11,37,42,.10)}
+.ob-choice:disabled{opacity:.55;cursor:not-allowed;background:var(--canvas)}
+.ob-choice svg{width:26px;height:26px}
+.ob-choice .t{font-size:16px;font-weight:650}
+.ob-choice .d{font-size:13px;color:var(--text2);line-height:1.4}
+.ob-badge{position:absolute;top:12px;right:12px;font-size:11px;font-weight:700;letter-spacing:.02em;border:1px solid var(--border2);border-radius:999px;padding:3px 9px;background:var(--paper);color:var(--text2)}
+.ob-badge.ok{border-color:#BFE0CB;background:#EEF7F1;color:#17703D}
+
+.ob-sub-panel{display:none;border-top:1px solid var(--border);padding-top:20px}
+.ob-sub-panel.show{display:block}
+
+.ob-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.ob-chip{height:36px;padding:0 14px;border:1px solid var(--border2);background:var(--paper);border-radius:999px;font:600 14px/1 var(--font);color:var(--text);cursor:pointer}
+.ob-chip:hover{border-color:var(--ink)}
+.ob-chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+.ob-help{background:var(--canvas);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.5;color:var(--text2);margin-bottom:18px}
+.ob-help a{color:var(--text);font-weight:600;text-underline-offset:3px}
+
+.ob-adv-toggle{background:none;border:none;font:600 14px/1 var(--font);color:var(--text2);cursor:pointer;padding:0;margin:-4px 0 16px;text-decoration:underline;text-underline-offset:3px}
+.ob-adv{display:none;border:1px solid var(--border);border-radius:12px;padding:16px 16px 0;margin-bottom:18px}
+.ob-adv.show{display:block}
+.ob-row2{display:grid;grid-template-columns:1fr 110px;gap:12px}
+@media (max-width:520px){.ob-row2{grid-template-columns:1fr}}
+
+.ob-wa-list{list-style:none;display:grid;gap:10px;margin:0 0 20px;font-size:14px;color:var(--text2)}
+.ob-wa-list li{display:grid;grid-template-columns:18px 1fr;gap:10px}
+.ob-wa-list svg{width:16px;height:16px;margin-top:3px;color:var(--green)}
+
+.ob-connected{display:none;align-items:center;gap:12px;border:1px solid #BFE0CB;background:#EEF7F1;border-radius:12px;padding:14px 16px;margin-bottom:18px;color:#17703D;font-size:14px;font-weight:600}
+.ob-connected.show{display:flex}
+.ob-connected svg{width:20px;height:20px;flex-shrink:0}
+
+.ob-hint{font-size:13px;color:var(--text3);line-height:1.5;margin-top:-8px;margin-bottom:18px}
+.ob-spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:ob-s .7s linear infinite}
+@keyframes ob-s{to{transform:rotate(360deg)}}
+
+.ob-chat{display:none;gap:10px;flex-direction:column;margin:4px 0 22px}
+.ob-chat.show{display:flex}
+.ob-bubble{border:1px solid var(--border2);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.55;max-width:92%;white-space:pre-wrap;word-wrap:break-word}
+.ob-bubble .who{display:block;font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.ob-bubble.them{align-self:flex-start;background:var(--canvas)}
+.ob-bubble.us{align-self:flex-end;background:var(--paper);border-color:var(--ink)}
+.ob-note{font-size:13px;color:var(--text3);margin-top:-6px;margin-bottom:20px}
+
+.ob-next{list-style:none;display:grid;gap:12px;margin:0 0 24px}
+.ob-next li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14px;line-height:1.5;color:var(--text2)}
+.ob-next b{color:var(--text)}
+.ob-next .n{width:22px;height:22px;border:1.5px solid var(--border2);border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--text)}
+
+.ob-link{display:block;text-align:center;background:none;border:none;width:100%;font:600 14px/1 var(--font);color:var(--text2);cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px}
+.ob-link:hover{color:var(--ink)}

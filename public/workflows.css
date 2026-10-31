@@ -1,0 +1,510 @@
+/* ═══════════════════════════════════════════════════════════════
+   WORKFLOWS.CSS — Visual Workflow Builder
+   Extends the Humarains monochrome design system (see leads.css :root)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Toolbar / header row ───────────────────────────────────── */
+.wf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.wf-toolbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.wf-toolbar-sub {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 3px;
+}
+
+/* ── Templates row ───────────────────────────────────────────── */
+.wf-templates-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.wf-template-card {
+  flex: 1 1 220px;
+  min-width: 200px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.wf-template-card:hover { border-color: var(--border2); background: var(--bg3); }
+.wf-template-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.wf-template-desc { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+/* ── Workflow grid + card ───────────────────────────────────── */
+.wf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.wf-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.12s;
+}
+.wf-card:hover { border-color: var(--border2); }
+.wf-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.wf-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  word-break: break-word;
+}
+.wf-card-name:hover { text-decoration: underline; }
+.wf-card-trigger { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+.wf-card-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text2); }
+.wf-card-stats b { color: var(--text); font-weight: 600; }
+.wf-card-actions { display: flex; gap: 6px; margin-top: 2px; flex-wrap: wrap; }
+
+/* ── Status pill ─────────────────────────────────────────────── */
+.wf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 9px 3px 7px;
+  border-radius: 100px;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  flex-shrink: 0;
+}
+.wf-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
+.wf-pill.active   { color: var(--text); border-color: var(--border3); }
+.wf-pill.active::before { background: #ffffff; animation: lc-pulse 2s infinite; }
+.wf-pill.paused::before { background: transparent; border: 1.5px solid var(--text3); width: 5px; height: 5px; }
+.wf-pill.draft::before { background: var(--bg5); border: 1px solid var(--border2); width: 5px; height: 5px; }
+
+/* ── Editor top bar ──────────────────────────────────────────── */
+.wf-editor-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.wf-back-btn {
+  background: none; border: none; cursor: pointer; color: var(--text2);
+  display: flex; align-items: center; gap: 4px; font-size: 13px; padding: 4px 0;
+}
+.wf-back-btn:hover { color: var(--text); }
+.wf-name-input {
+  font-size: 16px; font-weight: 600; color: var(--text);
+  background: none; border: none; border-bottom: 1px solid transparent;
+  padding: 2px 0; min-width: 160px; flex: 1;
+}
+.wf-name-input:focus { outline: none; border-bottom-color: var(--border2); }
+.wf-editor-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-left: auto; }
+.wf-editor-desc {
+  width: 100%; background: none; border: none; color: var(--text3); font-size: 12px;
+  padding: 0 0 14px 0; resize: none;
+}
+.wf-editor-desc:focus { outline: none; color: var(--text2); }
+
+.wf-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+.wf-tab {
+  background: none; border: none; cursor: pointer; color: var(--text3);
+  font-size: 13px; font-weight: 500; padding: 9px 4px; margin-right: 18px;
+  border-bottom: 2px solid transparent; transition: color 0.1s;
+}
+.wf-tab.active { color: var(--text); border-bottom-color: var(--text); }
+.wf-tab:hover { color: var(--text2); }
+
+/* ── Canvas / trigger card ───────────────────────────────────── */
+.wf-canvas { max-width: 920px; padding-bottom: 60px; }
+/* A plain (non-branching) workflow stays a comfortable reading width; only branching ones use the extra room. */
+.wf-canvas > * { max-width: 640px; }
+.wf-canvas > .wf-branch-row { max-width: none; }
+
+.wf-trigger-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.wf-trigger-card:hover { border-color: var(--border3); }
+.wf-trigger-icon, .wf-step-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--bg4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--text);
+}
+.wf-trigger-icon svg, .wf-step-icon svg { width: 17px; height: 17px; }
+.wf-trigger-body { flex: 1; min-width: 0; }
+.wf-trigger-label { font-size: 10px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 3px; }
+.wf-trigger-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.wf-trigger-edit { color: var(--text3); flex-shrink: 0; }
+
+/* ── Connector (vertical line + add-step button) ────────────── */
+.wf-connector {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; height: 34px;
+}
+.wf-connector::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; background: var(--border2); transform: translateX(-50%);
+}
+.wf-add-btn {
+  position: relative; z-index: 2;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text2); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 6px; transition: background 0.1s, color 0.1s;
+}
+.wf-add-btn:hover { background: var(--bg4); color: var(--text); }
+.wf-add-btn svg { width: 11px; height: 11px; }
+
+/* ── Step card ────────────────────────────────────────────────── */
+.wf-step {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 13px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.wf-step:hover { border-color: var(--border2); }
+.wf-step-body { flex: 1; min-width: 0; cursor: pointer; }
+.wf-step-type {
+  font-size: 10px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text3); margin-bottom: 3px;
+}
+.wf-step-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; overflow-wrap: break-word; }
+.wf-step-summary { font-size: 12px; color: var(--text3); line-height: 1.5; overflow-wrap: break-word;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.wf-step-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.wf-icon-btn {
+  width: 26px; height: 26px; border-radius: 6px; border: none; background: none;
+  color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s, color 0.1s;
+}
+.wf-icon-btn:hover { background: var(--bg4); color: var(--text); }
+.wf-icon-btn svg { width: 13px; height: 13px; }
+
+/* ── Branch fork ──────────────────────────────────────────────── */
+.wf-fork-label {
+  text-align: center; font-size: 10px; font-family: var(--mono); color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.07em; margin: 2px 0 10px;
+}
+.wf-branch-row {
+  display: flex;
+  flex-wrap: wrap;            /* branches drop below each other instead of being squeezed */
+  gap: 18px;
+  align-items: flex-start;
+}
+.wf-branch-col {
+  flex: 1 1 260px;            /* never narrower than a readable step card */
+  min-width: min(260px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-left: 1px dashed var(--border2);
+  padding-left: 16px;
+}
+.wf-branch-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.wf-branch-label {
+  font-size: 11px; font-weight: 600; color: var(--text2);
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em;
+}
+.wf-branch-empty {
+  font-size: 12px; color: var(--text3); padding: 10px 0 2px; text-align: center;
+}
+.wf-step-chain { display: flex; flex-direction: column; align-items: stretch; }
+.wf-branch-col .wf-branch-col { padding-left: 10px; }
+.wf-branch-col .wf-branch-row { gap: 12px; }
+
+/* ── Editable AI-decision branch label ──────────────────────── */
+.wf-branch-label-input {
+  background: none; border: none; border-bottom: 1px dashed var(--border2);
+  color: var(--text2); font-size: 11px; font-family: var(--mono); text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 1px 0; width: 110px;
+}
+.wf-branch-label-input:focus { outline: none; border-bottom-color: var(--text2); }
+
+/* ── End marker ───────────────────────────────────────────────── */
+.wf-end-marker {
+  text-align: center; font-size: 11px; color: var(--text3); font-family: var(--mono);
+  padding-top: 8px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ── Workflow slide-over (editing a step / trigger) ──────────── */
+.wf-slideover-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.wf-slideover-overlay.open { opacity: 1; pointer-events: all; }
+.wf-slideover {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 560px; max-width: 95vw;
+  background: var(--bg2); border-left: 1px solid var(--border2);
+  z-index: 201; transform: translateX(100%);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.wf-slideover.open { transform: translateX(0); }
+.wf-slideover-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.wf-slideover-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.wf-slideover-body { flex: 1; overflow-y: auto; padding: 20px 22px; }
+.wf-slideover-footer {
+  padding: 14px 22px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px; flex-shrink: 0;
+}
+
+/* ── Step-type picker (inside slide-over, when adding a new step) ── */
+.wf-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wf-type-option {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 11px 12px; cursor: pointer; transition: border-color 0.1s, background 0.1s;
+  text-align: left;
+}
+.wf-type-option:hover { border-color: var(--border2); background: var(--bg4); }
+.wf-type-option-icon {
+  width: 28px; height: 28px; border-radius: 7px; background: var(--bg4);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--text);
+}
+.wf-type-option-icon svg { width: 14px; height: 14px; }
+.wf-type-option-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.wf-type-option-desc { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+/* ── Condition row builder ───────────────────────────────────── */
+.wf-cond-row { display: flex; gap: 8px; align-items: center; }
+.wf-cond-row > * { flex: 1; }
+
+/* ── Modal (new workflow / pick lead to test) ────────────────── */
+.wf-modal-overlay {
+  position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.wf-modal {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 24px 20px; max-width: 460px; width: 100%;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+.wf-modal-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+.wf-modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* ── Runs list ────────────────────────────────────────────────── */
+.wf-run-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 4px; border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.wf-run-row:hover { background: var(--bg3); }
+.wf-run-row:last-child { border-bottom: none; }
+.wf-run-lead { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; min-width: 0; }
+.wf-run-workflow { font-size: 11px; color: var(--text3); }
+.wf-run-meta { font-size: 11px; color: var(--text3); font-family: var(--mono); white-space: nowrap; }
+
+/* ── Run status text (reuses .lc-status color logic) ─────────── */
+.wf-run-status { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--mono); }
+.wf-run-status.running   { color: var(--text); }
+.wf-run-status.waiting   { color: var(--text2); }
+.wf-run-status.completed { color: var(--text3); }
+.wf-run-status.failed    { color: var(--text); font-weight: 700; }
+.wf-run-status.cancelled { color: var(--text3); }
+
+/* ── Event timeline (mirrors .lc-fu-timeline) ────────────────── */
+.wf-timeline { display: flex; flex-direction: column; }
+.wf-timeline-item { display: flex; gap: 11px; padding: 9px 0; position: relative; }
+.wf-timeline-item:not(:last-child)::after {
+  content: ''; position: absolute; left: 7px; top: 26px; bottom: -9px; width: 1px; background: var(--border);
+}
+.wf-timeline-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid var(--border2); background: var(--bg3); flex-shrink: 0; margin-top: 3px;
+}
+.wf-timeline-dot.ok      { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+.wf-timeline-dot.error   { background: var(--bg4); border-color: var(--text2); }
+.wf-timeline-dot.skipped { background: transparent; border-style: dashed; }
+.wf-timeline-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 1px; line-height: 1.5; }
+.wf-timeline-meta { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+
+@media (max-width: 700px) {
+  .wf-branch-row { flex-direction: column; gap: 22px; }
+  .wf-branch-col { border-left: none; padding-left: 0; border-top: 1px dashed var(--border2); padding-top: 14px; }
+  .wf-type-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Humarains App Light-Theme Override ─────────────────────────
+   Applied on top of leads.css / workflows.css / performance.css / intelligence.css
+   after :root is already updated to light tokens.
+──────────────────────────────────────────────────────────────── */
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb { background: rgba(17,17,17,0.12) !important; }
+::-webkit-scrollbar-thumb:hover { background: rgba(17,17,17,0.22) !important; }
+
+/* Sidebar */
+.lc-sidebar {
+  background: #F6F5F5 !important;
+  border-right-color: rgba(11,37,42,.10) !important;
+}
+.lc-logo-text { color: #111111 !important; }
+.lc-nav-section-label { color: #8F8983 !important; }
+.lc-nav-item { color: #6B6B6B !important; }
+.lc-nav-item:hover { background: #EFEAE6 !important; color: #111111 !important; }
+.lc-nav-item.active {
+  color: #0B252A !important;
+  background: #E8F0F2 !important;
+  border-left-color: #0B252A !important;
+}
+.lc-nav-item.active svg { color: #0B252A !important; }
+.lc-usage-label { color: #8F8983 !important; }
+.lc-usage-track { background: rgba(11,37,42,.10) !important; }
+.lc-usage-fill { background: #0B252A !important; }
+.upgrade-btn { background: #0B252A !important; }
+.upgrade-btn:hover { background: #406E7A !important; }
+.lc-logout-btn { color: #8F8983 !important; }
+.lc-logout-btn:hover { background: #EFEAE6 !important; color: #111111 !important; }
+
+/* Topbar */
+.lc-topbar {
+  background: #FFFFFF !important;
+  border-bottom-color: rgba(11,37,42,.10) !important;
+}
+.lc-topbar-title { color: #111111 !important; }
+.lc-mode-badge { background: #E8F0F2 !important; color: #0B252A !important; }
+.lc-mode-toggle { background: #F6F5F5 !important; border-color: rgba(11,37,42,.10) !important; }
+.lc-mode-toggle-knob { background: #0B252A !important; }
+
+/* Content area */
+.lc-content { background: transparent !important; }
+
+/* Cards / panels */
+.lc-panel, .lc-card, .lc-section {
+  background: #F6F5F5 !important;
+  border-color: rgba(11,37,42,.10) !important;
+  border-radius: 16px !important;
+}
+.lc-panel-header { border-bottom-color: rgba(11,37,42,.10) !important; }
+.lc-panel-title { color: #111111 !important; }
+
+/* Lead rows */
+.lc-lead-row { border-bottom-color: rgba(17,17,17,0.07) !important; }
+.lc-lead-row:hover { background: #F6F5F5 !important; }
+.lc-lead-name { color: #111111 !important; }
+.lc-lead-meta { color: #6B6B6B !important; }
+.lc-lead-source { background: #EFEAE6 !important; color: #6B6B6B !important; }
+
+/* Table */
+.lc-table-head { background: #F6F5F5 !important; border-bottom-color: rgba(11,37,42,.10) !important; }
+.lc-th { color: #8F8983 !important; }
+.lc-td { color: #6B6B6B !important; border-bottom-color: rgba(17,17,17,0.06) !important; }
+
+/* Buttons */
+.lc-btn { border-radius: 10px !important; }
+.lc-btn-primary {
+  background: #0B252A !important;
+  color: #fff !important;
+  border-color: #0B252A !important;
+}
+.lc-btn-primary:hover { background: #406E7A !important; }
+.lc-btn-ghost {
+  color: #6B6B6B !important;
+  border-color: rgba(11,37,42,.10) !important;
+}
+.lc-btn-ghost:hover { background: #F6F5F5 !important; color: #111111 !important; }
+.lc-btn-danger {
+  border-color: #E7D3BF !important;
+  color: #8B3A2E !important;
+}
+.lc-btn-danger:hover { background: #FBF0EE !important; }
+
+/* Inputs */
+.lc-input, .lc-select, .lc-textarea {
+  background: #FFFFFF !important;
+  border-color: rgba(11,37,42,.10) !important;
+  color: #111111 !important;
+  border-radius: 10px !important;
+}
+.lc-input:focus, .lc-select:focus { border-color: #0B252A !important; }
+.lc-input::placeholder { color: #B5AEA8 !important; }
+
+/* Status badges */
+.lc-badge-new     { background: #EDF3FA !important; color: #35506B !important; }
+.lc-badge-open    { background: #F8EFE5 !important; color: #7A5C3E !important; }
+.lc-badge-won     { background: #EEF7F9 !important; color: #2E5A61 !important; }
+.lc-badge-lost    { background: #FBF0EE !important; color: #8B3A2E !important; }
+
+/* Modals / drawers */
+.lc-modal-overlay { background: rgba(17,17,17,0.4) !important; }
+.lc-modal, .lc-drawer {
+  background: #FFFFFF !important;
+  border-color: rgba(11,37,42,.10) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 20px 48px rgba(17,17,17,.10) !important;
+}
+.lc-modal-header, .lc-drawer-header { border-bottom-color: rgba(11,37,42,.10) !important; }
+.lc-modal-title, .lc-drawer-title { color: #111111 !important; }
+
+/* Toast / alerts */
+.lc-toast { background: #FFFFFF !important; border-color: rgba(11,37,42,.10) !important; color: #111111 !important; box-shadow: 0 10px 30px rgba(17,17,17,.10) !important; }
+.lc-alert-ok   { background: #EEF7F9 !important; border-color: #D4E6EB !important; color: #2E5A61 !important; }
+.lc-alert-warn { background: #F8EFE5 !important; border-color: #E7D3BF !important; color: #7A5C3E !important; }
+.lc-alert-err  { background: #FBF0EE !important; border-color: #ECC5BE !important; color: #8B3A2E !important; }
+
+/* Workflow builder */
+.wf-template-card { background: #F6F5F5 !important; border-color: rgba(11,37,42,.10) !important; border-radius: 12px !important; }
+.wf-template-card:hover { border-color: #D0CBC5 !important; background: #EFEAE6 !important; }
+.wf-template-name { color: #111111 !important; }
+.wf-template-desc { color: #6B6B6B !important; }
+.wf-step-card { background: #FFFFFF !important; border-color: rgba(11,37,42,.10) !important; border-radius: 14px !important; }
+.wf-step-card:hover { border-color: #0B252A !important; }
+
+/* Performance / intelligence */
+.perf-stat-card, .intel-kpi {
+  background: #F6F5F5 !important;
+  border-color: rgba(11,37,42,.10) !important;
+  border-radius: 14px !important;
+}
+.perf-stat-label, .intel-kpi-label { color: #8F8983 !important; }
+.perf-stat-value, .intel-kpi-value { color: #111111 !important; }
+.perf-range button { color: #6B6B6B !important; border-color: rgba(11,37,42,.10) !important; }
+.perf-range button.active { color: #111111 !important; border-color: #0B252A !important; background: #E8F0F2 !important; }
+
+/* Nav badges */
+.nav-max-badge  { background: #F8EFE5 !important; color: #7A5C3E !important; }
+.nav-pro-badge  { background: #EFE5F9 !important; color: #5B4676 !important; }
+.nav-plus-badge { background: #E8F0F2 !important; color: #0B252A !important; }
+.lc-nav-item-max:hover, .lc-nav-item-max.active   { color: #7A5C3E !important; background: #F8EFE5 !important; border-left-color: #7A5C3E !important; }
+.lc-nav-item-pro:hover, .lc-nav-item-pro.active   { color: #5B4676 !important; background: #EFE5F9 !important; border-left-color: #5B4676 !important; }
+.lc-nav-item-plus:hover, .lc-nav-item-plus.active { color: #0B252A !important; background: #E8F0F2 !important; border-left-color: #0B252A !important; }
+
+/* Banner / upsell bar */
+.lc-banner { background: #E8F0F2 !important; border-color: #D4E6EB !important; color: #2E5A61 !important; }
+.lc-banner-warn { background: #F8EFE5 !important; border-color: #E7D3BF !important; color: #7A5C3E !important; }

@@ -1,0 +1,134 @@
+/* ===================================================
+   HUMARAINS — GLOBAL MONOCHROME DESIGN SYSTEM
+   #0a0a0a bg · #ffffff text · #6b7280 muted
+   Hanken Grotesk (self-hosted, see fonts/fonts.css)
+   =================================================== */
+
+:root {
+  /* Core palette — pure black/grey/white */
+  --bg:        #0a0a0a;
+  --bg2:       #111111;
+  --bg3:       #1a1a1a;
+  --surface:   #161616;
+  --surface2:  #202020;
+  --surface3:  #2a2a2a;
+
+  /* Borders */
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.05);
+  --border3:   rgba(255,255,255,0.12);
+
+  /* Text */
+  --text:      #f5f5f5;
+  --text2:     rgba(245,245,245,0.65);
+  --text3:     rgba(245,245,245,0.35);
+  --text4:     rgba(245,245,245,0.18);
+
+  /* Accent — pure white as the single accent */
+  --accent:    #ffffff;
+  --accent-dim: rgba(255,255,255,0.08);
+
+  /* Semantic colours (muted, not vivid) */
+  --good:      #86efac;
+  --bad:       #fca5a5;
+  --warn:      #fcd34d;
+  --info:      #93c5fd;
+
+  /* CFO badge colours (muted teal) */
+
+  /* Plan badge colours */
+  --max-c:     #fcd34d;
+  --pro-c:     #c4b5fd;
+  --plus-c:    #93c5fd;
+
+  /* Typography */
+  --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --radius:    12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+
+  /* Legacy aliases for backward compat */
+  --gold:      #e5e5e5;
+  --gold-d:    #b0b0b0;
+  --gold-dim:  rgba(255,255,255,0.06);
+  --violet:    #c4b5fd;
+  --blue:      #93c5fd;
+  --green:     #86efac;
+  --red:       #fca5a5;
+  --surf:      rgba(255,255,255,0.03);
+  --surf2:     rgba(255,255,255,0.06);
+  --accent2:   #c4b5fd;
+  --accent3:   #93c5fd;
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font-family: inherit; }
+
+/* Safari-safe scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+
+/* ── UTILITY CLASSES ─────────────────────────────── */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* ── ALERTS ──────────────────────────────────────── */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.alert.success { background: rgba(134,239,172,0.08); border: 1px solid rgba(134,239,172,0.2); color: var(--good); }
+.alert.error   { background: rgba(252,165,165,0.08); border: 1px solid rgba(252,165,165,0.2); color: var(--bad); }
+.alert.info    { background: rgba(147,197,253,0.08); border: 1px solid rgba(147,197,253,0.2); color: var(--info); }
+
+/* ── TRIAL BANNER ────────────────────────────────── */
+.trial-banner {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(252,211,77,0.06);
+  border: 1px solid rgba(252,211,77,0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 13px;
+}
+.trial-banner-text { flex: 1; }
+.trial-banner-title { font-weight: 600; color: var(--warn); margin-bottom: 2px; }
+.trial-banner-sub { color: var(--text3); font-size: 12px; }
+.trial-banner-cta {
+  white-space: nowrap; padding: 7px 14px; border-radius: 7px;
+  background: rgba(252,211,77,0.12); color: var(--warn);
+  font-size: 12px; font-weight: 600; border: 1px solid rgba(252,211,77,0.2);
+  transition: background 0.15s;
+}
+.trial-banner-cta:hover { background: rgba(252,211,77,0.2); }

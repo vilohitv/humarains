@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="onboarding.css">
+<link rel="stylesheet" href="autonomy.css?v=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Set up Humarains</title>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+
+<div class="ob-top">
+  <a href="index.html" class="auth-logo"><img src="logo.png" alt="Humarains"> Humarains</a>
+  <button class="ob-signout" id="obSignOut" type="button">Sign out</button>
+</div>
+
+<div class="ob-wrap">
+  <div class="ob-steps" id="obSteps">
+    <div class="ob-step active" data-s="1"><div class="dot">1</div><span class="lbl">Connect</span></div>
+    <div class="ob-step" data-s="2"><div class="dot">2</div><span class="lbl">Your business</span></div>
+    <div class="ob-step" data-s="3"><div class="dot">3</div><span class="lbl">Permissions</span></div>
+    <div class="ob-step" data-s="4"><div class="dot">4</div><span class="lbl">Try it</span></div>
+  </div>
+
+  <div class="auth-card ob-card">
+    <div class="error-msg" id="obError"></div>
+
+    <!-- STEP 1: connect a channel (required) -->
+    <div class="ob-panel active" id="ob-1">
+      <div class="auth-title">Connect where customers reach you</div>
+      <div class="auth-sub" id="obSub1">Humarains reads new enquiries and replies for you. Connect your email or your WhatsApp to get started. You can add the other one later.</div>
+
+      <div class="ob-choices">
+        <button type="button" class="ob-choice" id="chEmail">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
+          <span class="t">Email</span>
+          <span class="d">Gmail, Outlook, Yahoo, iCloud or any business inbox.</span>
+          <span class="ob-badge ok" id="bdEmail" style="display:none">Connected</span>
+        </button>
+        <button type="button" class="ob-choice" id="chWa">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2a8.5 8.5 0 1 1 15.6-4.5z"/><path d="M9 9.2c.3 2.6 2.4 4.9 5.5 5.8l1.2-1.4-2-1-.9.6c-.8-.4-1.5-1.2-1.9-2l.6-.9-1-2z"/></svg>
+          <span class="t">WhatsApp</span>
+          <span class="d">Your WhatsApp Business number. Takes about a minute.</span>
+          <span class="ob-badge" id="bdWa" style="display:none"></span>
+        </button>
+      </div>
+
+      <!-- Email form -->
+      <div class="ob-sub-panel" id="subEmail">
+        <div class="ob-chips" id="obChips"></div>
+        <div class="ob-help" id="obHelp"></div>
+        <div class="field"><label for="emUser">Email address</label><input type="email" id="emUser" placeholder="you@company.com" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+        <div class="field"><label for="emPass" id="emPassLabel">App password</label><input type="password" id="emPass" placeholder="Paste it here" autocomplete="new-password"></div>
+        <div class="field"><label for="emFrom">Name replies are sent from</label><input type="text" id="emFrom" placeholder="Your business name"></div>
+        <button type="button" class="ob-adv-toggle" id="obAdvToggle">Server settings</button>
+        <div class="ob-adv" id="obAdv">
+          <div class="ob-row2">
+            <div class="field"><label for="emImapHost">IMAP server</label><input type="text" id="emImapHost" placeholder="imap.example.com" autocomplete="off"></div>
+            <div class="field"><label for="emImapPort">Port</label><input type="text" id="emImapPort" value="993" inputmode="numeric"></div>
+          </div>
+          <div class="ob-row2">
+            <div class="field"><label for="emSmtpHost">SMTP server</label><input type="text" id="emSmtpHost" placeholder="smtp.example.com" autocomplete="off"></div>
+            <div class="field"><label for="emSmtpPort">Port</label><input type="text" id="emSmtpPort" value="587" inputmode="numeric"></div>
+          </div>
+        </div>
+        <div class="ob-hint">We check the login before saving anything. Your password is stored encrypted and is only used to read and answer enquiries.</div>
+        <button type="button" class="btn-submit" id="btnEmail">Connect email</button>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="ob-sub-panel" id="subWa">
+        <ul class="ob-wa-list">
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>A Facebook window opens. Log in and pick or add the WhatsApp Business number to use.</span></li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Humarains starts answering messages sent to that number as soon as you finish.</span></li>
+          <li><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Allow pop-ups for this site if nothing opens.</span></li>
+        </ul>
+        <button type="button" class="btn-submit" id="btnWa">Connect WhatsApp</button>
+      </div>
+
+      <div class="ob-connected" id="obConnected">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10l4.5 4.5L16 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="obConnectedText">Connected</span>
+      </div>
+      <button type="button" class="btn-submit" id="btnNext1" style="display:none">Continue</button>
+    </div>
+
+    <!-- STEP 2: business basics -->
+    <div class="ob-panel" id="ob-2">
+      <div class="auth-title">Tell us about your business</div>
+      <div class="auth-sub">The Agent uses this to introduce you properly and quote accurately. You can change all of it later.</div>
+      <div class="field"><label for="bzName">Business name</label><input type="text" id="bzName" placeholder="Smith Plumbing Ltd" autocomplete="organization"></div>
+      <div class="field"><label for="bzType">What does your business do?</label><input type="text" id="bzType" list="bzTypes" placeholder="Plumbing and heating"></div>
+      <datalist id="bzTypes">
+        <option value="Plumbing"><option value="HVAC"><option value="Electrical"><option value="Roofing"><option value="Cleaning"><option value="Landscaping"><option value="Auto repair"><option value="Dental clinic"><option value="Med-spa and beauty"><option value="Real estate"><option value="Painting and decorating"><option value="Pest control">
+      </datalist>
+      <div class="field"><label for="bzOwner">Your name</label><input type="text" id="bzOwner" autocomplete="name"></div>
+      <div class="field"><label for="bzPhone">Business phone (optional)</label><input type="tel" id="bzPhone" placeholder="+1 555 000 1234" autocomplete="tel"></div>
+      <div class="ob-hint" id="bzTz"></div>
+      <button type="button" class="btn-submit" id="btnBiz">Save and continue</button>
+    </div>
+
+    <!-- STEP 3: what the Agent may do on its own -->
+    <div class="ob-panel" id="ob-3">
+      <div class="auth-title">What can your Agent do on its own?</div>
+      <div class="auth-sub">Besides answering enquiries, the Agent can win back money that would otherwise be lost: chase quiet leads, offer a discount you approve, and text back a missed WhatsApp call. You decide what it may do and how far it can go. You can change all of this later in Settings.</div>
+      <div id="auOnboard"></div>
+    </div>
+
+    <!-- STEP 4: try it -->
+    <div class="ob-panel" id="ob-4">
+      <div class="auth-title">See it work</div>
+      <div class="auth-sub">Send yourself a practice enquiry and watch the Agent answer it using your business details. Nothing is sent to anyone.</div>
+      <div class="ob-chat" id="obChat">
+        <div class="ob-bubble them"><span class="who" id="obWhoThem">Customer</span><span id="obThem"></span></div>
+        <div class="ob-bubble us"><span class="who">Your Agent</span><span id="obUs"></span></div>
+      </div>
+      <div class="ob-note" id="obChatNote" style="display:none">This was a practice enquiry. Real ones will appear in your dashboard.</div>
+      <button type="button" class="btn-submit" id="btnTest">Send a practice enquiry</button>
+      <ul class="ob-next" id="obNext" style="display:none">
+        <li><span class="n">1</span><span><b>Your Agent will ask a few quick questions</b> about your services, prices and hours when you open the dashboard.</span></li>
+        <li><span class="n">2</span><span><b>Then you are live.</b> New enquiries get answered automatically.</span></li>
+      </ul>
+      <button type="button" class="btn-submit" id="btnFinish" style="display:none">Go to my dashboard</button>
+      <button type="button" class="ob-link" id="btnSkipTest">Skip for now</button>
+    </div>
+  </div>
+</div>
+
+<script src="email-providers.js"></script>
+<script src="autonomy-ui.js?v=1"></script>
+<script src="onboarding.js"></script>
+</body>
+</html>

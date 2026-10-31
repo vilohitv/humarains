@@ -1,0 +1,25 @@
+/* Spacing and alignment finish: loaded last, only adjusts rhythm and alignment, never colour or content. */
+
+/* Classic header: the primary action lines up with the right edge of the content below it, not a third of the way in */
+@media (min-width: 1100px) {
+  body.agent-ui.classic-ui .lc-topbar { padding-right: 44px !important; }
+  body.agent-ui.classic-ui .lc-topbar-actions { margin-left: auto; }
+}
+
+/* Section tabs (Channels, Settings): first tab's text starts on the same line as the cards, and the cards get room to breathe */
+.lc-tabs { padding-left: 29px; margin-bottom: 12px; }
+
+/* Lead list header and filters */
+.lc-leads-header { margin-top: 8px; margin-bottom: 16px; gap: 16px; }
+.lc-filter-row { gap: 4px; padding: 4px; }
+.lc-filter-btn { padding-left: 16px; padding-right: 16px; }
+.lc-stats-bar { margin-bottom: 4px; }
+
+/* Workflow editor: a one-line description is one line, with even gaps down the page */
+.wf-editor-desc { min-height: 0 !important; height: auto; field-sizing: content; resize: none; padding: 6px 2px !important; margin: 4px 0 18px; line-height: 1.5; }
+.wf-name-input { padding-top: 8px; padding-bottom: 8px; }
+.wf-toolbar-sub { margin-top: 24px; }
+.wf-templates-row { margin-bottom: 28px; }
+
+/* Slide-over panels sit above the cookie notice, so their buttons are never hidden behind it */
+.wf-slideover-overlay, .wf-slideover { z-index: 100001; }

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="fonts/fonts.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signing you in… — Humarains</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+      background-color: #FFFFFF;
+    }
+    .card {
+      background: #FFFFFF;
+      border: 1px solid rgba(11,37,42,0.10);
+      box-shadow: 0 1px 2px rgba(11,37,42,0.04), 0 14px 36px -16px rgba(11,37,42,0.14);
+      border-radius: 16px;
+      padding: 44px 52px;
+      text-align: center;
+      max-width: 360px;
+      width: 90%;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .logo-text {
+      font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(11,37,42,0.65);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .spinner-wrap {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 22px;
+      position: relative;
+    }
+    .spinner-ring {
+      width: 48px; height: 48px;
+      border: 2px solid rgba(11,37,42,0.10);
+      border-top-color: #0B252A;
+      border-right-color: rgba(11,37,42,0.30);
+      border-radius: 50%;
+      animation: spin 0.85s cubic-bezier(0.4,0,0.6,1) infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h1 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #0B252A;
+      margin-bottom: 6px;
+      letter-spacing: -0.1px;
+    }
+    p {
+      font-size: 13px;
+      color: rgba(11,37,42,0.60);
+      line-height: 1.5;
+    }
+    .error { color: #C0392B; }
+    .dot-anim { display: inline-block; }
+    .dot-anim::after {
+      content: '';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+    @keyframes dots {
+      0%   { content: ''; }
+      25%  { content: '.'; }
+      50%  { content: '..'; }
+      75%  { content: '...'; }
+      100% { content: ''; }
+    }
+  </style>
+<link rel="stylesheet" href="typography.css?v=1">
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <span class="logo-text">Humarains</span>
+    </div>
+    <div class="spinner-wrap">
+      <div class="spinner-ring" id="spinner"></div>
+    </div>
+    <h1 id="heading">Signing you in<span class="dot-anim"></span></h1>
+    <p id="sub">Please wait a moment.</p>
+  </div>
+
+  <script>
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const bt = params.get('bt');
+
+      if (!bt) {
+        showError('No auth token found. Please try logging in again.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/google/exchange?bt=' + encodeURIComponent(bt), {
+          credentials: 'include',
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.replace(data.isNewUser ? '/onboarding.html' : '/dashboard.html');
+        } else {
+          showError(data.message || 'Authentication failed. Please try again.');
+        }
+      } catch (e) {
+        showError('Network error. Please try again.');
+      }
+    })();
+
+    function showError(msg) {
+      const spinner = document.getElementById('spinner');
+      const heading = document.getElementById('heading');
+      const sub = document.getElementById('sub');
+      if (spinner) { spinner.style.borderTopColor = '#C0392B'; spinner.style.borderRightColor = 'rgba(192,57,43,0.25)'; }
+      if (heading) { heading.textContent = 'Sign-in failed'; heading.style.color = '#C0392B'; }
+      if (sub) { sub.textContent = msg; sub.classList.add('error'); }
+      setTimeout(function () {
+        window.location.replace('/login.html?error=google_failed');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
