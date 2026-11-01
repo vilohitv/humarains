@@ -22,7 +22,6 @@
   document.addEventListener('click', function (e) {
     var tab = e.target.closest('.lc-tab'); if (!tab) return;
     var v = tab.getAttribute('data-tab');
-    if (v === 'agent') { document.dispatchEvent(new CustomEvent('ag:open-prefs')); return; }   // opens the Agent settings dialog
     if (window.showView) window.showView(v);
   });
 

@@ -219,7 +219,7 @@
         btn.style.display = 'none'; $('btnSkipTest').style.display = 'none';
         finishReady();
       } else {
-        showError((d.message || 'Could not generate a practice reply.') + ' You can still continue to your dashboard.');
+        showError((d.message || 'Could not generate a practice reply.') + ' Add your services and pricing in Settings, then try again. You can still continue to your dashboard.');
         finishReady();
       }
     }).catch(function () { showError('Could not reach the server. You can still continue to your dashboard.'); finishReady(); })

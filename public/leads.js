@@ -1659,8 +1659,8 @@
   async function refreshBadgeCounts() {
     try {
       const [cr, hr] = await Promise.all([
-        apiFetch('/api/leads/consent-queue'),
-        apiFetch('/api/leads/human-review'),
+        fastGet('/api/leads/consent-queue'),
+        fastGet('/api/leads/human-review'),
       ]);
       if (cr) {
         const d = await cr.json();
@@ -3158,7 +3158,7 @@ const KnowledgeUI = (() => {
           <select class="lc-select" id="kbCategory">
             ${CATEGORIES.map(c => `<option value="${c.key}" ${entry && entry.category===c.key ? 'selected' : ''}>${esc(c.label)}</option>`).join('')}
           </select>
-          <div id="kbCategoryHint" style="font-size:11px;color:var(--text3);margin-top:6px"></div>
+          <div id="kbCategoryHint" class="kb-hint"></div>
         </div>
         <div class="lc-field">
           <label class="lc-label">Title</label>
@@ -3166,12 +3166,12 @@ const KnowledgeUI = (() => {
         </div>
         <div class="lc-field">
           <label class="lc-label">Content</label>
-          <textarea class="lc-input" id="kbContent" rows="9" style="resize:vertical;min-height:160px;font-family:var(--mono)" placeholder="Paste or type the document content here — pricing tables, FAQ Q&amp;As, policies, anything the AI should know.">${esc(entry ? entry.content : '')}</textarea>
-          <div style="font-size:11px;color:var(--text3);margin-top:6px">
+          <textarea class="lc-input kb-content" id="kbContent" rows="9" placeholder="Paste or type the document content here — pricing tables, FAQ Q&amp;As, policies, anything the AI should know.">${esc(entry ? entry.content : '')}</textarea>
+          <div class="kb-hint">
             <span id="kbCharCount">0</span> / 20,000 characters
           </div>
         </div>
-        <div id="kbModalError" style="color:var(--red);font-size:13px;margin-top:4px;display:none"></div>
+        <div id="kbModalError" class="kb-error" style="color:var(--red);display:none"></div>
         <div class="wf-modal-actions">
           <button class="lc-btn lc-btn-ghost lc-btn-sm" id="kbCancel">Cancel</button>
           <button class="lc-btn lc-btn-primary lc-btn-sm" id="kbSave">${entry ? 'Save Changes' : 'Add Document'}</button>

@@ -19,3 +19,16 @@
   .hours-row.is-closed .hours-closed { grid-column: 1; grid-row: auto; }
   .hours-times .lc-input { width: 100%; flex: 1 1 0; }
 }
+
+/* The shared field style in premium.css makes every .lc-input 100% wide, which beats the 128px set above (it is more specific).
+   The "opens" box then fills the whole row, and the "to" and the closing-time box are pushed out of sight, clipped by the grid's
+   overflow: hidden. This puts both time boxes back side by side, and lets them wrap on narrow screens instead of hiding. */
+body.agent-ui .hours-times { flex-wrap: wrap; row-gap: 8px; min-width: 0; }
+body.agent-ui .hours-times .lc-input {
+  width: 144px !important; min-width: 0; flex: 0 1 144px; min-height: 44px;
+  padding: 8px 12px !important;
+}
+body.agent-ui .hours-times .lc-input:disabled { opacity: .5; }
+@media (max-width: 520px) {
+  body.agent-ui .hours-times .lc-input { width: auto !important; flex: 1 1 110px; }
+}

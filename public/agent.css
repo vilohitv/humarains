@@ -188,7 +188,7 @@ body.ag-surface-open .ag-mark, body.ag-surface-open .ag-me { opacity: 0; pointer
 .ag-me-btn:hover, .ag-me-btn:focus-visible { border-color: var(--ag-ink-3); color: var(--ag-ink); outline: none; }
 .ag-menu {
   position: absolute; right: 0; top: 44px; min-width: 188px; padding: 8px; border-radius: 16px;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(16px); border: 1px solid var(--ag-hair);
+  background: #fff; border: 1px solid var(--ag-hair);
   box-shadow: 0 24px 60px -20px rgba(11,37,42,.28);
   opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .2s, transform .3s var(--ag-ease);
 }
@@ -356,8 +356,8 @@ body.ag-has-thread .ag-opps { display: none; }
 .ag-prefs-opt input { margin-top: 4px; accent-color: #0b252a; }
 .ag-prefs-opt b { display: block; font-size: 14px; font-weight: 600; }
 .ag-prefs-opt small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--ag-ink-2); }
-.ag-prefs-field textarea, .ag-prefs-field select { width: 100%; font: inherit; font-size: 14px; color: var(--ag-ink); padding: 10px 12px; border: 1px solid rgba(11,37,42,.16); border-radius: 12px; background: #fff; resize: vertical; }
-.ag-prefs-field textarea:focus, .ag-prefs-field select:focus { outline: 2px solid var(--ag-ink); outline-offset: 1px; }
+.ag-prefs-field textarea, .ag-prefs-field select, .ag-prefs-field input { width: 100%; font: inherit; font-size: 14px; color: var(--ag-ink); padding: 10px 12px; border: 1px solid rgba(11,37,42,.16); border-radius: 12px; background: #fff; resize: vertical; }
+.ag-prefs-field textarea:focus, .ag-prefs-field select:focus, .ag-prefs-field input:focus { outline: 2px solid var(--ag-ink); outline-offset: 1px; }
 .ag-prefs-field small { display: block; margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--ag-ink-2); }
 .ag-prefs-status { min-height: 18px; font-size: 13px; color: var(--ag-ink-2); }
 .ag-prefs-status.err { color: #b3261e; }

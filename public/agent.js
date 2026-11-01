@@ -453,8 +453,7 @@
         // let it be read). If the owner has already sent something newer, the directive is stale: skip it.
         (d.ui || []).forEach(function (u) {
           var run = null;
-          if (u.type === 'open' && u.page === 'agent') run = function () { openPrefs(); };
-          else if (u.type === 'open' && VIEWS.indexOf(u.page) !== -1) run = function () { openSurface(u.page); };
+          if (u.type === 'open' && VIEWS.indexOf(u.page) !== -1) run = function () { openSurface(u.page); };
           else if (u.type === 'lead' && u.id) run = function () { openLead(u.id); };
           else if (u.type === 'approvals') run = function () { showApprovals(true); };
           if (!run) return;
@@ -520,7 +519,6 @@
     },
     enter: function () { unrest(); settle(); loadBrief(); setTimeout(function () { try { input.focus({ preventScroll: true }); } catch (_) {} }, 200); },
   };
-  document.addEventListener('ag:open-prefs', function () { openPrefs(); });
   $('agScrim') && $('agScrim').addEventListener('click', function () { closeSurface(); });
 
   // Close button lives in the page header so it reads as part of the sheet
@@ -605,7 +603,6 @@
     if (e.key === '/' && !typing && !S.surface) { e.preventDefault(); input.focus(); return; }
     if (e.key === 'Escape') {
       if (document.querySelector('.lc-slideover.open, .wf-slideover.open')) return; // let those close first
-      if (!$('agPrefs').hidden) { closePrefs(); return; }
       var menu = $('agMenu'); if (menu && menu.classList.contains('open')) { menu.classList.remove('open'); return; }
       if (S.surface) closeSurface();
     }
@@ -625,61 +622,15 @@
     var go = t.dataset.go;
     if (go === 'logout') {
       api('/api/auth/logout', { method: 'POST' }).catch(function () {}).then(function () { window.location.href = '/login.html'; });
-    } else if (go === 'agentsettings') { openPrefs(); }
-    else { openSurface(go); }
+    } else { openSurface(go); }
   });
 
-  // ── Agent settings panel (special instructions, reply length) ──
   S.mode = 'autonomous';   // the Agent always works on its own; there is no manual mode
   function setMode() { S.mode = 'autonomous'; if (S.brief) S.brief.agentMode = 'autonomous'; }
   function note(text) {
     document.body.classList.add('ag-has-thread'); unrest();
     var m = el('div', 'ag-msg agent', text); thread.appendChild(m); trimThread(); scrollEnd();
   }
-  var prefs = $('agPrefs'), prefsStatus = $('agPrefsStatus'), prefsSave = $('agPrefsSave'), prefsLoaded = null, prefsFocusBack = null;
-  function prefsMsg(text, bad) { prefsStatus.textContent = text || ''; prefsStatus.classList.toggle('err', !!bad); }
-  function openPrefs() {
-    prefsFocusBack = document.activeElement;
-    prefs.hidden = false; prefsMsg('Loading\u2026'); prefsSave.disabled = true;
-    api('/api/agent/prefs').then(function (r) { return r.json(); }).then(function (d) {
-      if (!d || !d.success) throw new Error('load');
-      prefsLoaded = d;
-      $('agPrefInstr').value = d.agentInstructions || '';
-      $('agPrefRules').value = d.specialInstructions || '';
-      $('agPrefStyle').value = d.agentStyle || 'balanced';
-      setMode(d.agentMode, true);
-      prefsMsg(''); prefsSave.disabled = false;
-      $('agPrefInstr').focus({ preventScroll: true });
-    }).catch(function () { prefsMsg('Could not load your settings. Close this and try again.', true); });
-  }
-  function closePrefs() {
-    prefs.hidden = true; prefsMsg('');
-    try { if (prefsFocusBack && prefsFocusBack.focus) prefsFocusBack.focus({ preventScroll: true }); } catch (_) {}
-  }
-  function savePrefs() {
-    var body = { agentInstructions: $('agPrefInstr').value, specialInstructions: $('agPrefRules').value, agentStyle: $('agPrefStyle').value };
-    prefsSave.disabled = true; prefsMsg('Saving\u2026');
-    api('/api/agent/prefs', { method: 'POST', body: JSON.stringify(body) })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
-      .then(function (x) {
-        if (!x.ok || !x.d || !x.d.success) { prefsMsg((x.d && x.d.message) || 'We could not save your changes.', true); prefsSave.disabled = false; return; }
-        prefsSave.disabled = false;
-        closePrefs(); note('Saved. I\u2019ll follow these from now on.'); loadBrief();
-      })
-      .catch(function () { prefsMsg('Could not save. Check your connection and try again.', true); prefsSave.disabled = false; });
-  }
-  $('agPrefsClose').addEventListener('click', closePrefs);
-  $('agPrefsCancel').addEventListener('click', closePrefs);
-  prefsSave.addEventListener('click', savePrefs);
-  prefs.addEventListener('mousedown', function (e) { if (e.target === prefs) closePrefs(); });
-  prefs.addEventListener('keydown', function (e) {   // keep Tab inside the dialog
-    if (e.key !== 'Tab') return;
-    var f = Array.prototype.slice.call(prefs.querySelectorAll('textarea, select, input, button')).filter(function (n) { return !n.disabled && n.offsetParent !== null; });
-    if (!f.length) return;
-    var first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  });
   // the dashboard's own mode switch (leads.js) tells us when it changes
   
 

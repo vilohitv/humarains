@@ -160,13 +160,6 @@
     }).catch(function () {});
   })();
 
-  // Classic sidebar: Agent settings (mode, instructions, reply length) lives in the same dialog as in Agent view
-  var agentSettings = $('navAgentSettings');
-  if (agentSettings) agentSettings.addEventListener('click', function () {
-    closeDrawer();
-    document.dispatchEvent(new CustomEvent('ag:open-prefs'));
-  });
-
   window.__uiMode = { get: current, set: set };
   apply(read(), true);
 })();

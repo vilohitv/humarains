@@ -18,6 +18,17 @@
     P[u] = { p: p, t: Date.now() };
     return p;
   }
+  // Responses fetched on the sign-in screen (preload.js). Used once, and only if they are fresh.
+  try {
+    var raw = sessionStorage.getItem('bp_preload'); sessionStorage.removeItem('bp_preload');
+    var pre = raw ? JSON.parse(raw) : null;
+    if (pre && pre.d && Date.now() - pre.t < 90000) {
+      Object.keys(pre.d).forEach(function (u) {
+        var c = pre.d[u]; if (!c || !c.ok) return;
+        P[u] = { t: Date.now(), p: Promise.resolve({ ok: true, status: c.status || 200, json: function () { return Promise.resolve(c.body); } }) };
+      });
+    }
+  } catch (_) {}
   window.__early = {
     start: start,
     take: function (u) {
@@ -29,7 +40,7 @@
     },
     drop: function (u) { delete P[u]; }
   };
-  ['/api/users/me', '/api/users/setup-status', '/api/leads', '/api/leads/settings', '/api/leads/email-settings', '/api/account/me', '/api/agent/brief'].forEach(start);
+  ['/api/users/me', '/api/users/setup-status', '/api/leads', '/api/leads/settings', '/api/leads/email-settings', '/api/account/me', '/api/agent/brief', '/api/leads/consent-queue', '/api/leads/human-review'].forEach(function (u) { if (!P[u]) start(u); });
 })();
 </script>
 <meta charset="UTF-8">
@@ -45,14 +56,14 @@
 <link rel="stylesheet" href="workflows.css?v=1782003953">
 <link rel="stylesheet" href="performance.css?v=1782003953">
 <link rel="stylesheet" href="intelligence.css?v=1782003953">
-<link rel="stylesheet" href="agent.css?v=10">
+<link rel="stylesheet" href="agent.css?v=12">
 <link rel="stylesheet" href="premium.css?v=5">
 <link rel="stylesheet" href="polish.css?v=1">
 <link rel="stylesheet" href="support.css?v=1">
-<link rel="stylesheet" href="hours.css?v=1">
+<link rel="stylesheet" href="hours.css?v=2">
 <link rel="stylesheet" href="classic.css?v=3">
 <link rel="stylesheet" href="settings.css?v=1">
-<link rel="stylesheet" href="refine.css?v=1">
+<link rel="stylesheet" href="refine.css?v=3">
 <link rel="stylesheet" href="reschedule.css?v=1">
 <link rel="stylesheet" href="classic-console.css?v=1">
 <link rel="stylesheet" href="inbox.css?v=2">
@@ -212,7 +223,6 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
   <button class="ag-me-btn" id="agMeBtn" type="button" aria-label="Account menu" aria-haspopup="true" aria-expanded="false">&nbsp;</button>
   <div class="ag-menu" id="agMenu" role="menu">
     <div class="ag-menu-id"><b id="agMenuName"></b><span id="agMenuPlan"></span></div>
-    <button type="button" role="menuitem" data-go="agentsettings">Agent settings</button>
     <button type="button" role="menuitem" data-go="settings">Settings</button>
     <button type="button" role="menuitem" data-go="payment">Plans &amp; billing</button>
     <button type="button" role="menuitem" data-go="support">Support<span class="sp-badge" id="agMenuSupportBadge"></span></button>
@@ -265,42 +275,6 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
   </div>
 </main>
 <div class="ag-scrim" id="agScrim"></div>
-
-<div class="ag-prefs" id="agPrefs" role="dialog" aria-modal="true" aria-labelledby="agPrefsTitle" hidden>
-  <div class="ag-prefs-card">
-    <div class="ag-prefs-head">
-      <h2 id="agPrefsTitle">Agent settings</h2>
-      <button class="ag-prefs-x" id="agPrefsClose" type="button" aria-label="Close">&times;</button>
-    </div>
-    <div class="ag-prefs-body">
-      <div class="ag-prefs-field">
-        <label for="agPrefInstr">How the Agent should work with you</label>
-        <textarea id="agPrefInstr" rows="4" maxlength="2000" placeholder="Examples: Keep answers short. Always check with me before pausing anything. Call me Sam. Never run promotions on weekends."></textarea>
-        <small>Shapes the Agent&rsquo;s own tone and behaviour. It can&rsquo;t override approvals, pricing rules or AI disclosure.</small>
-      </div>
-
-      <div class="ag-prefs-field">
-        <label for="agPrefRules">Rules for messages to your customers</label>
-        <textarea id="agPrefRules" rows="5" maxlength="4000" placeholder="Examples: Always mention our 12-month guarantee. Never promise same-day service. Sign off with &ldquo;The team at Smith Plumbing&rdquo;."></textarea>
-        <small>Applied to every reply, follow-up and campaign the AI writes for you. One rule per line.</small>
-      </div>
-
-      <div class="ag-prefs-field">
-        <label for="agPrefStyle">Agent reply length</label>
-        <select id="agPrefStyle">
-          <option value="brief">Brief</option>
-          <option value="balanced">Balanced</option>
-          <option value="detailed">Detailed</option>
-        </select>
-      </div>
-      <p class="ag-prefs-status" id="agPrefsStatus" role="status" aria-live="polite"></p>
-    </div>
-    <div class="ag-prefs-foot">
-      <button class="ag-prefs-btn ghost" id="agPrefsCancel" type="button">Cancel</button>
-      <button class="ag-prefs-btn" id="agPrefsSave" type="button">Save</button>
-    </div>
-  </div>
-</div>
 
 <div class="lc-root">
 
@@ -401,7 +375,6 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
   <nav class="lc-tabs" id="lcTabsSettings" data-group="settings" aria-label="Settings" hidden>
     <button type="button" class="lc-tab" data-tab="settings">Business <span id="setupIndicator" class="lc-tab-dot" style="display:none" title="Setup incomplete"></span></button>
     <button type="button" class="lc-tab" data-tab="knowledge">Knowledge</button>
-    <button type="button" class="lc-tab" data-tab="agent">Agent</button>
     <button type="button" class="lc-tab" data-tab="support">Support <span class="sp-badge" id="navBadgeSupport"></span></button>
     <button type="button" class="lc-tab" data-tab="account">Account</button>
   </nav>
@@ -1396,9 +1369,7 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
     <!-- ── CONSENT QUEUE VIEW ─────────────────────────────────── -->
     <div class="lc-view" id="view-humanreview">
       <div class="lc-consent-header">
-        <div>
-          <div style="font-size:13px;color:var(--text3)">Everything the AI held back for a person. Nothing here has been sent to the customer.</div>
-        </div>
+        <div></div>
         <button class="lc-btn lc-btn-ghost lc-btn-sm" id="btnRefreshHuman">Refresh</button>
       </div>
       <section id="reviewApprovals" class="rv-section" hidden>
@@ -1751,11 +1722,11 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
 </div>
 
 <script src="timing-ui.js?v=1"></script>
-<script src="leads.js?v=1782003958y"></script>
+<script src="leads.js?v=1782003959"></script>
 <script src="inbox.js?v=2"></script>
-<script src="nav-groups.js?v=1"></script>
-<script src="agent.js?v=11" defer></script>
-<script src="ui-mode.js?v=3" defer></script>
+<script src="nav-groups.js?v=1x"></script>
+<script src="agent.js?v=13" defer></script>
+<script src="ui-mode.js?v=4" defer></script>
 <script src="handover-ui.js?v=2" defer></script>
 <script src="autonomy-ui.js?v=1" defer></script>
 <script src="settings-nav.js?v=1" defer></script>

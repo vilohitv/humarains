@@ -59,10 +59,12 @@
 
 </div>
 
+<script src="preload.js"></script>
 <script>
 function showReset(){document.getElementById('loginSection').style.display='none';document.getElementById('resetSection').classList.add('show');}
 function showLogin(){document.getElementById('loginSection').style.display='block';document.getElementById('resetSection').classList.remove('show');}
 
+let navigating=false;
 async function doLogin(){
   const btn=document.getElementById('loginBtn');
   const email=document.getElementById('loginEmail').value.trim();
@@ -79,9 +81,12 @@ async function doLogin(){
     const p=new URLSearchParams(location.search);
     let dest=p.get('next')||p.get('redirect')||'dashboard.html';
     if(dest.startsWith('http://')||dest.startsWith('https://'))dest='dashboard.html';
+    // Load what the dashboard shows now, while this screen is up, so it opens with the real data already in.
+    if(/^\/?dashboard\.html/.test(dest)&&window.HumPreload){btn.textContent='Loading your dashboard…';await window.HumPreload.run(8000);}
+    navigating=true;
     location.href=dest;
   }catch(e){err.textContent='Connection error. Please try again.';err.classList.add('show');}
-  finally{btn.disabled=false;btn.textContent='Sign in';}
+  finally{if(!navigating){btn.disabled=false;btn.textContent='Sign in';}}
 }
 
 async function doReset(){

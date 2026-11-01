@@ -95,6 +95,7 @@
     <p id="sub">Please wait a moment.</p>
   </div>
 
+  <script src="preload.js"></script>
   <script>
     (async function () {
       const params = new URLSearchParams(window.location.search);
@@ -112,6 +113,11 @@
         const data = await res.json();
 
         if (data.success) {
+          if (!data.isNewUser && window.HumPreload) {
+            // Load what the dashboard shows now, while this screen is still up.
+            document.getElementById('sub').textContent = 'Loading your leads and settings.';
+            await window.HumPreload.run(8000);
+          }
           window.location.replace(data.isNewUser ? '/onboarding.html' : '/dashboard.html');
         } else {
           showError(data.message || 'Authentication failed. Please try again.');
