@@ -1890,7 +1890,7 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
     if (el('acctSubPlanLabel'))  el('acctSubPlanLabel').textContent  = planLabel;
     if (el('acctSubStatusLabel')) el('acctSubStatusLabel').textContent = isPaid ? 'Active — managed via Stripe' : 'No active subscription';
 
-    // Hide plan cards at or below the current plan, mark current plan
+    // Show every plan. Mark the current one; lower tiers open the billing portal.
     var ORDER = ['free', 'starter', 'growth', 'business'];
     var currentIdx = ORDER.indexOf(plan);
     ['starter', 'growth', 'business'].forEach(function(p) {
@@ -1898,14 +1898,16 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
       var btnEl  = el('checkoutBtn-' + p);
       if (!cardEl) return;
       var idx = ORDER.indexOf(p);
-      if (idx <= currentIdx) {
-        // Already on this plan or higher — show "Current plan" disabled state
-        if (idx === currentIdx) {
-          cardEl.style.opacity = '0.7';
-          if (btnEl) { btnEl.textContent = 'Current plan'; btnEl.disabled = true; }
-        } else {
-          cardEl.style.display = 'none';
-        }
+      cardEl.style.display = '';
+      if (idx === currentIdx) {
+        cardEl.classList.add('current');
+        if (btnEl) { btnEl.textContent = 'Current plan'; btnEl.disabled = true; }
+      } else if (idx < currentIdx && btnEl) {
+        btnEl.textContent = 'Change in billing';
+        btnEl.disabled = false;
+        btnEl.classList.remove('lc-btn-primary');
+        btnEl.classList.add('lc-btn-ghost');
+        btnEl.dataset.portal = '1';
       }
     });
 
@@ -2323,6 +2325,17 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
     var label = 'Get ' + (PLAN_NAMES[plan] || (plan.charAt(0).toUpperCase() + plan.slice(1))) + ' — $' + PLAN_PRICES[plan] + '/mo';
     btn.addEventListener('click', function() {
       if (btn.disabled) return;
+      if (btn.dataset.portal === '1') {
+        btn.disabled = true; btn.textContent = 'Loading...';
+        fetch('/api/billing/create-portal-session', {
+          method:'POST', credentials:'include',
+          headers:{'Content-Type':'application/json','x-csrf-token':csrf()}
+        }).then(function(r){ return r.json(); }).then(function(d) {
+          if (d.url) window.location.href = d.url;
+          else { btn.disabled = false; btn.textContent = 'Change in billing'; }
+        }).catch(function() { btn.disabled = false; btn.textContent = 'Change in billing'; });
+        return;
+      }
       btn.disabled = true; btn.textContent = 'Loading...';
       fetch('/api/billing/create-checkout-session', {
         method:'POST', credentials:'include',
