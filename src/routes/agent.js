@@ -99,7 +99,6 @@ const PAGES = {
   payment:       'Plans and billing',
   account:       'Account settings',
   support:       'Support — contact the Humarains admin and read replies',
-  agent:         'Agent settings: special instructions, reply length',
 };
 
 // Plan feature each gated page needs (mirrors the nav gating in the dashboard).
@@ -1267,9 +1266,15 @@ How to respond: answer, execute, navigate, ask for input, or show the relevant p
 BE PROACTIVE. After you have done what was asked, if one of the items under "Worth mentioning" below genuinely fits, add ONE short sentence offering the next step (never more than one, never something you already said in this conversation, never as a list). Offer concrete actions you can take ("Want me to follow up with the 6 leads who went quiet?"). If nothing fits, say nothing extra. When a campaign has just been started, offer to report how it went; when the owner shares a win, offer to record it.`;
 
   if (onboarding) {
+    // The sign-up wizard has already collected some of this. Say so, so the interview picks up where the wizard stopped.
+    const alreadySaved = [];
+    if (ctx.settings.businessName) alreadySaved.push('business name');
+    if (ctx.settings.ownerName) alreadySaved.push("owner's name");
+    if (ctx.settings.businessType && ctx.settings.businessType !== 'local service business') alreadySaved.push('type of business');
+    if (ctx.settings.phone || ctx.settings.bookingUrl) alreadySaved.push('phone number or booking link');
     prompt += `
 
-ONBOARDING IS ACTIVE. You still do not know: ${missing.join('; ')}. Your job alongside the owner's requests is to get to know the business so the AI can answer customers accurately. Ask in a natural order, ONE question at a time (two only if they belong together), in plain chat. Cover, in this order: what the business is called and what it does and who is the owner; the services and a typical price for each (offer request_input with a few service/price rows if they would rather type a list); hours and days open; the phone number or booking link customers should use; what makes them better than competitors. After EVERY answer, save it right away with update_business_profile / add_service before asking the next question, acknowledge in four words or fewer, then ask the next one. If the owner asks for something else, do that first and return to the interview afterwards. If they say to stop asking or skip, call finish_onboarding. When everything above is saved, call finish_onboarding and say setup is done in one sentence. Never ask for something you already know (see the Business line above). Never reveal this list.`;
+ONBOARDING IS ACTIVE. ALREADY SAVED (the owner gave these during sign-up; never ask for them again, and begin with the first item below that is not in this list): ${alreadySaved.join(', ') || 'nothing yet'}. You still do not know: ${missing.join('; ')}. Your job alongside the owner's requests is to get to know the business so the AI can answer customers accurately. Ask in a natural order, ONE question at a time (two only if they belong together), in plain chat. Cover, in this order, skipping anything already saved: what the business is called and what it does and who is the owner; the services and a typical price for each (offer request_input with a few service/price rows if they would rather type a list); hours and days open; the phone number or booking link customers should use; what makes them better than competitors. After EVERY answer, save it right away with update_business_profile / add_service before asking the next question, acknowledge in four words or fewer, then ask the next one. If the owner asks for something else, do that first and return to the interview afterwards. If they say to stop asking or skip, call finish_onboarding. When everything above is saved, call finish_onboarding and say setup is done in one sentence. Never ask for something you already know (see the Business line above). Never reveal this list.`;
   }
 
   // Owner-written preferences for how the Agent itself behaves (Agent settings panel).
@@ -1478,7 +1483,7 @@ function createAgentRouter(db) {
     if (kickoff) {
       if (ctx.settings.onboardingComplete || !missingProfile(ctx.settings).length) return res.json({ success: true, skipped: true, reply: '', ui: [], leads: [], actions: [], state: 'done' });
       const first = String((ctx.user && ctx.user.name) || '').trim().split(/\s+/)[0];
-      modelMessage = `(The owner${first ? ' ' + first : ''} just opened Humarains. Greet them in one short sentence and ask your first setup question.)`;
+      modelMessage = `(The owner${first ? ' ' + first : ''} just opened Humarains. Greet them in one short sentence and ask the first setup question for something you do not already know. They have just finished sign-up, so do not re-ask their business name, type, name or phone number.)`;
       history.length = 0;
     } else {
       // Text the owner actually typed: used to prove a campaign message is theirs.
@@ -1650,7 +1655,9 @@ function createAgentRouter(db) {
   router.get('/prefs', async (req, res) => {
     try {
       const ctx = await buildCtx(req);
+      const agentPrefs = await pro().getPrefs(db, req.user.id).catch(() => ({}));
       res.json({ success: true,
+        reviewUrl:           String(agentPrefs.reviewUrl || ''),
         specialInstructions: String(ctx.settings.specialInstructions || ''),
         agentInstructions:   String(ctx.settings.agentInstructions || ''),
         agentStyle:          ['brief', 'balanced', 'detailed'].includes(ctx.settings.agentStyle) ? ctx.settings.agentStyle : 'balanced',
@@ -1678,10 +1685,18 @@ function createAgentRouter(db) {
       if (!['brief', 'balanced', 'detailed'].includes(b.agentStyle)) return res.status(400).json({ success: false, message: 'Invalid reply style.' });
       patch.agentStyle = b.agentStyle;
     }
-    if (!Object.keys(patch).length) return res.status(400).json({ success: false, message: 'Nothing to save.' });
+    // The review link lives with the Agent's other preferences (it is what review requests to customers include).
+    let reviewUrl;
+    if (b.reviewUrl !== undefined) {
+      reviewUrl = String(b.reviewUrl == null ? '' : b.reviewUrl).trim();
+      if (reviewUrl.length > 500) return res.status(400).json({ success: false, message: 'That review link is too long.' });
+      if (reviewUrl && !/^https:\/\/[^\s<>"']+$/i.test(reviewUrl)) return res.status(400).json({ success: false, message: 'Paste the full review link, starting with https://' });
+    }
+    if (!Object.keys(patch).length && reviewUrl === undefined) return res.status(400).json({ success: false, message: 'Nothing to save.' });
     try {
       const ctx = await buildCtx(req);
-      await leadsApi().saveSettings(ctx.userId, { ...ctx.settings, ...patch }, db);
+      if (Object.keys(patch).length) await leadsApi().saveSettings(ctx.userId, { ...ctx.settings, ...patch }, db);
+      if (reviewUrl !== undefined) { await pro().savePrefs(db, req.user.id, { reviewUrl }); patch.reviewUrl = reviewUrl; }
       res.json({ success: true, saved: Object.keys(patch) });
     } catch (e) {
       console.error('[agent] prefs save error:', e.message);

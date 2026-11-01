@@ -2013,9 +2013,9 @@ router.post('/ingest', leadsLimiter, async (req, res) => {
 // never touches the AI-reply send quota, so trying the product costs a new
 // user nothing toward their plan's monthly limit.
 const TEST_LEAD_SAMPLES = [
-  { subject: 'Quick quote request', body: "Hi, I saw your listing online and I'm interested in getting a quote. Do you have availability this week? Thanks!", fromName: 'Sample Lead' },
-  { subject: 'Question about pricing', body: "Hello, could you tell me more about your pricing and how the process works? I'm looking to get started soon.", fromName: 'Sample Lead' },
-  { subject: 'Looking to book a service', body: "Hi there, I'd like to book an appointment. What's your soonest availability and what would it cost?", fromName: 'Sample Lead' },
+  { subject: 'Interested in your services', body: "Hi, I found your business online and I'm interested in your services. Could someone get in touch with me about next steps? Thanks!", fromName: 'Sample Lead' },
+  { subject: 'Getting started', body: "Hello, I'd like to find out more about what you do and how to get started. Please let me know the best way to move forward.", fromName: 'Sample Lead' },
+  { subject: 'New enquiry', body: "Hi there, I'm looking for help and came across your business. I'd love to chat about what you can do for me. Thanks!", fromName: 'Sample Lead' },
 ];
 
 router.post('/test-lead', testLeadLimiter, async (req, res) => {
@@ -2037,6 +2037,12 @@ router.post('/test-lead', testLeadLimiter, async (req, res) => {
 
     await storeLead(req.user.id, processed, req._db);
     console.log(`[Leads] Created onboarding test lead ${processed.id} for user ${req.user.id}`);
+    // processLead() can return without a drafted reply (disqualified, needs human review, not enough business info).
+    // Say why, instead of letting the client fall back to a generic error.
+    if (!processed.aiReply || !processed.aiReply.body) {
+      const why = processed.humanReviewReason || processed.disqualifyReason || 'The Agent needs a few more business details to reply safely.';
+      return res.status(200).json({ success: false, lead: processed, message: why });
+    }
     res.status(201).json({ success: true, lead: processed });
   } catch (err) {
     console.error('[Leads] test-lead error:', err.message);
