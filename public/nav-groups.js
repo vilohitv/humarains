@@ -1,9 +1,9 @@
-/* One sidebar item, several pages: Channels (Email, WhatsApp, Google Calendar) and Settings (Business, Knowledge,
+/* One sidebar item, several pages: Channels (Email, WhatsApp, Telegram, Google Calendar) and Settings (Business, Knowledge,
    Agent, Support, Account). leads.js calls NavGroups.sync(viewId) every time a page opens. Also keeps the Review
    badge on the sidebar (drafts waiting for approval + chats that need a person) in step. */
 (function () {
   'use strict';
-  var GROUPS = { channels: ['email', 'whatsapp', 'calendar', 'integrations'], settings: ['settings', 'knowledge', 'support', 'account'] };
+  var GROUPS = { channels: ['email', 'whatsapp', 'telegram', 'calendar', 'integrations'], settings: ['settings', 'knowledge', 'support', 'account'] };
   var strips = {};
   ['channels', 'settings'].forEach(function (g) { strips[g] = document.querySelector('.lc-tabs[data-group="' + g + '"]'); });
 

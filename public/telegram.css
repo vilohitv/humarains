@@ -1,0 +1,14 @@
+/* Channels > Telegram */
+#view-telegram .tg-card { max-width: 640px; }
+#view-telegram .tg-h { font-size: 16px; font-weight: 600; margin: 0 0 8px; color: var(--text); }
+#view-telegram .tg-p, #view-telegram .tg-note { font-size: 14px; line-height: 1.55; color: var(--text2); margin: 0 0 14px; }
+#view-telegram .tg-note { font-size: 13px; margin: 14px 0 0; }
+#view-telegram .tg-steps, #view-telegram .tg-list { margin: 0 0 20px; padding-left: 20px; font-size: 14px; line-height: 1.7; color: var(--text2); }
+#view-telegram .tg-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+#view-telegram .tg-radios { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+#view-telegram .tg-radios label { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border2); border-radius: 12px; cursor: pointer; }
+#view-telegram .tg-radios label:has(input:checked) { border-color: var(--text); }
+#view-telegram .tg-radios input { margin-top: 3px; }
+#view-telegram .tg-radios span { display: flex; flex-direction: column; gap: 3px; font-size: 14px; color: var(--text); }
+#view-telegram .tg-radios small { font-size: 13px; color: var(--text2); line-height: 1.45; }
+#view-telegram .lc-btn { text-decoration: none; }

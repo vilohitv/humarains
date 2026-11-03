@@ -1774,7 +1774,7 @@
   // ── Navigation ────────────────────────────────────────────────
   const VIEW_TITLES = {
     leads:'Leads',new:'New',pending:'Follow-Ups',closed:'Closed',performance:'Performance',inbox:'Inbox',
-    ingest:'Add Lead',email:'Email Connection',whatsapp:'WhatsApp',calendar:'Google Calendar',settings:'Business Settings',payment:'Upgrade',
+    ingest:'Add Lead',email:'Email Connection',whatsapp:'WhatsApp',telegram:'Telegram',calendar:'Google Calendar',settings:'Business Settings',payment:'Upgrade',
     humanreview:'Review',integrations:'Integrations',workflows:'Workflows',
     knowledge:'Company Knowledge',account:'Account',support:'Support','getting-started':'Getting Started',
   };
@@ -2896,7 +2896,7 @@
     if (!isLocked()) return; // nothing to do
 
     // Only gate send-related views — config/setup pages always stay accessible
-    const freeViews = new Set(['payment','whatsapp','email','integrations','settings','webhook']);
+    const freeViews = new Set(['payment','whatsapp','telegram','email','integrations','settings','webhook']);
 
     // Dim and intercept send-related nav items only
     document.querySelectorAll('.lc-nav-item[data-view]').forEach(function(navEl) {

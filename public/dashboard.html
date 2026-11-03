@@ -63,6 +63,7 @@
 <link rel="stylesheet" href="hours.css?v=2">
 <link rel="stylesheet" href="classic.css?v=3">
 <link rel="stylesheet" href="settings.css?v=1">
+<link rel="stylesheet" href="telegram.css?v=1">
 <link rel="stylesheet" href="refine.css?v=3">
 <link rel="stylesheet" href="reschedule.css?v=1">
 <link rel="stylesheet" href="classic-console.css?v=1">
@@ -370,6 +371,7 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
   <nav class="lc-tabs" id="lcTabsChannels" data-group="channels" aria-label="Channels" hidden>
     <button type="button" class="lc-tab" data-tab="email">Email</button>
     <button type="button" class="lc-tab" data-tab="whatsapp">WhatsApp <span class="lc-nav-badge" id="navBadgeWhatsapp" style="display:none">0</span></button>
+    <button type="button" class="lc-tab" data-tab="telegram">Telegram</button>
     <button type="button" class="lc-tab" data-tab="calendar">Google Calendar</button>
   </nav>
   <nav class="lc-tabs" id="lcTabsSettings" data-group="settings" aria-label="Settings" hidden>
@@ -534,6 +536,52 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
             Save and process with AI
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- TELEGRAM: manage the Agent and get its updates from the Telegram app (built by telegram-ui.js) -->
+    <div class="lc-view" id="view-telegram">
+      <div id="tgConnected" class="lc-connect-card" style="display:none">
+        <div class="lc-connect-info">
+          <div class="lc-connect-title">Telegram connected</div>
+          <div class="lc-connect-meta" id="tgConnectedMeta">-</div>
+        </div>
+        <button class="lc-btn lc-btn-ghost lc-btn-sm" id="tgDisconnect" style="margin-left:auto">Disconnect</button>
+      </div>
+
+      <div id="tgSetup" class="lc-settings-section tg-card" style="display:none">
+        <h3 class="tg-h">Run your Agent from Telegram</h3>
+        <p class="tg-p">See what the Agent is doing, give it tasks, and get its updates as they happen, from your phone.</p>
+        <ol class="tg-steps">
+          <li>Press Connect below. Telegram opens with the Humarains bot.</li>
+          <li>Tap Start in Telegram. This page updates by itself.</li>
+        </ol>
+        <div class="tg-actions">
+          <button class="lc-btn lc-btn-primary" id="tgConnect">Connect Telegram</button>
+          <a class="lc-btn lc-btn-ghost" id="tgOpenLink" href="#" target="_blank" rel="noopener" style="display:none">Open Telegram again</a>
+        </div>
+        <p class="tg-note" id="tgWaiting" style="display:none">Waiting for you to tap Start in Telegram. The link works for 10 minutes.</p>
+        <p class="tg-note" id="tgUnavailable" style="display:none">Telegram is not switched on for this Humarains install yet.</p>
+      </div>
+
+      <div id="tgManage" class="lc-settings-section tg-card" style="display:none">
+        <h3 class="tg-h">What the Agent tells you</h3>
+        <div class="tg-radios" id="tgNotify">
+          <label><input type="radio" name="tgNotify" value="all"> <span><b>Everything it does</b><small>New enquiries, replies, bookings, wins, follow-ups and anything that needs you.</small></span></label>
+          <label><input type="radio" name="tgNotify" value="important"> <span><b>Only what matters</b><small>Skips routine replies. Still tells you about new enquiries, bookings, wins and anything that needs you.</small></span></label>
+          <label><input type="radio" name="tgNotify" value="off"> <span><b>Nothing</b><small>You can still message the Agent any time.</small></span></label>
+        </div>
+        <div class="tg-actions"><button class="lc-btn lc-btn-ghost lc-btn-sm" id="tgTest">Send a test message</button></div>
+        <h3 class="tg-h" style="margin-top:26px">What you can do there</h3>
+        <ul class="tg-list">
+          <li>Message it like the Agent chat: "who is waiting for me?", "follow up with everyone who asked for a quote this week".</li>
+          <li>Tap Send it or Do not send on a reply it has drafted, and Send it or Dismiss on follow-ups it prepares.</li>
+          <li>When it hands you a chat, reply to its message in Telegram and your answer goes to the customer.</li>
+          <li>Send it photos: it saves them to your photo library, looks at them, and can send them to a customer ("send these to Ann").</li>
+          <li>Launch a campaign it has drafted with one tap, or hand a chat back to it.</li>
+          <li>Quick commands: /status, /today, /activity, /waiting, /opportunities, /notify, /quiet.</li>
+          <li>Deleting leads, resetting data and passwords stay in the dashboard.</li>
+        </ul>
       </div>
     </div>
 
@@ -1725,6 +1773,7 @@ body.lc-booting .lc-chart-card .lc-bars,body.lc-booting .lc-chart-card .lc-donut
 <script src="leads.js?v=1782003959"></script>
 <script src="inbox.js?v=2"></script>
 <script src="nav-groups.js?v=1x"></script>
+<script src="telegram-ui.js?v=1"></script>
 <script src="agent.js?v=13" defer></script>
 <script src="ui-mode.js?v=4" defer></script>
 <script src="handover-ui.js?v=2" defer></script>
