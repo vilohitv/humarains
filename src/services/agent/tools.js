@@ -18,6 +18,10 @@ module.exports = function createAgentTools(h) {
   const media  = () => require('../media-library');
   const tasks  = () => require('./tasks');
 
+  // userId -> a photo send that is waiting for the owner's yes (the Agent wrote the wording).
+  const photoSends = new Map();
+  const sweepPhotoSends = () => { const now = Date.now(); for (const [k, v] of photoSends) if (v.expires < now) photoSends.delete(k); };
+
   const DNC = 'do-not-contact';
   const str = (v, n) => clip(v, n);
   const leadTags = l => Array.isArray(l.tags) ? l.tags : [];
@@ -106,6 +110,12 @@ module.exports = function createAgentTools(h) {
         photo_ids: { type: 'array', items: { type: 'string' } },
         delay_minutes: { type: 'integer', description: 'Send later: minutes from now (max 20160 = 14 days).' },
         channel: { type: 'string', enum: ['email'] } }, required: ['message', 'written_by'] } },
+
+    { name: 'send_photos_to_lead', description: 'Send photos from the owner\'s library to ONE lead right now, on the channel that lead uses (WhatsApp or email), with an optional message. Use it when the owner says to send, show or share photos with a customer ("send Ann the bathroom photos"). Get ids from list_photos, or from photos the owner just attached. WhatsApp follows the usual rule: only inside the customer\'s 24-hour window. Email needs a message. If the owner dictated the message (written_by \"owner\") or sent no message, it goes straight out. If you wrote the message (written_by \"agent\"), nothing is sent: tell the owner exactly what will go out and to whom, ask them to reply yes, and when they do call this tool again with the same lead and photos.',
+      input_schema: { type: 'object', properties: { ...leadRef,
+        photo_ids: { type: 'array', items: { type: 'string' }, description: 'Photo ids (max 4).' },
+        message: { type: 'string', description: 'Optional text to send with the photos.' },
+        written_by: { type: 'string', enum: ['owner', 'agent'], description: '\"owner\" only when the owner typed this exact wording; otherwise \"agent\".' } }, required: ['photo_ids'] } },
 
     // ── Reports ────────────────────────────────────────────
     { name: 'business_report', description: 'Numbers for a period: new leads, by status/source/service, replies, urgent, won jobs and revenue. Use for "how are we doing", "how many leads this week".',
@@ -285,6 +295,44 @@ module.exports = function createAgentTools(h) {
         ? (delay ? `Scheduled for ${delay} minutes from now.` : 'Sending now.') + ' It is a one-time job that removes itself afterwards. Say so in one sentence.'
         : r.message);
       return r;
+    },
+
+    // Photos to one lead on their own channel. Goes through the Inbox send path (plan, quota, WhatsApp consent and
+    // 24-hour window, do-not-contact) so it can never do more than the owner could do by hand in the dashboard.
+    async send_photos_to_lead(ctx, input) {
+      const p = await pickLead(ctx, input); if (p.amb) return p.amb;
+      const l = p.lead, name = compactLead(l).name;
+      if (leadTags(l).includes(DNC)) return { ok: false, error: `${name} is marked do-not-contact, so nothing can be sent. Ask the owner whether to allow contact again.` };
+      const ids = [...new Set((Array.isArray(input.photo_ids) ? input.photo_ids : []).map(String))].slice(0, 4);
+      if (!ids.length) return { ok: false, error: 'Say which photos to send. Use list_photos for ids, or the photos the owner just attached.' };
+      const owned = await media().ownedIds(ctx.db, ctx.userId, ids);
+      if (owned.length !== ids.length) return { ok: false, error: 'One of those photo ids is not in the owner\'s photo library. Use list_photos for valid ids.' };
+
+      const message = String(input.message || '').trim().slice(0, 1500);
+      const typed = !message || (input.written_by === 'owner' && h.ownerWrote && h.ownerWrote(ctx, message));
+      const key = l.id + ':' + [...ids].sort().join(',');
+      sweepPhotoSends();
+      const prior = photoSends.get(ctx.userId);
+      const approved = !!(prior && prior.key === key && prior.reqId !== ctx._reqId && prior.expires >= Date.now()
+        && require('./account-tools').isYes(ctx.lastOwnerMessage));
+      if (!typed && !approved) {
+        // The Agent's own wording: held until the owner says yes in their NEXT message.
+        ctx._reqId = ctx._reqId || crypto.randomBytes(6).toString('hex');
+        photoSends.set(ctx.userId, { key, message, reqId: ctx._reqId, expires: Date.now() + 10 * 60_000 });
+        ctx.waiting = true;
+        return { ok: true, needsConfirmation: true, message: `NOTHING has been sent. Tell the owner exactly what will go to ${name}: ${ids.length} photo${ids.length === 1 ? '' : 's'}` +
+          ` with the message "${message}". Ask them to reply yes to send it. When they do, call send_photos_to_lead again with the same lead and photos.` };
+      }
+      const text = approved && !typed ? prior.message : message;
+      photoSends.delete(ctx.userId);
+
+      const r = await require('../../routes/leads').runLeadAction('inboxSend', { db: ctx.db, user: ctx.user, leadId: l.id, body: { body: text, photoIds: ids } });
+      if (r.body && r.body.success) {
+        ctx.actions.push(`Sent ${ids.length} photo${ids.length === 1 ? '' : 's'} to ${name}`);
+        return { ok: true, sentTo: name, channel: r.body.channel, photos: ids.length, withMessage: !!text, message: 'Sent. Confirm in one short sentence.' };
+      }
+      return { ok: false, error: (r.body && r.body.message) || 'It could not be sent.', needsUpgrade: !!(r.body && r.body.needsUpgrade),
+        message: 'NOT sent. Tell the owner why in one short sentence, using the error.' };
     },
 
     // ── Reports ────────────────────────────────────────────

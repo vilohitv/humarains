@@ -1278,6 +1278,11 @@ app.use('/api/knowledge', requireAuth, attachLeadsUser, createKnowledgeRouter(db
 // The Agent — natural-language control layer over everything above
 const { createAgentRouter } = require('./routes/agent');
 app.use('/api/agent', requireAuth, attachLeadsUser, createAgentRouter(db));
+
+// Telegram: the owner connects their phone to the Agent. Every write needs the CSRF token.
+app.use('/api/telegram', requireAuth, attachLeadsUser,
+  (req, res, next) => (req.method === 'GET' ? next() : verifyCsrfToken(req, res, next)),
+  require('./routes/telegram').createTelegramRouter(db));
 // What the Agent may do on its own (permissions, limits, activity log)
 const { createAutonomyRouter } = require('./routes/autonomy');
 app.use('/api/autonomy', requireAuth, attachLeadsUser, createAutonomyRouter(db));
@@ -1775,6 +1780,7 @@ const server = app.listen(PORT, () => {
     maintenanceJob.start(db);
     require('./services/whatsapp-maintenance').start(db);
     require('./services/retention-job').start(db);
+    require('./services/telegram').start(db);
   }).catch(() => {});
 });
 
@@ -1786,6 +1792,7 @@ function gracefulShutdown(signal) {
   maintenanceJob.stop();
   require('./services/whatsapp-maintenance').stop();
   require('./services/retention-job').stop();
+  require('./services/telegram').stop();
   server.close(() => { console.log('[Server] All connections closed.'); process.exit(0); });
   setTimeout(() => { console.error('[Server] Drain timeout — forcing exit'); process.exit(1); }, 10000);
 }

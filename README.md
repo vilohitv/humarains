@@ -347,6 +347,7 @@ All variables are documented in `.env.example`. The ones that matter:
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_<PLAN>_PRICE_ID` | for billing | Subscriptions |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL` | for Google | Sign-in and Calendar |
 | `META_APP_ID`, `META_APP_SECRET`, `META_CONFIG_ID`, `WHATSAPP_VERIFY_TOKEN` | for WhatsApp | Embedded Signup and webhook |
+| `TELEGRAM_BOT_TOKEN` | for Telegram | Token of the one Humarains bot (create it with @BotFather). Set the same value on the web service and the worker. Without it the Telegram feature is off. |
 | `INBOX_POLL_INTERVAL_MS`, `AGENT_CAMPAIGN_MAX` | no | Inbox poll interval; cap on campaign recipients |
 | `PROCESS_ROLE` | no | `all` (default), `web` (HTTP only) or `worker`. See section 8. |
 | `INBOUND_QUIET_MS`, `INBOUND_MAX_WAIT_MS`, `INBOUND_MAX_ATTEMPTS` | no | Inbound WhatsApp queue: batch window (6 s), longest wait (20 s), attempts before dead-letter (5) |
@@ -513,6 +514,18 @@ Rules come from the WhatsApp Business Messaging Policy (whatsappbusiness.com/pol
 - **Human escalation.** The AI hands a conversation to a person (Human Review) when it cannot or should not answer. Make sure your WhatsApp Business profile lists a phone, email or website so customers can always reach someone.
 
 
+### Telegram: run the Agent from a phone (`services/telegram.js`, `routes/telegram.js`, `public/telegram-ui.js`)
+
+Owners connect Telegram under Channels > Telegram. Humarains runs one bot (`TELEGRAM_BOT_TOKEN`); the owner presses Connect, opens a one-time link and taps Start. The code is stored hashed, is single use and expires after 10 minutes. One Telegram chat belongs to one account. Group chats are ignored.
+
+- **Talk to the Agent.** Free text goes through the same loop as the dashboard chat (`runAgentTurn` in `routes/agent.js`), with the same tools and limits. On Telegram the prompt says there are no forms or pages, links to pages and leads are attached as buttons, and `delete_leads`, `reset_account_data`, `confirm_pending_action` and `change_password` are refused (dashboard only). Each chat is limited to 15 messages a minute. Quick commands without an AI call: `/status`, `/today`, `/activity`, `/waiting`, `/opportunities`, `/notify all|important|off`, `/quiet`, `/disconnect`, `/help`.
+- **Updates from the Agent.** Every 20 seconds `notifyCycle` looks, per linked owner, for what happened since a cursor: new enquiries, replies sent (not the owner's own), handovers, drafts waiting for approval, bookings, wins, recovery follow-ups (sent or failed), finished jobs. Several events in one look become one message; a burst becomes a digest. Follow-up proposals arrive with Send it and Dismiss buttons (the same `approve_opportunity` and `dismiss_opportunity` the chat uses). Owners choose `all`, `important` or `off`. A person who blocks the bot is paused until they message it again. Nothing older than 2 hours is replayed after an outage.
+- **Act, not just read.** A drafted reply arrives as its own message with Send it / Do not send; a chat handed over arrives with a prompt to reply to that message, and the owner's reply is sent to the customer. Both go through the dashboard's own handlers (`runLeadAction` in `routes/leads.js`), so plan limits, quotas and the WhatsApp consent and 24-hour rules apply exactly as in the dashboard. Routine news (replies sent, customers writing back) arrives silently; anything that needs the owner makes a sound. The morning briefing is also sent to Telegram.
+- **Nothing the Agent shows is lost on a phone.** The dashboard's cards are rebuilt as Telegram messages: a campaign the Agent drafted arrives with Launch campaign / Not now (Launch calls the same `launchCampaign` as the dashboard button), and the pending-approvals card becomes each draft (Send it / Do not send) and each handed-over chat (reply to it, or Hand back to the Agent, which clears the flag through the Inbox's own AI toggle). `/waiting` shows the same actionable messages. `/today` lists today's and tomorrow's Google Calendar appointments in the business time zone with no AI call. `/quiet 22:00 07:00` keeps every update silent (still delivered) between those times in the business time zone. The "reply to answer" map lives in its own key (`tg_msgs:<user>`) so notifier writes can not drop it.
+- **Photos, both ways.** Photos (or images sent as files) the owner sends to the bot are saved to the same photo library the dashboard paperclip uses (JPEG, PNG, WebP, up to 4 MB each, 4 per message, 40 in the library) and are shown to the model for that turn, so it can describe them and save captions and tags with `update_photo`. An album arrives as several updates; `pollOnce` waits briefly and merges it into one turn. To send photos to a customer, the owner tells the Agent ("send Ann that photo"); the new `send_photos_to_lead` tool sends them through the Inbox send path (`inboxSendHandler` in `routes/leads.js`, now photo-aware), on the lead's own channel: WhatsApp images with the usual consent, 24-hour window and quota checks, or email attachments (email needs a message). Wording the owner typed goes straight out; wording the Agent wrote is held until the owner replies yes in a later message. Do-not-contact leads and photos that are not the owner's are refused.
+- **No schema change, no webhook.** The link and the owner's choice live in `users.integrations.telegram`; the cursor, de-duplication keys and the last 10 chat turns live in `admin_settings` (`tg_state:<user>`, `tg_hist:<user>`, `telegram_offset`). Messages arrive by long polling in the worker (job `telegram_poll`, one process at a time through the database lock; updates `telegram_notify`), so no public URL is needed. An index on the chat id is created at start-up.
+- **Limits to know.** A slow AI turn delays the next poll for everyone, so run the worker on its own process. Voice notes and other files sent to the bot are not read. Email lead photo sends were tested with a captured mailer, not a real SMTP server. The update loop checks only owners with recent activity each cycle, plus everyone every 10 minutes.
+
 ### Front-end design system
 
 One typeface, one palette, one set of rules, so no page looks like it came from a different product.
@@ -533,7 +546,7 @@ One typeface, one palette, one set of rules, so no page looks like it came from 
 
 ## 11. Testing
 
-This release ships without an automated test suite. Run `npm run check` (syntax check of every file) and test end to end with a fresh account before going live.
+This release ships without an automated test suite in the repository. The Telegram feature was checked against a real PostgreSQL with a fake Telegram API (linking, expiry and single use, every update type, digests, de-duplication, blocked users, commands, buttons, polling, disconnect). Run `npm run check` (syntax check of every file) and test end to end with a fresh account before going live.
 
 ---
 

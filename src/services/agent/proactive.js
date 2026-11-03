@@ -758,6 +758,7 @@ async function sendDueBriefings(db, users) {
       const data = await gatherBriefing(db, user);
       const quiet = !data.newLeads && !data.won && !data.waiting && !data.opportunities.length && !data.agentDid.total;
       if (quiet) continue;                                   // never send an empty "nothing happened" email
+      require('../telegram').sendBriefing(db, user, data, settings).catch(() => {});   // the same briefing on Telegram, if connected
       // The main button goes to whatever needs the owner most, and a second link covers the next thing:
       // conversations handed over -> drafted replies waiting -> follow-ups ready to approve -> the lead list.
       const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);

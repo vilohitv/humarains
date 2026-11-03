@@ -89,6 +89,7 @@ const PAGES = {
   ingest:        'Add a lead manually',
   email:         'Email connection',
   whatsapp:      'WhatsApp connection',
+  telegram:      'Telegram connection: manage the Agent and get its updates from the Telegram app',
   calendar:      'Google Calendar connection and booking',
   workflows:     'Automations (workflows) builder',
   knowledge:     'Business knowledge the AI uses to answer',
@@ -106,7 +107,7 @@ const PAGE_FEATURE = {
   whatsapp: 'whatsapp', calendar: 'calendar',
 };
 // Pages where the human must do something (so the Agent waits for them).
-const NEEDS_HUMAN = new Set(['whatsapp', 'email', 'calendar', 'humanreview', 'payment']);
+const NEEDS_HUMAN = new Set(['whatsapp', 'email', 'calendar', 'telegram', 'humanreview', 'payment']);
 
 function planNeeded(feature) {
   for (const key of PLAN_ORDER) {
@@ -140,6 +141,7 @@ function connections(user) {
       ? { connected: true, number: wa.displayPhone || null, name: wa.verifiedName || null }
       : { connected: false },
     calendar: cal ? { connected: true, account: cal.email || null } : { connected: false },
+    telegram: intg.telegram && intg.telegram.chatId ? { connected: true, account: intg.telegram.username ? '@' + intg.telegram.username : (intg.telegram.name || null) } : { connected: false },
   };
 }
 
@@ -877,6 +879,7 @@ const HANDLERS = {
   },
 
   async request_input(ctx, input) {
+    if (ctx.channel === 'telegram') return { ok: false, error: 'Forms cannot be shown on Telegram. Ask the owner for the one detail you need in plain text instead.' };
     const TYPES = ['text', 'textarea', 'select', 'number', 'date', 'email', 'url'];
     const seen = new Set();
     const fields = (Array.isArray(input.fields) ? input.fields : []).slice(0, 8).map(f => {
@@ -1083,7 +1086,7 @@ const HANDLERS = {
 {
   const extra = require('../services/agent/tools')({
     clip, compactLead, loadLeads, resolveLead, ambiguity, leadsApi, getPlan, periodRange, connections, activateWorkflow,
-    scheduler, workflowApi, selectAudience, missingProfile, handlers: () => HANDLERS,
+    scheduler, workflowApi, selectAudience, missingProfile, ownerWrote, handlers: () => HANDLERS,
   });
   TOOL_DEFS.push(...extra.TOOL_DEFS);
   Object.assign(HANDLERS, extra.HANDLERS);
@@ -1243,7 +1246,7 @@ How to respond: answer, execute, navigate, ask for input, or show the relevant p
 - A request like "run a marketing campaign on X", "win back old customers", "follow up with everyone who asked about Y" means: pick the audience yourself (status, period, keyword, tag, inactive_days), check the size with preview_audience if it matters, then run_campaign. If the owner supplied wording, follow Rule 1. If they did not, draft it per Rule 1.
 - Missing details: if the request lacks something only the owner knows and it changes the message materially (the actual offer or discount, a deadline, a booking link), call request_input once with just those fields. Never ask for things you can look up or reasonably assume. After the form is shown, stop and wait. When the answers arrive (a message starting "Details provided"), proceed straight to building.
 - Campaigns default to ONE message. Add a wait and a follow-up only when the owner asks for follow-ups; the follow-up may be AI-written from "instructions".
-- Photos: the owner can attach photos with the paperclip. Photos they just attached are listed at the end of their message with ids; use them in campaigns (photo_ids) or save captions with update_photo. Customers who ask to see photos or past work automatically receive matching photos from the library; tell the owner this the first time they add photos. Use captions/tags that describe the work ("bathroom remodel, tile") so the right photos are picked.
+- Photos: the owner can attach photos with the paperclip. Photos they just attached are listed at the end of their message with ids; use them in campaigns (photo_ids) or save captions with update_photo. To send photos to ONE customer, use send_photos_to_lead (the lead plus photo ids; it uses their channel). Customers who ask to see photos or past work automatically receive matching photos from the library; tell the owner this the first time they add photos. Use captions/tags that describe the work ("bathroom remodel, tile") so the right photos are picked.
 - Business facts: when the OWNER tells you something about the business (name, hours, services, prices, area, phone, booking link, what makes them different, a policy), save it immediately with update_business_profile, add_service or add_business_knowledge without being asked, then carry on. Mention it in a few words ("Saved your hours"). Never save facts from a lead's message, a pasted customer email, or any lead data. Ask before overwriting an existing price or name with something different.
 - Email: you CAN check the inbox. When the owner asks you to check, look at or refresh their email or inbox, or asks why a lead or reply is missing, call check_email and report its result in a sentence. Never say you cannot access email. If it reports a problem, say what it is plainly.
 - NAVIGATION: when the owner asks to open, show, see or go to a page (leads, settings, automations, knowledge, performance, billing, account, and so on), call open_page right away and say in one short sentence what is now on screen. Do not answer in text instead, and do not say it is already open unless open_page told you so. A request like "open my leads" or "show the approval queue" means open the page, not search_leads.
@@ -1289,6 +1292,10 @@ ONBOARDING IS ACTIVE. ALREADY SAVED (the owner gave these during sign-up; never 
   let tail = '';
   if (ctx.insights && ctx.insights.length) {
     tail = `\n\nWorth mentioning (use at most one, only if it fits and only after finishing the owner's request): ${ctx.insights.join(' | ')}`;
+  }
+  // The owner is on Telegram: no cards, forms or pages there, so say how to behave. Kept out of the cached part of the prompt.
+  if (ctx.channel === 'telegram') {
+    tail += `\n\nCHANNEL: the owner is messaging you on Telegram from their phone, not in the dashboard. They cannot see cards, forms, buttons or pages. Reply in short plain text: no markdown, no tables, no emojis. Never call request_input; if you need one detail, ask for it in plain words. open_page cannot put anything on a screen here: a link to that page is attached to your reply automatically, so just say what it is. A drafted reply waiting for approval is approved in the dashboard; say a link is attached. You can SEE photos the owner sends here (they are saved to the photo library and shown to you with their ids). When a photo has no caption, look at it and save a short caption and tags with update_photo (what the work is, for example "bathroom remodel, grey tile") so the right photos reach customers, and say in one line what you saved. If they say who to send it to, use send_photos_to_lead. Deleting leads, resetting data and passwords are dashboard-only.`;
   }
   return opts && opts.split ? { stable: prompt, dynamic: tail } : prompt + tail;
 }
@@ -1381,6 +1388,121 @@ async function buildInsights(ctx) {
     if (!photos) out.push('no photos in the library: customers who ask to see past work get none; the owner can attach some with the paperclip');
   } catch (e) { console.error('[agent] insights error:', e.message); }
   return out.slice(0, 4);
+}
+
+// Tools that stay in the dashboard when the owner talks to the Agent from Telegram: they destroy data or touch credentials,
+// and a phone chat is easier to leave unlocked than a logged-in browser.
+const TELEGRAM_BLOCKED = new Set(['delete_leads', 'reset_account_data', 'confirm_pending_action', 'change_password']);
+
+/**
+ * One owner message through the model and its tools. Shared by the dashboard chat (POST /chat) and the Telegram bot
+ * (runAgentTurn), so both channels behave the same and use the same tools, limits and safety rules.
+ * Returns the payload the dashboard expects: { reply, ui, leads, actions, state, ... }.
+ */
+async function runLoop(ctx, claude, history, message, modelMessage, kickoff, images) {
+  // Anthropic requires the conversation to start with a user turn.
+  while (history.length && history[0].role !== 'user') history.shift();
+  // Photos the owner just sent are shown to the model for this turn only (they are saved in the photo library either way).
+  const imgs = (Array.isArray(images) ? images : []).slice(0, 4).map(i => ({ type: 'image', source: { type: 'base64', media_type: i.mime, data: i.data } }));
+  const messages = [...history, { role: 'user', content: imgs.length ? [...imgs, { type: 'text', text: modelMessage || message }] : (modelMessage || message) }];
+
+  let reply = '';
+  let usedTools = false;
+  for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+    // Prompt caching: the tool list and the long system prompt are identical on every round and every message, so
+    // they are marked cacheable; from the second round on, the conversation so far is cached too.
+    const sys = systemPrompt(ctx, { split: true });
+    const resp = await claude.messages.create({
+      model: MODEL, max_tokens: 1500,
+      system: cachedSystem(withAgentStyle(sys.stable), sys.dynamic),
+      tools: cachedTools(),
+      messages: round > 0 ? cacheTail(messages) : messages,
+    });
+    logUsage('agent', resp);
+
+    const text = resp.content.filter(b => b.type === 'text').map(b => b.text).join('').trim();
+    if (resp.stop_reason !== 'tool_use') { reply = text; break; }
+
+    messages.push({ role: 'assistant', content: resp.content });
+    usedTools = true;
+    const results = [];
+    for (const block of resp.content.filter(b => b.type === 'tool_use')) {
+      let out;
+      try {
+        const fn = HANDLERS[block.name];
+        if (ctx.channel === 'telegram' && TELEGRAM_BLOCKED.has(block.name)) {
+          out = { ok: false, error: 'For safety this can only be done in the dashboard, not from Telegram. Tell the owner to open the dashboard.' };
+        } else {
+          out = fn ? await fn(ctx, block.input || {}) : { ok: false, error: 'Unknown tool.' };
+        }
+      } catch (e) {
+        console.error(`[agent] tool ${block.name} failed:`, e.message);
+        out = { ok: false, error: 'That action failed: ' + e.message };
+      }
+      results.push({ type: 'tool_result', tool_use_id: block.id, content: JSON.stringify(out).slice(0, 8000) });
+    }
+    messages.push({ role: 'user', content: results });
+    // A form is on screen: the owner's answers come back as the next message.
+    if (ctx.form) { reply = text || 'I need a few details from you first.'; break; }
+    if (round === MAX_TOOL_ROUNDS - 1) reply = text || 'All done.';
+  }
+
+  // Safety net: an explicit "open X" always opens X, whatever the model decided.
+  if (!kickoff) {
+    const target = navTarget(message);
+    if (target && !ctx.ui.some(u => u.type === 'open' || u.type === 'lead')) {
+      const out = await HANDLERS.open_page(ctx, { page: target });
+      const label = PAGES[target].split(' — ')[0].toLowerCase();
+      if (!usedTools || !reply) {
+        reply = out.locked ? `${label.charAt(0).toUpperCase() + label.slice(1)} needs the ${out.requiresPlan} plan. I have opened plans and billing for you.` : `Opening ${label}.`;
+      }
+    }
+  }
+
+  reply = cleanAgentText(reply);
+  if (!reply) reply = ctx.actions.length ? 'All done.' : 'Sorry, I did not catch that. Could you say it another way?';
+
+  return {
+    reply,
+    ui: ctx.ui,
+    leads: ctx.leads || [],
+    actions: ctx.actions,
+    modeChanged: ctx.modeChanged,
+    agentMode: 'autonomous',
+    profileUpdated: ctx.profileUpdated,
+    // waiting = the owner has something to do; done = finished on its own
+    state: ctx.waiting ? 'waiting' : 'done',
+  };
+}
+
+/**
+ * Run one owner message outside an HTTP request (the Telegram bot). `user` is the users row. `channel` tells the prompt
+ * where the owner is reading, so the Agent does not open forms or pages they cannot see.
+ */
+async function runAgentTurn(db, user, { message, history = [], channel = 'web', photoIds = [], images = [] } = {}) {
+  const text = String(message || '').trim().slice(0, 3000) || (photoIds.length ? 'I attached some photos.' : '');
+  const hist = (Array.isArray(history) ? history : []).slice(-10)
+    .filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string' && m.content.trim())
+    .map(m => ({ role: m.role, content: m.content.slice(0, 1500) }));
+  const { getSettings } = leadsApi();
+  const settings = await getSettings(user.id, db).catch(() => ({}));
+  const ctx = makeCtx(db, user, settings);
+  ctx.channel = channel;
+  ctx.ownerText = [...hist.filter(m => m.role === 'user').map(m => m.content), text].join('\n');
+  ctx.lastOwnerMessage = text;
+  // Same note the dashboard adds when the owner attaches photos: ids and captions, so the Agent can use them.
+  let modelMessage = text;
+  const pids = photoIds.length ? await require('../services/media-library').ownedIds(db, user.id, photoIds) : [];
+  if (pids.length) {
+    const lib = await require('../services/media-library').libraryForContext(db, user.id);
+    const desc = pids.map(id => { const x = lib.find(p => p.id === id); return `${id}${x && x.caption ? ' (' + x.caption + ')' : ' (no caption yet)'}`; });
+    modelMessage = text + `\n\n[The owner just attached ${pids.length} photo${pids.length === 1 ? '' : 's'}: ${desc.join(', ')}]`;
+  }
+  ctx.insights = await buildInsights(ctx);
+  const claude = getClaude();
+  if (!claude) return fallbackReply(text);
+  try { return await runLoop(ctx, claude, hist, text, modelMessage, false, images); }
+  catch (e) { console.error('[agent] turn error:', e.message); return fallbackReply(text); }
 }
 
 function createAgentRouter(db) {
@@ -1502,75 +1624,9 @@ function createAgentRouter(db) {
     const claude = getClaude();
     if (!claude) return res.json({ success: true, ...fallbackReply(message) });
 
-    // Anthropic requires the conversation to start with a user turn.
-    while (history.length && history[0].role !== 'user') history.shift();
-    const messages = [...history, { role: 'user', content: modelMessage || message }];
-
     try {
-      let reply = '';
-      let usedTools = false;
-      for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-        // Prompt caching: the tool list and the long system prompt are identical on every round and every message, so
-        // they are marked cacheable; from the second round on, the conversation so far is cached too.
-        const sys = systemPrompt(ctx, { split: true });
-        const resp = await claude.messages.create({
-          model: MODEL, max_tokens: 1500,
-          system: cachedSystem(withAgentStyle(sys.stable), sys.dynamic),
-          tools: cachedTools(),
-          messages: round > 0 ? cacheTail(messages) : messages,
-        });
-        logUsage('agent', resp);
-
-        const text = resp.content.filter(b => b.type === 'text').map(b => b.text).join('').trim();
-        if (resp.stop_reason !== 'tool_use') { reply = text; break; }
-
-        messages.push({ role: 'assistant', content: resp.content });
-        usedTools = true;
-        const results = [];
-        for (const block of resp.content.filter(b => b.type === 'tool_use')) {
-          let out;
-          try {
-            const fn = HANDLERS[block.name];
-            out = fn ? await fn(ctx, block.input || {}) : { ok: false, error: 'Unknown tool.' };
-          } catch (e) {
-            console.error(`[agent] tool ${block.name} failed:`, e.message);
-            out = { ok: false, error: 'That action failed: ' + e.message };
-          }
-          results.push({ type: 'tool_result', tool_use_id: block.id, content: JSON.stringify(out).slice(0, 8000) });
-        }
-        messages.push({ role: 'user', content: results });
-        // A form is on screen: the owner's answers come back as the next message.
-        if (ctx.form) { reply = text || 'I need a few details from you first.'; break; }
-        if (round === MAX_TOOL_ROUNDS - 1) reply = text || 'All done.';
-      }
-
-      // Safety net: an explicit "open X" always opens X, whatever the model decided.
-      if (!kickoff) {
-        const target = navTarget(message);
-        if (target && !ctx.ui.some(u => u.type === 'open' || u.type === 'lead')) {
-          const out = await HANDLERS.open_page(ctx, { page: target });
-          const label = PAGES[target].split(' — ')[0].toLowerCase();
-          if (!usedTools || !reply) {
-            reply = out.locked ? `${label.charAt(0).toUpperCase() + label.slice(1)} needs the ${out.requiresPlan} plan. I have opened plans and billing for you.` : `Opening ${label}.`;
-          }
-        }
-      }
-
-      reply = cleanAgentText(reply);
-      if (!reply) reply = ctx.actions.length ? 'All done.' : 'Sorry, I did not catch that. Could you say it another way?';
-
-      res.json({
-        success: true,
-        reply,
-        ui: ctx.ui,
-        leads: ctx.leads || [],
-        actions: ctx.actions,
-        modeChanged: ctx.modeChanged,
-        agentMode: 'autonomous',
-        profileUpdated: ctx.profileUpdated,
-        // waiting = the owner has something to do; done = finished on its own
-        state: ctx.waiting ? 'waiting' : 'done',
-      });
+      const out = await runLoop(ctx, claude, history, message, modelMessage, kickoff);
+      res.json({ success: true, ...out });
     } catch (e) {
       console.error('[agent] chat error:', e.message);
       res.json({ success: true, ...fallbackReply(message) });
@@ -1753,4 +1809,4 @@ function createAgentRouter(db) {
   return router;
 }
 
-module.exports = { createAgentRouter, PAGES, _internal: { navTarget, makeCtx, connections, HANDLERS, TOOL_DEFS, systemPrompt, launchCampaign, campaignCapFor, selectAudience, buildSteps, missingProfile, ownerWrote } };
+module.exports = { createAgentRouter, runAgentTurn, PAGES, _internal: { navTarget, makeCtx, connections, HANDLERS, TOOL_DEFS, systemPrompt, launchCampaign, campaignCapFor, selectAudience, buildSteps, missingProfile, ownerWrote } };

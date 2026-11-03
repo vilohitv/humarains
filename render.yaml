@@ -76,6 +76,9 @@ services:
         sync: false
       - key: WHATSAPP_VERIFY_TOKEN
         sync: false
+      # Telegram bot (create one with @BotFather; the SAME token on the web service and the worker)
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
       # Email sending — Resend (recommended) or SMTP
       - key: RESEND_API_KEY
         sync: false
@@ -103,7 +106,7 @@ services:
   # ───────────────────────────────────────────────────────────────
   #  Background worker — everything that is not an HTTP request
   #  (inbox polling, follow-ups, workflow timers, Proactive Agent,
-  #  inbound WhatsApp message queue, daily database backup).
+  #  inbound WhatsApp message queue, Telegram bot, daily database backup).
   #
   #  Runs from the Dockerfile because backups need pg_dump / pg_restore
   #  / aws-cli, which Render's native Node runtime does not include.
@@ -132,6 +135,9 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: APP_URL
+        sync: false
+      # Telegram bot (create one with @BotFather; the SAME token on the web service and the worker)
+      - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false

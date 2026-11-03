@@ -1818,16 +1818,25 @@ router.get('/inbox/conversations/:id', async (req, res) => {
   }
 });
 
-router.post('/inbox/conversations/:id/messages', leadsLimiter, async (req, res) => {
+async function inboxSendHandler(req, res) {
   const user = req.dbUser;
   if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
   const body = typeof (req.body && req.body.body) === 'string' ? req.body.body.trim() : '';
-  if (!body) return res.status(400).json({ success: false, message: 'Type a message first.' });
+  // Photos from the owner's library can go with the message (or alone on WhatsApp). Ids must all be the owner's.
+  const media = require('../services/media-library');
+  const wantIds = [...new Set((Array.isArray(req.body && req.body.photoIds) ? req.body.photoIds : []).map(String))];
+  if (wantIds.length > media.MAX_PER_MESSAGE) return res.status(400).json({ success: false, message: `You can send up to ${media.MAX_PER_MESSAGE} photos at a time.` });
+  const photoIds = await media.ownedIds(req._db, req.user.id, wantIds);
+  if (photoIds.length !== wantIds.length) return res.status(400).json({ success: false, message: 'One of those photos is not in your photo library.' });
+  if (!body && !photoIds.length) return res.status(400).json({ success: false, message: 'Type a message first.' });
   if (body.length > INBOX_MESSAGE_MAX) return res.status(400).json({ success: false, message: `Messages can be up to ${INBOX_MESSAGE_MAX} characters.` });
 
   const lead = await getLeadById(req.user.id, req.params.id, req._db);
   if (!lead) return res.status(404).json({ success: false, message: 'Chat not found.' });
+  if (Array.isArray(lead.tags) && lead.tags.includes('do-not-contact')) return res.status(409).json({ success: false, message: 'This customer asked not to be contacted, so nothing was sent.' });
   const channel = isWhatsAppLead(lead) ? 'whatsapp' : 'email';
+  const photos = photoIds.length ? await media.loadForSend(req._db, req.user.id, photoIds) : [];
+  let photosSent = 0;
 
   let sentId = null, subject = null, quotaOut = {};
   if (channel === 'whatsapp') {
@@ -1842,7 +1851,14 @@ router.post('/inbox/conversations/:id/messages', leadsLimiter, async (req, res) 
       return res.status(403).json({ success: false, quotaExceeded: true, message: whatsappQuotaExceededMessage(waQuota), used: waQuota.used, limit: waQuota.limit });
     }
     try {
-      sentId = (await sendWAAuto({ to, body, creds: getWACreds(user), db: req._db, userId: req.user.id })).id;
+      if (body) sentId = (await sendWAAuto({ to, body, creds: getWACreds(user), db: req._db, userId: req.user.id })).id;
+      // Photos alone still go through the same consent and 24-hour checks as text.
+      else await require('../services/wa-consent').assertCanMessage({ db: req._db, userId: req.user.id, phone: to });
+      if (photos.length) {
+        const c = getWACreds(user);
+        photosSent = await require('../services/whatsapp').sendWhatsAppImages({ to, media: photos, phoneNumberId: c.phoneNumberId, accessToken: c.accessToken });
+        if (!photosSent && !body) return res.status(502).json({ success: false, message: 'WhatsApp could not send the photos. Please try again.' });
+      }
     } catch (err) {
       if (err.whatsappBlocked) return res.status(409).json({ success: false, blockedBy: err.blockedBy, message: err.message });
       console.error('[Inbox] WhatsApp send error:', err.message);
@@ -1851,12 +1867,14 @@ router.post('/inbox/conversations/:id/messages', leadsLimiter, async (req, res) 
     quotaOut = { whatsappQuota: { used: waQuota.used + 1, limit: planIsUnlimited(waQuota.limit) ? null : waQuota.limit, unlimited: waQuota.unlimited } };
   } else {
     if (!lead.fromEmail) return res.status(400).json({ success: false, message: 'This customer did not leave an email address.' });
+    if (!body) return res.status(400).json({ success: false, message: 'Add a short message to go with the photos. This customer is on email.' });
     const quota = await checkSendQuota(req.user.id, user, req._db);
     if (!quota.allowed) return res.status(402).json({ success: false, quotaExceeded: true, message: quotaExceededMessage(quota), used: quota.used, limit: quota.limit });
     const base = (lead.aiReply && lead.aiReply.subject) || lead.subject || 'Your enquiry';
     subject = /^re:/i.test(base) ? base : `Re: ${base}`;
     try {
-      await sendLeadReply({ user, to: lead.fromEmail, subject, body, ...threadingFor(lead) });
+      await sendLeadReply({ user, to: lead.fromEmail, subject, body, ...(photos.length ? { attachments: photos } : {}), ...threadingFor(lead) });
+      photosSent = photos.length;
     } catch (err) {
       console.error('[Inbox] email send error:', err.message);
       return res.status(502).json({ success: false, message: err.message || 'The email could not be sent. Check your email connection under Channels.' });
@@ -1867,7 +1885,7 @@ router.post('/inbox/conversations/:id/messages', leadsLimiter, async (req, res) 
   // The message is out. Record it on a fresh copy of the lead so a customer message that arrived
   // while we were sending is not overwritten. A failed save must not look like a failed send.
   const sentAt = new Date().toISOString();
-  const turn = { role: 'agent', body, ...(subject ? { subject } : {}), sentAt, ...(sentId ? { externalId: sentId } : {}), source: 'owner' };
+  const turn = { role: 'agent', body, ...(subject ? { subject } : {}), sentAt, ...(sentId ? { externalId: sentId } : {}), source: 'owner', ...(photosSent ? { photos: photosSent } : {}) };
   let message = inboxMessage(turn, (lead.conversationHistory || []).length);
   try {
     const fresh = (await getLeadById(req.user.id, lead.id, req._db)) || lead;
@@ -1886,9 +1904,10 @@ router.post('/inbox/conversations/:id/messages', leadsLimiter, async (req, res) 
   }
   if (channel === 'whatsapp') await incrementWhatsAppSends(req.user.id, req._db).catch(() => {});
   res.json({ success: true, message, channel, ...quotaOut });
-});
+}
+router.post('/inbox/conversations/:id/messages', leadsLimiter, inboxSendHandler);
 
-router.post('/inbox/conversations/:id/ai', async (req, res) => {
+async function inboxAiHandler(req, res) {
   const lead = await getLeadById(req.user.id, req.params.id, req._db);
   if (!lead) return res.status(404).json({ success: false, message: 'Chat not found.' });
   const pause = !!(req.body && req.body.paused);
@@ -1896,7 +1915,8 @@ router.post('/inbox/conversations/:id/ai', async (req, res) => {
     pause ? { needsHumanReview: true, humanReviewReason: INBOX_PAUSE_REASON } : { needsHumanReview: false, humanReviewReason: null }, req._db);
   if (!updated) return res.status(500).json({ success: false, message: 'Could not update this chat.' });
   res.json({ success: true, aiPaused: pause });
-});
+}
+router.post('/inbox/conversations/:id/ai', inboxAiHandler);
 
 function createLeadsRouter(db, requireAuth) {
   const r = express.Router();
@@ -1918,8 +1938,22 @@ function createLeadsRouter(db, requireAuth) {
   return r;
 }
 
+// Run one of the reply handlers outside an HTTP request (the Telegram bot's Send / Don't send buttons and
+// reply-to-answer). A synthetic request carries the owner, the handler writes its answer to a captured response.
+// The handlers use only req.user.id, req.dbUser, req._db, req.params and req.body.
+async function runLeadAction(name, { db, user, leadId, body }) {
+  const handler = { approve: consentApproveHandler, reject: consentRejectHandler, humanReply: humanReviewSendHandler, inboxSend: inboxSendHandler, inboxAi: inboxAiHandler }[name];
+  if (!handler) throw new Error('Unknown lead action.');
+  const req = { user: { id: user.id }, dbUser: user, _db: db, params: { id: leadId }, body: body || {}, headers: {}, ip: 'telegram' };
+  let status = 200, payload;
+  const res = { status(c) { status = c; return this; }, json(p) { payload = p; return this; } };
+  await handler(req, res);
+  return { status, body: payload || {} };
+}
+
 module.exports = {
   createLeadsRouter,
+  runLeadAction,
   normalizeService,
   migrateLegacyPricing,
   // Exported for use by the background poller — single source of truth
@@ -2392,7 +2426,7 @@ function followUpSender(req, user) {
 }
 
 // ── POST /api/leads/consent-queue/:id/approve — approve & send ─
-router.post('/consent-queue/:id/approve', leadsLimiter, async (req, res) => {
+async function consentApproveHandler(req, res) {
   const lead = await getLeadById(req.user.id, req.params.id, req._db);
   if (!lead) return res.status(404).json({ success: false, message: 'Lead not found.' });
   if (!lead.pendingApproval) return res.status(400).json({ success: false, message: 'Lead is not awaiting approval.' });
@@ -2440,10 +2474,11 @@ router.post('/consent-queue/:id/approve', leadsLimiter, async (req, res) => {
     console.error('[Consent] Approve error:', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
-});
+}
+router.post('/consent-queue/:id/approve', leadsLimiter, consentApproveHandler);
 
 // ── POST /api/leads/consent-queue/:id/reject — dismiss without sending
-router.post('/consent-queue/:id/reject', leadsLimiter, async (req, res) => {
+async function consentRejectHandler(req, res) {
   const lead = await getLeadById(req.user.id, req.params.id, req._db);
   if (!lead) return res.status(404).json({ success: false, message: 'Lead not found.' });
   // keepOpen: drop the draft without sending, but leave the lead open (Agent "Don't send").
@@ -2458,12 +2493,13 @@ router.post('/consent-queue/:id/reject', leadsLimiter, async (req, res) => {
     }).catch(e => console.error('[Workflow] onStatusChanged (consent-reject) error:', e.message));
   }
   res.json({ success: true, lead: updatedLead });
-});
+}
+router.post('/consent-queue/:id/reject', leadsLimiter, consentRejectHandler);
 
 // ── POST /api/leads/human-review/:id/send is below ──
 
 // ── POST /api/leads/human-review/:id/send — send human reply ──
-router.post('/human-review/:id/send', leadsLimiter, async (req, res) => {
+async function humanReviewSendHandler(req, res) {
   const lead = await getLeadById(req.user.id, req.params.id, req._db);
   if (!lead) return res.status(404).json({ success: false, message: 'Lead not found.' });
   if (!lead.needsHumanReview) return res.status(400).json({ success: false, message: 'Lead is not flagged for human review.' });
@@ -2517,7 +2553,8 @@ router.post('/human-review/:id/send', leadsLimiter, async (req, res) => {
     console.error('[HumanReview] Send error:', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
-});
+}
+router.post('/human-review/:id/send', leadsLimiter, humanReviewSendHandler);
 
 
 // ── DELETE /api/leads/calendar — disconnect calendar ──────────

@@ -12,7 +12,7 @@
  */
 'use strict';
 
-const VIEWS = ['leads', 'new', 'pending', 'closed', 'ingest', 'email', 'whatsapp', 'calendar', 'settings', 'payment',
+const VIEWS = ['leads', 'new', 'pending', 'closed', 'ingest', 'email', 'whatsapp', 'telegram', 'calendar', 'settings', 'payment',
   'humanreview', 'inbox', 'performance', 'workflows', 'knowledge', 'account', 'support'];
 const ASKS = ['opportunities'];
 const LEAD_ID = /^[A-Za-z0-9_-]{3,80}$/;

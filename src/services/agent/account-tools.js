@@ -212,3 +212,4 @@ module.exports = function createAccountTools(h) {
 
   return { TOOL_DEFS, HANDLERS };
 };
+module.exports.isYes = isYes;

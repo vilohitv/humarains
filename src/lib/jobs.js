@@ -25,6 +25,8 @@ const EXPECTED_EVERY_MS = {
   inbound_queue:    30_000,          // heartbeat written by the queue worker
   whatsapp_sync:    5 * 60_000,      // WhatsApp connection health
   retention:        60 * 60_000,     // first-week setup reminders
+  telegram_poll:    60_000,          // owner messages from Telegram (long poll; only when TELEGRAM_BOT_TOKEN is set)
+  telegram_notify:  60_000,          // Agent updates pushed to the owner's Telegram
   db_backup:        24 * 3600_000,   // daily backup (only when BACKUP_ENABLED=true)
   db_prune:         24 * 3600_000,   // daily retention cleanup
 };

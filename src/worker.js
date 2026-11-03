@@ -4,7 +4,7 @@
  *   node src/worker.js
  *
  * Runs everything that is not an HTTP request: the inbox poller, follow-up jobs, workflow
- * waits, the Proactive Agent, the inbound WhatsApp message queue and the daily backup. The web
+ * waits, the Proactive Agent, the inbound WhatsApp message queue, the Telegram bot and the daily backup. The web
  * process then only serves the app (set PROCESS_ROLE=web on it), so a slow AI call or a long
  * mailbox sync can never make the site feel slow, and each side can be restarted and scaled on
  * its own.
@@ -40,6 +40,7 @@ const backupJob     = require('./services/backup-job');
 const maintenanceJob = require('./services/maintenance-job');
 const waMaintenance = require('./services/whatsapp-maintenance');
 const retentionJob = require('./services/retention-job');
+const telegramBot  = require('./services/telegram');
 const { jobStatus } = require('./lib/jobs');
 const { processWhatsAppBatch } = require('./services/whatsapp-inbound');
 
@@ -57,6 +58,7 @@ const { processWhatsAppBatch } = require('./services/whatsapp-inbound');
   maintenanceJob.start(db);
   waMaintenance.start(db);
   retentionJob.start(db);
+  telegramBot.start(db);
 
   let health = null;
   if (process.env.WORKER_HEALTH_PORT) {
@@ -75,7 +77,7 @@ const { processWhatsAppBatch } = require('./services/whatsapp-inbound');
 
   const shutdown = signal => {
     console.log(`[Worker] ${signal} received — stopping`);
-    leadsPoller.stop(); inboundQueue.stop(); backupJob.stop(); maintenanceJob.stop(); waMaintenance.stop(); retentionJob.stop();
+    leadsPoller.stop(); inboundQueue.stop(); backupJob.stop(); maintenanceJob.stop(); waMaintenance.stop(); retentionJob.stop(); telegramBot.stop();
     if (health) health.close();
     // Give an in-flight batch a few seconds to finish; unfinished work stays in the queue and is retried.
     setTimeout(() => db.pool.end().catch(() => {}).finally(() => process.exit(0)), 5000);
