@@ -1,0 +1,185 @@
+/* Mobile layer for the dashboard (phones and small tablets). Loaded last, so it only has to refine what the
+   other sheets set. Desktop is untouched: every rule below sits inside a max-width query. */
+
+/* ── All touch screens ───────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  button, a, [role="button"], .lc-lead-row, .wai-item { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  /* No sticky hover states or lifting on touch */
+  .lc-icon-btn:hover, .lc-filter-btn:hover, .lc-lead-row:hover, .wai-item:hover { transform: none; }
+  .lc-content, .wai-list, .lc-slideover-body, .ag-thread { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+}
+
+/* ── Phones and small tablets ────────────────────────────────────── */
+@media (max-width: 760px) {
+  /* Inputs at 16px: iOS zooms the page when a focused field is smaller */
+  .lc-main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  .lc-main select, .lc-main textarea,
+  .lc-slideover input, .lc-slideover select, .lc-slideover textarea,
+  .wf-slideover input, .wf-slideover select, .wf-slideover textarea,
+  .wf-modal input, .wf-modal select, .wf-modal textarea,
+  .lc-modal input, .lc-modal select, .lc-modal textarea,
+  .rs-modal input, .rs-modal select, .rs-modal textarea,
+  .wai-search, .wai-input, .ag-input { font-size: 16px !important; }
+
+  /* Comfortable tap targets (44px) */
+  .lc-main .lc-btn, .lc-main .lc-btn-sm, .lc-slideover .lc-btn, .wf-modal .lc-btn, .lc-modal .lc-btn, .rs-modal .lc-btn { min-height: 44px; }
+  .lc-main .lc-input, .lc-main select.lc-input { min-height: 44px; }
+  .lc-filter-btn { min-height: 38px; padding-left: 14px !important; padding-right: 14px !important; font-size: 13px !important; }
+  .wai-filter { height: 34px; padding: 0 14px; font-size: 13px; }
+  .wai-search { height: 44px; }
+  .wai-back { width: 44px; height: 44px; }
+  .ag-attach, .ag-mic { min-width: 44px; min-height: 44px; }
+  .ag-me-btn { min-width: 42px; min-height: 42px; }
+
+  /* Section tabs (Channels, Settings…): one swipeable row, no wrapping, no scrollbar */
+  .lc-tabs { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; padding-left: 12px !important; padding-right: 12px; }
+  .lc-tabs::-webkit-scrollbar { display: none; }
+  .lc-tab { flex: none; height: 44px; scroll-snap-align: start; white-space: nowrap; }
+
+  /* Wide tables and code scroll inside themselves, never the page */
+  .lc-table-wrap, #view-settings .lc-settings-section table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* ── Phones ──────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  /* Real viewport height: the browser's collapsing address bar no longer hides the bottom of the page */
+  .lc-root, .lc-main { height: 100dvh !important; }
+  .lc-sidebar { height: 100dvh !important; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  body.agent-ui .lc-sidebar { padding-top: env(safe-area-inset-top); }
+
+  /* Top bar: slim, clears the notch, title never wraps */
+  body.agent-ui .lc-topbar, body.agent-ui.classic-ui .lc-topbar {
+    height: calc(54px + env(safe-area-inset-top)) !important; padding-top: env(safe-area-inset-top) !important;
+    padding-bottom: 0 !important; padding-left: 8px !important; gap: 4px !important; align-items: center !important;
+  }
+  body.agent-ui .lc-topbar-title, body.agent-ui.classic-ui .lc-topbar-title { font-size: 17px !important; font-weight: 650 !important; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; }
+  .lc-hamburger { width: 44px !important; height: 44px !important; border-radius: 12px; }
+  /* The fixed Agent/Classic switch and account button sit at the top right; keep them clear of the notch */
+  .ui-switch-stage { top: calc(8px + env(safe-area-inset-top)); right: 56px; }
+  .ag-me { top: calc(8px + env(safe-area-inset-top)); right: 10px; }
+  .ag-mark { top: calc(16px + env(safe-area-inset-top)); left: 16px; }
+  .ag-close { height: 44px; margin-right: 0; }
+
+  /* Content: edge to edge with room for the bottom bar and the home indicator */
+  body.agent-ui .lc-content, body.agent-ui.classic-ui .lc-content, .lc-content {
+    padding: 12px 12px calc(76px + env(safe-area-inset-bottom)) !important; scroll-padding-bottom: 96px;
+  }
+
+  /* Bottom navigation: frosted bar, bigger targets, a clear active state */
+  .lc-bottom-nav {
+    height: calc(60px + env(safe-area-inset-bottom)) !important; padding: 0 4px env(safe-area-inset-bottom) !important;
+    background: rgba(255, 255, 255, .88) !important; -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px);
+    border-top: 1px solid rgba(11, 37, 42, .10) !important; box-shadow: none !important; gap: 2px;
+  }
+  .lc-bottom-nav-item { min-height: 56px; margin: 4px 0; border-radius: 14px; font-size: 10.5px !important; font-weight: 600 !important; letter-spacing: .01em; transition: background .15s, color .15s; }
+  .lc-bottom-nav-item svg { width: 22px !important; height: 22px !important; }
+  .lc-bottom-nav-item.active { background: rgba(11, 37, 42, .07); color: #0B252A; }
+  .lc-bottom-nav-item:not(.active) svg { opacity: .5 !important; }
+  .lc-bottom-nav-item:active { background: rgba(11, 37, 42, .10); }
+  .lc-bottom-nav-badge { top: 4px !important; right: calc(50% - 22px) !important; background: #0B252A !important; color: #fff !important; }
+
+  /* Toasts and cookie notice float above the bottom bar */
+  #lcToast { bottom: calc(72px + env(safe-area-inset-bottom)) !important; }
+  #cc-banner { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
+
+  /* Leads: numbers first, compact. Stats get compact 2x2 cards, charts become a swipeable strip */
+  body.agent-ui .lc-stats-bar, body.agent-ui.classic-ui .lc-stats-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px !important; margin-bottom: 10px; }
+  body.agent-ui .lc-stat-card, body.agent-ui.classic-ui .lc-stat-card { padding: 11px 13px 10px !important; border-radius: 14px !important; }
+  body.agent-ui.classic-ui .lc-stat-card .lc-stat-label, .lc-stat-label { margin-bottom: 4px !important; font-size: 10px !important; letter-spacing: .1em !important; }
+  body.agent-ui .lc-stat-value, body.agent-ui.classic-ui .lc-stat-card .lc-stat-value, .lc-stat-value { font-size: 24px !important; line-height: 1.1; }
+
+  .lc-charts-row { display: flex !important; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 -12px 12px; padding: 0 12px 2px; }
+  .lc-charts-row::-webkit-scrollbar { display: none; }
+  .lc-charts-row > .lc-chart-card { flex: 0 0 88%; scroll-snap-align: center; min-width: 0; padding: 14px 16px !important; border-radius: 16px !important; }
+  .lc-charts-row .lc-bars { height: 96px; }
+  .lc-charts-row .lc-chart-title { font-size: 15px !important; }
+  .lc-charts-row .lc-donut-row { gap: 14px; }
+
+  /* Lead list as cards */
+  body.agent-ui.classic-ui .lc-lead-row, .lc-lead-row { padding: 13px 14px !important; min-height: 64px; border-radius: 0; }
+  .lc-leads-header { margin-top: 2px !important; margin-bottom: 10px !important; gap: 8px !important; }
+  .lc-filter-row { margin: 0 -12px; padding: 2px 12px 4px !important; scrollbar-width: none; }
+  .lc-filter-row::-webkit-scrollbar { display: none; }
+
+  /* Each lead is a compact two-line row: name and status, then service and value. The whole row opens the lead. */
+  .lc-leads-table .lc-lead-row, .lc-leads-table .lc-lead-row:hover {
+    display: grid !important; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; row-gap: 4px;
+    text-align: left; padding: 12px 14px !important; min-height: 0; cursor: pointer;
+  }
+  body.agent-ui .lc-leads-table .lc-lead-row { grid-template-columns: minmax(0, 1fr) auto !important; column-gap: 12px !important; }
+  .lc-leads-table .lc-lead-row > :nth-child(1) { grid-column: 1; grid-row: 1; min-width: 0; text-align: left; }
+  .lc-leads-table .lc-lead-row > :nth-child(1) .lc-lead-name { font-size: 15px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lc-leads-table .lc-lead-row > :nth-child(1) > span:not(.lc-lead-name) { display: block; margin-top: 1px; }
+  .lc-leads-table .lc-lead-row > .lc-td:nth-child(5) { grid-column: 2; grid-row: 1; margin: 0 !important; justify-self: end; }
+  .lc-leads-table .lc-lead-row > .lc-td:nth-child(2) { grid-column: 1; grid-row: 2; margin: 0 !important; font-size: 11px; }
+  .lc-leads-table .lc-lead-row > .lc-td:nth-child(4) { display: block !important; grid-column: 2; grid-row: 2; margin: 0 !important; justify-self: end; font-size: 11.5px !important; color: var(--text3); }
+  .lc-leads-table .lc-lead-row > .lc-td:nth-child(3) { display: none !important; }
+  .lc-leads-table .lc-lead-row > .lc-table-actions { display: none !important; }
+  .lc-leads-table .lc-lead-row:active { background: rgba(11, 37, 42, .05) !important; }
+
+  /* Lead detail: a full-height sheet with a footer that clears the home indicator */
+  .lc-slideover { width: 100% !important; max-width: 100% !important; height: 100dvh; border-radius: 0 !important; }
+  .lc-slideover-header { padding-top: calc(14px + env(safe-area-inset-top)) !important; }
+  .lc-slideover-footer { padding-bottom: max(14px, env(safe-area-inset-bottom)) !important; }
+  .wf-slideover { width: 100% !important; max-width: 100% !important; }
+
+  /* Pop-ups become bottom sheets */
+  .wf-modal-overlay, .rs-overlay, .lc-modal-overlay { align-items: flex-end !important; padding: 0 !important; }
+  .wf-modal, .rs-modal, .lc-modal, body.agent-ui #wfNewModal .wf-modal, body.agent-ui #kbModalOverlay .wf-modal {
+    width: 100% !important; max-width: 100% !important; max-height: 92dvh !important; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    border-radius: 22px 22px 0 0 !important; padding-bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+    animation: mbSheetUp .28s cubic-bezier(.22, .72, .2, 1);
+  }
+  .wf-modal-actions, .rs-actions { flex-direction: column-reverse; gap: 8px; }
+  .wf-modal-actions .lc-btn, .rs-actions .lc-btn { width: 100%; justify-content: center; }
+  .rs-grid { grid-template-columns: 1fr; }
+  @keyframes mbSheetUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* Inbox: list and chat fill the screen between the top bar and the bottom bar */
+  .wai { height: calc(100dvh - 54px - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 24px) !important; min-height: 0 !important; border-radius: 16px; }
+  .wai-item { padding: 14px; min-height: 68px; }
+  .wai-head { padding: 10px 12px; gap: 10px; }
+  .wai-msg { max-width: 86%; }
+
+  /* Settings: one calm column; save buttons span the width */
+  #view-settings .lc-settings-section { padding: 18px 16px 20px !important; margin-bottom: 14px !important; border-radius: 16px !important; }
+  #view-settings #btnSaveSettings, #view-settings #btnSavePricing, #view-settings #hoSave { width: 100%; justify-content: center; margin-top: 20px !important; }
+  #view-settings #settSaveStatus { display: block; margin: 10px 0 0 !important; }
+  #view-settings #addServiceForm > div { padding: 18px !important; }
+  #view-settings .lc-service-item { padding: 14px !important; gap: 10px !important; }
+
+  /* Insights, workflows and other cards: no side-by-side squeeze */
+  .perf-grid, .intel-grid, .wf-grid, .wf-templates-row { grid-template-columns: minmax(0, 1fr) !important; }
+  .wf-templates-row { overflow-x: auto; scroll-snap-type: x proximity; }
+
+  /* Agent home: the box sits above the keyboard area and the thread keeps most of the screen */
+  .ag-stage { padding: env(safe-area-inset-top) 14px calc(8px + env(safe-area-inset-bottom)); }
+  .ag-thread { max-height: min(56dvh, 460px); }
+  .ag-box { border-radius: 28px; }
+  .ag-msg.agent { font-size: 16.5px; }
+  .ag-lead { padding: 14px 2px; }
+  .ag-q-list > * { max-width: 100%; }
+  .ag-q-all { min-height: 40px; padding: 0 14px; }
+  .ag-menu { max-width: calc(100vw - 20px); }
+  .ag-menu button { min-height: 46px; }
+
+  /* Drawer menu: roomy rows */
+  body.agent-ui.classic-ui .lc-flyout .lc-nav-item, body.agent-ui.classic-ui #navUpgrade { min-height: 46px; }
+}
+
+/* ── Small phones ────────────────────────────────────────────────── */
+@media (max-width: 380px) {
+  .ui-switch-stage { right: 52px; }
+  .ui-switch-opt { padding: 0 8px !important; }
+  .lc-bottom-nav-item { font-size: 10px !important; }
+  body.agent-ui .lc-stat-value, body.agent-ui.classic-ui .lc-stat-card .lc-stat-value, .lc-stat-value { font-size: 22px !important; }
+}
+
+/* ── Landscape phones: keep the bars from eating the screen ─────── */
+@media (max-width: 900px) and (max-height: 480px) and (orientation: landscape) {
+  .lc-bottom-nav { height: calc(48px + env(safe-area-inset-bottom)) !important; }
+  .lc-bottom-nav-item { min-height: 44px; flex-direction: row !important; gap: 6px !important; }
+  body.agent-ui .lc-topbar, body.agent-ui.classic-ui .lc-topbar { height: calc(46px + env(safe-area-inset-top)) !important; }
+  .ag-thread { max-height: 38dvh; }
+}

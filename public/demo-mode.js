@@ -60,7 +60,7 @@
       whatsappThreadPhone: wa ? phone : null, source: o.src, intent: o.intent, urgency: o.urg,
       status: o.st, createdAt: iso(ago(o.h)), sentAt: o.st === 'new' ? null : iso(ago(o.h) + 14e3),
       subject: o.svc, needsHumanReview: !!o.review, humanReviewReason: o.review ? 'Large job: needs your quote' : null,
-      quote: o.review ? { currency: 'USD', total: 0, requiresSiteVisit: true } : (o.q ? { currency: 'USD', total: o.q } : null),
+      quote: o.review ? { currency: 'USD', total: 0, lineItems: [], requiresSiteVisit: true } : (o.q ? { currency: 'USD', total: o.q, lineItems: [] } : null),
       calendarEventId: o.booked ? 'ev-' + i : null, calendarEventLink: o.booked ? '#' : null, conversationHistory: []
     };
     return lead;

@@ -762,10 +762,10 @@
       <div class="lc-detail-section">
         <div class="lc-detail-label">Quote</div>
         <div class="lc-quote-box">
-          ${lead.quote.lineItems.map(li=>`<div class="lc-quote-row"><span>${esc(li.label)}</span><span style="font-family:var(--mono)">${esc(lead.quote.currency)} ${fmt(li.amount)}</span></div>`).join('')}
+          ${(lead.quote.lineItems||[]).map(li=>`<div class="lc-quote-row"><span>${esc(li.label)}</span><span style="font-family:var(--mono)">${esc(lead.quote.currency)} ${fmt(li.amount)}</span></div>`).join('')}
           ${lead.quote.range?`<div class="lc-quote-row"><span>Estimate range</span><span style="font-family:var(--mono)">${esc(lead.quote.currency)} ${fmt(lead.quote.range.low)} – ${fmt(lead.quote.range.high)}</span></div>`:''}
-          ${lead.quote.requiresSiteVisit&&!lead.quote.lineItems.length?`<div class="lc-quote-total"><span>Site visit required before pricing</span></div>`:`<div class="lc-quote-total"><span>Total</span><span>${esc(lead.quote.currency)} ${fmt(lead.quote.total)}</span></div>`}
-          ${lead.quote.requiresSiteVisit&&lead.quote.lineItems.length?`<div style="margin-top:9px;font-size:11px;color:var(--text3)">Site visit recommended before the price is final.</div>`:''}
+          ${lead.quote.requiresSiteVisit&&!(lead.quote.lineItems||[]).length?`<div class="lc-quote-total"><span>Site visit required before pricing</span></div>`:`<div class="lc-quote-total"><span>Total</span><span>${esc(lead.quote.currency)} ${fmt(lead.quote.total)}</span></div>`}
+          ${lead.quote.requiresSiteVisit&&(lead.quote.lineItems||[]).length?`<div style="margin-top:9px;font-size:11px;color:var(--text3)">Site visit recommended before the price is final.</div>`:''}
           ${lead.quote.notes?`<div style="margin-top:9px;font-size:11px;color:var(--text3)">${esc(lead.quote.notes)}</div>`:''}
         </div>
       </div>`:''}
