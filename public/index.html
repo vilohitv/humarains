@@ -409,10 +409,61 @@ html:not(.js) .sc-pane:first-child{display:block;}
 .hw-stats div{padding:14px;border-radius:14px;background:#F4F6F6;}
 .hw-stats b{display:block;font-size:28px;font-weight:650;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums;}
 .hw-stats span{font-size:13.5px;color:var(--ink-3);}
+/* How it works: compact, numbered steps and a smaller demo panel */
+.product.how{padding:64px 0 72px;}
+.how-head h2{font-size:clamp(28px,3.4vw,40px);line-height:1.1;letter-spacing:-.03em;}
+.how-head h2 span{max-width:30em;margin:12px auto 0;font-size:clamp(16px,1.5vw,19px);line-height:1.45;letter-spacing:-.005em;font-weight:450;}
+.how-grid{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:44px;margin-top:36px;}
+.acc{display:grid;gap:6px;border:0;counter-reset:acc;}
+.acc-item{border:1px solid transparent;border-radius:16px;padding:0 18px;transition:background .25s ease,border-color .25s ease,box-shadow .25s ease;}
+.acc-item:hover{background:rgba(255,255,255,.55);}
+.acc-item.open{background:#fff;border-color:var(--line);box-shadow:0 14px 32px -22px rgba(11,37,42,.35);}
+.acc-btn{justify-content:flex-start;gap:14px;padding:16px 0;font-size:19px;letter-spacing:-.015em;}
+.acc-btn::before{counter-increment:acc;content:counter(acc,decimal-leading-zero);flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:rgba(11,37,42,.07);color:var(--ink-3);font-size:12px;font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums;transition:background .25s ease,color .25s ease;}
+.acc-item.open .acc-btn::before{background:var(--ink);color:#fff;}
+.acc-pm{margin-left:auto;width:14px;height:14px;}
+.acc-pm::before,.acc-pm::after{top:6px;height:1.75px;}
+.acc-in p{max-width:none;padding-left:42px;font-size:15.5px;line-height:1.5;}
+.acc-chip{margin:12px 0 18px 42px;padding:6px 12px;border-radius:999px;background:#EEF1FB;font-size:13px;color:#1D2A86;}
+.how-panel{min-height:424px;padding:36px;border-radius:24px;}
+.how-panel .sc-card{padding:18px;border-radius:18px;box-shadow:0 26px 54px -30px rgba(6,10,56,.6);}
+.hw-from{margin:2px 0 5px 4px;font-size:13px;}
+.hw-bubble{padding:10px 15px;border-radius:18px;font-size:15.5px;line-height:1.4;}
+.hw-right{margin-top:8px;}
+.hw-meta{margin-top:6px;font-size:12px;}
+.hw-tags{gap:7px;margin-top:14px;}
+.hw-tag{gap:6px;padding:6px 11px;font-size:13px;}
+.hw-tag svg{width:13px;height:13px;}
+.hw-sub{margin-top:14px;padding-top:12px;font-size:13.5px;}
+.hw-chans{gap:8px;margin-top:10px;}
+.hw-chan{height:44px;border-radius:11px;font-size:14px;}
+.hw-chan svg{width:17px;height:17px;}
+.hw-hd{margin-bottom:10px;font-size:15px;}
+.hw-tl{gap:8px;}
+.hw-tl li{grid-template-columns:52px minmax(0,1fr);gap:10px;padding:10px 12px;border-radius:12px;}
+.hw-day{font-size:11.5px;}
+.hw-tl p{font-size:14.5px;line-height:1.4;}
+.hw-tl em{margin-top:3px;font-size:12px;}
+.hw-note{margin-top:10px;font-size:13px;}
+.hw-flag{margin-bottom:8px;padding:5px 11px;font-size:12.5px;}
+.hw-draft{margin-top:12px;padding:13px;border-radius:12px;}
+.hw-draft small{margin-bottom:6px;font-size:11.5px;}
+.hw-draft p{font-size:14.5px;line-height:1.45;}
+.hw-act{margin-top:10px;gap:12px;font-size:12.5px;}
+.hw-btn{height:36px;padding:0 15px;border-radius:9px;font-size:13.5px;}
+.hw-booked{gap:12px;padding:14px;border-radius:14px;}
+.hw-booked svg{width:28px;height:28px;}
+.hw-booked small{font-size:11.5px;}
+.hw-booked strong{font-size:16.5px;}
+.hw-booked span{font-size:13.5px;}
+.hw-stats{gap:8px;margin-top:10px;}
+.hw-stats div{padding:11px 12px;border-radius:12px;}
+.hw-stats b{font-size:23px;}
+.hw-stats span{font-size:12.5px;}
 @media (prefers-reduced-motion:reduce){.sc-item.pop,.sc-pane.on{animation:none;}.sc-run .sc-stage.on i::after,.hw-chan.run[aria-pressed=true] i{animation:none;transform:scaleX(1);}.acc-panel{transition:none;}}
 @media (max-width:960px){
-  .how-grid{grid-template-columns:1fr;gap:36px;margin-top:44px;}
-  .how-panel{min-height:0;padding:40px 18px;}
+  .how-grid{grid-template-columns:1fr;gap:24px;margin-top:28px;}
+  .how-panel{min-height:0;padding:24px 14px;}
 }
 @media (max-width:720px){
   .sc-hero{padding:24px 12px 18px;border-radius:20px;}
@@ -424,8 +475,9 @@ html:not(.js) .sc-pane:first-child{display:block;}
   .sc-msg{max-width:88%;font-size:15px;}
   .sc-stages{gap:8px;}.sc-stage{font-size:12.5px;}
   .acc-btn{font-size:23px;padding:22px 0;}.acc-in p{font-size:17px;}
-  .how-panel .sc-card{padding:16px;}.hw-bubble{font-size:16px;}.hw-chans{grid-template-columns:1fr;}
-  .product.how{padding:72px 0 80px;}
+  .how-panel .sc-card{padding:14px;}.hw-bubble{font-size:14.5px;}.hw-chans{grid-template-columns:1fr;}
+  .acc-btn{font-size:17px;padding:14px 0;}.acc-in p{font-size:15px;}
+  .product.how{padding:48px 0 56px;}
 }
 </style>
 <link rel="stylesheet" href="typography.css?v=1">
