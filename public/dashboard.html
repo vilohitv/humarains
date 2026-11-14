@@ -41,6 +41,21 @@
     drop: function (u) { delete P[u]; }
   };
   ['/api/users/me', '/api/users/setup-status', '/api/leads', '/api/leads/settings', '/api/leads/email-settings', '/api/account/me', '/api/agent/brief', '/api/leads/consent-queue', '/api/leads/human-review'].forEach(function (u) { if (!P[u]) start(u); });
+
+  /* Onboarding gate, decided before first paint. A new account has to connect email or WhatsApp first, so it is sent to
+     onboarding.html here instead of waiting for leads.js to load. The page stays hidden until the answer arrives; if the
+     request is slow or fails, it is shown anyway after 4 s (leads.js repeats the check as a backstop). */
+  var root = document.documentElement;
+  root.classList.add('lc-gate');
+  var reveal = function () { root.classList.remove('lc-gate'); };
+  var failOpen = setTimeout(reveal, 4000);
+  var g = P['/api/users/setup-status'];
+  (g ? g.p : Promise.resolve(null)).then(function (r) {
+    return r && r.ok ? r.json() : null;
+  }).then(function (st) {
+    clearTimeout(failOpen);
+    if (st && st.onboarding_required) location.replace('onboarding.html'); else reveal();
+  }).catch(function () { clearTimeout(failOpen); reveal(); });
 })();
 </script>
 <meta charset="UTF-8">
@@ -78,6 +93,8 @@
 /* CRITICAL LAYOUT — inline, cannot be cached, always fresh */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; background: #FFFFFF; color: #0B252A; font-family: 'Hanken Grotesk', system-ui, sans-serif; }
+/* Held until the onboarding check answers (see the top script), so a new account never sees the dashboard shell. */
+html.lc-gate body { visibility: hidden !important; }
 
 /* ROOT: flexbox row — far more reliable than grid across all browsers/devices */
 .lc-root {
