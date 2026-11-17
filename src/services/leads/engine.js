@@ -330,66 +330,6 @@ function formatHistory(history, businessName) {
 // result if definitely not a lead.
 // ════════════════════════════════════════════════════════════════
 
-// Known automated/system sender patterns — evaluated against fromEmail
-const AUTOMATED_SENDER_PATTERNS = [
-  /^no.?reply@/i,
-  /^noreply@/i,
-  /^do.?not.?reply@/i,
-  /^mailer.?daemon@/i,
-  /^postmaster@/i,
-  /^bounce[s+]?@/i,
-  /^notifications?@/i,
-  /^alerts?@/i,
-  /^system@/i,
-  /^auto(mated|reply)?@/i,
-  /^support+[a-z0-9]+@/i,      // ticketing system auto-addresses
-  /^hello+[a-z0-9]{8,}@/i,     // Intercom/Zendesk style
-];
-
-// Subject line patterns that are unambiguously not customer enquiries
-const AUTOMATED_SUBJECT_PATTERNS = [
-  /delivery (status|notification|failure|report)/i,
-  /(mail|message) delivery (failed|failure|undeliverable)/i,
-  /undeliverable/i,
-  /failed to deliver/i,
-  /out of (office|town|desk)/i,
-  /auto.?reply/i,
-  /vacation (notice|reply)/i,
-  /(email|mail) verification/i,
-  /confirm your (email|subscription|account)/i,
-  /unsubscribe/i,
-  /password reset/i,
-  /your (order|invoice|receipt|payment) #/i,
-  /tracking (number|update|info)/i,
-  /newsletter/i,
-  /weekly (digest|roundup|update)/i,
-];
-
-// Cold vendor pitch signals in subject
-const VENDOR_PITCH_PATTERNS = [
-  /partnering with/i,
-  /introduc(e|ing) (our|my|ourselves)/i,
-  /quick question/i,   // classic cold email opener in subject
-  /I (found|came across) your (company|business|website)/i,
-  /can (I|we) help (your|your business)/i,
-  /we (help|provide|offer|specialize)/i,
-  /free (trial|demo|consultation) offer/i,
-  /affiliate (program|opportunity|partnership)/i,
-  /SEO (services|help|audit)/i,
-];
-
-// Body signals that strongly indicate automated/system content
-const AUTOMATED_BODY_SIGNALS = [
-  /this is an automated (message|reply|response|notification)/i,
-  /please do not (reply to|respond to) this (email|message)/i,
-  /you are receiving this (email|message|notification) because/i,
-  /to unsubscribe (from|click)/i,
-  /click here to unsubscribe/i,
-  /this email was sent (to|by) an automated system/i,
-  /if you did not (request|initiate) this/i,
-  /your (account|subscription) has been (created|activated|updated)/i,
-];
-
 // Only mechanical, unambiguous system mail is rejected without Claude.
 // Everything else (including "quick question", "we offer", "unsubscribe" in a
 // footer, etc.) is judged by Claude from the actual subject + content.
@@ -1541,12 +1481,17 @@ function photoQuoteGuard(assessment, quote, businessContext) {
 // ════════════════════════════════════════════════════════════════
 // PROCESS LEAD — first contact
 // ════════════════════════════════════════════════════════════════
-async function processLead(claude, model, rawLead, businessContext, agentMode = 'autonomous') {
+async function processLead(claude, model, rawLead, businessContext, agentMode = 'autonomous', opts = {}) {
   const lead = normalizeLead(rawLead);
   lead.agentModeSnapshot = agentMode;
+  // Practice enquiry (onboarding): the sample is written by us, so it is always a genuine lead and must not be
+  // held back for human review just because the business profile is still thin.
+  const practice = !!(opts && opts.practice);
 
   // Step 1: Qualify
-  const qualification = await qualifyLead(claude, model, lead, businessContext);
+  const qualification = practice
+    ? { isLead: true, confidence: 1, reason: 'practice_enquiry', senderType: 'customer', urgencyLevel: 'none', serviceMatch: null, buyingSignals: [], preflightHit: true }
+    : await qualifyLead(claude, model, lead, businessContext);
   lead.qualification   = qualification;
 
   if (!qualification.isLead) {
@@ -1588,7 +1533,9 @@ async function processLead(claude, model, rawLead, businessContext, agentMode = 
   lead.conversationHistory = initialHistory;
 
   const [humanAssessment, quote] = await Promise.all([
-    assessHumanReviewNeeded(claude, model, lead, extracted, businessContext, initialHistory),
+    practice
+      ? { needed: false, reason: null, confidence: 1, escalationType: null }
+      : assessHumanReviewNeeded(claude, model, lead, extracted, businessContext, initialHistory),
     Promise.resolve(calculateQuote(extracted, businessContext)),
   ]);
   lead.quote = quote;
@@ -1603,7 +1550,9 @@ async function processLead(claude, model, rawLead, businessContext, agentMode = 
   }
 
   // Step 4: Knowledge sufficiency check — don't hallucinate missing details
-  const sufficiency = await checkKnowledgeSufficiency(claude, model, lead, extracted, businessContext);
+  const sufficiency = practice
+    ? { sufficient: true, missingInfo: [] }
+    : await checkKnowledgeSufficiency(claude, model, lead, extracted, businessContext);
   if (!sufficiency.sufficient) {
     const missing = sufficiency.missingInfo.length
       ? `Missing info: ${sufficiency.missingInfo.join('; ')}`

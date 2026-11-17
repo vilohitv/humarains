@@ -2056,8 +2056,14 @@ router.post('/test-lead', testLeadLimiter, async (req, res) => {
   const claude = getClaude();
   if (!claude) return res.status(503).json({ success: false, message: 'AI service not configured.' });
 
-  const sample = TEST_LEAD_SAMPLES[Math.floor(Math.random() * TEST_LEAD_SAMPLES.length)];
+  const sample = { ...TEST_LEAD_SAMPLES[Math.floor(Math.random() * TEST_LEAD_SAMPLES.length)] };
   const businessContext = await getSettings(req.user.id, req._db);
+  // Mention what the business does so the practice enquiry reads like a real customer, even before services are added.
+  const bType = String(businessContext.businessType || '').trim();
+  if (bType && bType !== 'local service business') {
+    sample.subject = 'Enquiry about ' + bType.slice(0, 60);
+    sample.body = "Hi, I found your business online and I'm interested in what you offer (" + bType.slice(0, 80) + "). Could someone get in touch with me about next steps? Thanks!";
+  }
 
   try {
     const processed = await processLead(claude, MODEL, {
@@ -2067,7 +2073,7 @@ router.post('/test-lead', testLeadLimiter, async (req, res) => {
       subject:   sample.subject,
       body:      sample.body,
       businessId: req.user.id,
-    }, businessContext);
+    }, businessContext, 'autonomous', { practice: true });
 
     await storeLead(req.user.id, processed, req._db);
     console.log(`[Leads] Created onboarding test lead ${processed.id} for user ${req.user.id}`);

@@ -1413,7 +1413,7 @@ async function runLoop(ctx, claude, history, message, modelMessage, kickoff, ima
     // they are marked cacheable; from the second round on, the conversation so far is cached too.
     const sys = systemPrompt(ctx, { split: true });
     const resp = await claude.messages.create({
-      model: MODEL, max_tokens: 1500,
+      model: MODEL, max_tokens: 2500,
       system: cachedSystem(withAgentStyle(sys.stable), sys.dynamic),
       tools: cachedTools(),
       messages: round > 0 ? cacheTail(messages) : messages,
@@ -1421,7 +1421,11 @@ async function runLoop(ctx, claude, history, message, modelMessage, kickoff, ima
     logUsage('agent', resp);
 
     const text = resp.content.filter(b => b.type === 'text').map(b => b.text).join('').trim();
-    if (resp.stop_reason !== 'tool_use') { reply = text; break; }
+    if (resp.stop_reason !== 'tool_use') {
+      reply = text;
+      if (resp.stop_reason === 'max_tokens' && reply) reply += ' (I ran out of room there. Say "continue" and I will pick it up.)';
+      break;
+    }
 
     messages.push({ role: 'assistant', content: resp.content });
     usedTools = true;
@@ -1444,7 +1448,20 @@ async function runLoop(ctx, claude, history, message, modelMessage, kickoff, ima
     messages.push({ role: 'user', content: results });
     // A form is on screen: the owner's answers come back as the next message.
     if (ctx.form) { reply = text || 'I need a few details from you first.'; break; }
-    if (round === MAX_TOOL_ROUNDS - 1) reply = text || 'All done.';
+    if (round === MAX_TOOL_ROUNDS - 1) {
+      try {
+        const sys2 = systemPrompt(ctx, { split: true });
+        const wrap = await claude.messages.create({
+          model: MODEL, max_tokens: 800,
+          system: cachedSystem(withAgentStyle(sys2.stable), sys2.dynamic),
+          tools: cachedTools(),
+          tool_choice: { type: 'none' },
+          messages: [...cacheTail(messages), { role: 'user', content: '(Stop calling tools now. In two or three short sentences tell the owner what you finished and what is still left, so they can say "continue" if they want you to carry on.)' }],
+        });
+        reply = wrap.content.filter(b => b.type === 'text').map(b => b.text).join('').trim();
+      } catch (e) { console.error('[agent] wrap-up failed:', e.message); }
+      if (!reply) reply = text || 'I did part of that and ran out of steps. Say "continue" and I will carry on.';
+    }
   }
 
   // Safety net: an explicit "open X" always opens X, whatever the model decided.
@@ -1629,6 +1646,10 @@ function createAgentRouter(db) {
       res.json({ success: true, ...out });
     } catch (e) {
       console.error('[agent] chat error:', e.message);
+      if (ctx.actions && ctx.actions.length) {
+        return res.json({ success: true, reply: 'I made those changes, but I lost my connection before I could write the summary. Check the Activity list, and tell me if anything looks off.',
+          ui: ctx.ui || [], leads: ctx.leads || [], actions: ctx.actions, state: 'done' });
+      }
       res.json({ success: true, ...fallbackReply(message) });
     }
   });
