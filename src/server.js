@@ -461,8 +461,10 @@ app.use(async (req, res, next) => {
   const isStaticAsset  = req.path.match(/\.(css|js|jpeg|jpg|png|ico|svg|woff|woff2|gif|webp|ttf|otf)$/i);
   const isSystemRoute  = req.path.startsWith('/api/system/');
   const isAdminRoute   = req.path.startsWith('/api/admin');
+  // The admin panel page itself must stay reachable, otherwise nobody can switch maintenance mode off.
+  const isAdminPage    = req.path === '/admin' || req.path === '/admin/' || req.path === '/admin.html';
   const isMaintenancePage = req.path === '/maintenance.html';
-  if (isStaticAsset || isSystemRoute || isAdminRoute || isMaintenancePage) return next();
+  if (isStaticAsset || isSystemRoute || isAdminRoute || isAdminPage || isMaintenancePage) return next();
   if (!dbReady) return next();
   try {
     const maintenance = await isMaintenanceCached();
